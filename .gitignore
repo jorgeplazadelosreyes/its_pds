@@ -8,6 +8,7 @@ media
 
 # Backup files # 
 *.bak 
+node_modules
 
 # If you are using PyCharm # 
 # User-specific stuff
