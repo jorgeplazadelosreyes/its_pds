@@ -20,126 +20,320 @@
     <script>
       var alto = 600
       var largo = 1500
-        const stage = new Konva.Stage({
-            container: 'container',
-            width: largo,
-            height: alto
-          });
+      var shadowOffset = 20;
+      var tween = null;
+      var blockSnapSize = 30;
+
+      var shadowRectangle = new Konva.Rect({
+        x: 0,
+        y: 0,
+        width: blockSnapSize,
+        height: blockSnapSize,
+        fill: '#FF7B17',
+        opacity: 0.6,
+        stroke: '#CF6412',
+        strokeWidth: 3,
+        dash: [20, 2]
+      });
+
+      const stage = new Konva.Stage({
+          container: 'container',
+          width: largo,
+          height: alto
+        });
           
-          const layer = new Konva.Layer();
-          
-          {% comment %} var cir = new Konva.Circle({
-            radius: 2,
+      var layer = new Konva.Layer();
+        
+      {% comment %} var cir = new Konva.Circle({
+        radius: 2,
+        fill: 'grey',
+        name: 'node'
+      }); {% endcomment %}
+        
+      var padding = 30;
+      for (var i = 0; i < largo / padding; i++) {
+        layer.add(new Konva.Line({
+          points: [Math.round(i * padding) + 0.5, 0, Math.round(i * padding) + 0.5, alto],
+          stroke: '#000000',
+          strokeWidth: 1,
+        }));
+        
+      }
+      layer.add(new Konva.Line({points: [0,0,10,10]}));
+      
+      for (var j = 0; j < largo / padding; j++) {
+        layer.add(new Konva.Line({
+          points: [0, Math.round(j * padding), largo, Math.round(j * padding)],
+          stroke: '#000000',
+          strokeWidth: 0.5,
+        }));
+      }
+        
+      for(var j = 30; j < alto; j+=30){
+        for(var i = 30; i < largo; i+=30){
+
+          var cir = new Konva.Circle({
+            x: i,
+            y: j,
+            radius: 4,
             fill: 'grey',
             name: 'node'
-          }); {% endcomment %}
-          
-          var padding = 30;
-          for (var i = 0; i < largo / padding; i++) {
-            layer.add(new Konva.Line({
-              points: [Math.round(i * padding) + 0.5, 0, Math.round(i * padding) + 0.5, alto],
-              stroke: '#000000',
-              strokeWidth: 1,
-            }));
-            
-          }
-          layer.add(new Konva.Line({points: [0,0,10,10]}));
-          
-          for (var j = 0; j < largo / padding; j++) {
-            layer.add(new Konva.Line({
-              points: [0, Math.round(j * padding), largo, Math.round(j * padding)],
-              stroke: '#000000',
-              strokeWidth: 0.5,
-            }));
-          }
-          
-          for(var j = 30; j < alto; j+=30){
-            for(var i = 30; i < largo; i+=30){
+          });
 
-              var cir = new Konva.Circle({
-                x: i,
-                y: j,
-                radius: 4,
-                fill: 'grey',
-                name: 'node'
-              });
-
-              layer.add(cir);
-              }
+          layer.add(cir);
           }
-          
-          
-         
-          
-          
-          
-          
-          
-          let drawingLine = false;
-          let line;
-          stage.on('mousedown', (e) => {
-            if (e.target.hasName('node')) {
-              drawingLine = true;
-              const pos = stage.getPointerPosition();
-              line = new Konva.Line({
-                stroke: 'black',
-                strokeWidth: 7,
-                // remove line from hit graph, so we can check intersections
-                listening: false,
-                points: [e.target.x(), e.target.y(), pos.x, pos.y]
-              });
-              layer.add(line);
-            }
+      }
+
+      function newRectangle(x, y, layer, stage) {
+        let rectangle = new Konva.Rect({
+          x: x,
+          y: y,
+          width: blockSnapSize ,
+          height: blockSnapSize ,
+          fill: '#fff',
+          stroke: '#ddd',
+          strokeWidth: 1,
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: true
+        });
+        rectangle.on('dragstart', (e) => {
+          shadowRectangle.show();
+          shadowRectangle.moveToTop();
+          rectangle.moveToTop();
+        });
+        rectangle.on('dragend', (e) => {
+          rectangle.position({
+            x: Math.round(rectangle.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(rectangle.y() / blockSnapSize) * blockSnapSize
           });
-          
-          stage.on('mouseover', (e) => {
-            if (e.target.hasName('node')) {
-              e.target.stroke('black');
-              layer.draw();
-            }
+          stage.batchDraw();
+          shadowRectangle.hide();
+        });
+        rectangle.on('dragmove', (e) => {
+          shadowRectangle.position({
+            x: Math.round(rectangle.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(rectangle.y() / blockSnapSize) * blockSnapSize
           });
-          
-          stage.on('mouseout', (e) => {
-            if (e.target.hasName('node')) {
-              e.target.stroke(null);
-              layer.draw();
-            }
+          stage.batchDraw();
+        });
+        layer.add(rectangle);
+      }
+
+      function newArrow(x, y, layer, stage, tilt) {
+        var arrow = new Konva.Arrow({
+          x: x,
+          y: y,
+          points: [0, 0, 20, 10],
+          pointerLength: 2,
+          pointerWidth: 2,
+          rotation: tilt,
+          fill: 'black',
+          stroke: 'black',
+          strokeWidth: 4,
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: true
+        });
+
+        arrow.on('dragstart', (e) => {
+          shadowRectangle.show();
+          shadowRectangle.moveToTop();
+          arrow.moveToTop();
+        });
+        arrow.on('dragend', (e) => {
+          arrow.position({
+            x: (Math.round(arrow.x() / blockSnapSize) * blockSnapSize) + 10,
+            y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize
           });
-          
-          stage.on('mousemove', (e) => {
-            if (!line) {
-              return;
-            }
+          stage.batchDraw();
+          shadowRectangle.hide();
+        });
+        arrow.on('dragmove', (e) => {
+          shadowRectangle.position({
+            x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize
+          });
+          stage.batchDraw();
+        });
+
+        var tr2 = new Konva.Transformer({
+          nodes: [arrow],
+          centeredScaling: false,
+        });
+        layer.add(tr2);
+        layer.add(arrow);
+
+      }
+
+
+      function toolBar(layer, stage) {
+        let rectangle = new Konva.Rect({
+          x: 1400,
+          y: 10,
+          width: blockSnapSize ,
+          height: blockSnapSize,
+          fill: '#fff',
+          stroke: '#ddd',
+          strokeWidth: 1,
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: false,
+        });
+        rectangle.on('pointerdown', function () {
+          newRectangle(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
+        });
+
+        let arrowVert = new Konva.Arrow({
+          x: 1400,
+          y: 50,
+          points: [0, 0, 20, 10],
+          pointerLength: 2,
+          pointerWidth: 2,
+          rotation: 60,
+          fill: 'black',
+          stroke: 'black',
+          strokeWidth: 4,
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: false,
+        });
+        arrowVert.on('pointerdown', function () {
+          newArrow(blockSnapSize * 17, blockSnapSize * 3, layer, stage, 60);
+        });
+
+        let arrowHor = new Konva.Arrow({
+          x: 1415,
+          y: 60,
+          points: [0, 0, 20, 10],
+          pointerLength: 2,
+          pointerWidth: 2,
+          rotation: -25,
+          fill: 'black',
+          stroke: 'black',
+          strokeWidth: 4,
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: false,
+        });
+        arrowHor.on('pointerdown', function () {
+          newArrow(blockSnapSize * 17, blockSnapSize * 3, layer, stage, -25);
+        });
+        
+        let arrowDiag = new Konva.Arrow({
+          x: 1450,
+          y: 55,
+          points: [0, 0, 20, 10],
+          pointerLength: 2,
+          pointerWidth: 2,
+          rotation: 15,
+          fill: 'black',
+          stroke: 'black',
+          strokeWidth: 4,
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: false,
+        });
+        arrowDiag.on('pointerdown', function () {
+          newArrow(blockSnapSize * 17, blockSnapSize * 3, layer, stage, 15);
+        });
+        
+        layer.add(rectangle);
+        layer.add(arrowVert);
+        layer.add(arrowHor);
+        layer.add(arrowDiag);
+
+      }
+        
+        
+        
+        
+        
+        
+        
+        
+        let drawingLine = false;
+        let line;
+        stage.on('mousedown', (e) => {
+          if (e.target.hasName('node')) {
+            drawingLine = true;
             const pos = stage.getPointerPosition();
+            line = new Konva.Line({
+              stroke: 'black',
+              strokeWidth: 7,
+              // remove line from hit graph, so we can check intersections
+              listening: false,
+              points: [e.target.x(), e.target.y(), pos.x, pos.y]
+            });
+            layer.add(line);
+          }
+        });
+        
+        stage.on('mouseover', (e) => {
+          if (e.target.hasName('node')) {
+            e.target.stroke('black');
+            layer.draw();
+          }
+        });
+        
+        stage.on('mouseout', (e) => {
+          if (e.target.hasName('node')) {
+            e.target.stroke(null);
+            layer.draw();
+          }
+        });
+        
+        stage.on('mousemove', (e) => {
+          if (!line) {
+            return;
+          }
+          const pos = stage.getPointerPosition();
+          const points = line.points().slice();
+          points[2] = pos.x;
+          points[3] = pos.y;
+          line.points(points);
+          layer.batchDraw();
+        });
+        
+        stage.on('mouseup', (e) => {
+          if (!line) {
+            return;
+          }
+          if (!e.target.hasName('node')) {
+            line.destroy();
+            layer.draw();
+            line = null;
+          } else {
+            let pos = e.target.getClientRect();
             const points = line.points().slice();
-            points[2] = pos.x;
-            points[3] = pos.y;
+            points[2] = pos.x + (e.target.width()/2);
+            points[3] = pos.y + (e.target.height()/2);;
             line.points(points);
             layer.batchDraw();
-          });
+            line = null;
+          }
           
-          stage.on('mouseup', (e) => {
-            if (!line) {
-              return;
-            }
-            if (!e.target.hasName('node')) {
-              line.destroy();
-              layer.draw();
-              line = null;
-            } else {
-              let pos = e.target.getClientRect();
-              const points = line.points().slice();
-              points[2] = pos.x + (e.target.width()/2);
-              points[3] = pos.y + (e.target.height()/2);;
-              line.points(points);
-              layer.batchDraw();
-              line = null;
-            }
-            
-          });
-          
-          stage.add(layer);
-          layer.draw();
+        });
+
+        shadowRectangle.hide();
+        layer.add(shadowRectangle);
+
+        toolBar( layer, stage);
+        
+        stage.add(layer);
+        layer.draw();
     </script>
   </body>
 </html>
