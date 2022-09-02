@@ -18,7 +18,7 @@
   <body>
     <div id="container"></div>
     <script>
-      var alto = 500
+      var alto = 600
       var largo = 1500
         const stage = new Konva.Stage({
             container: 'container',
@@ -27,12 +27,12 @@
           });
           
           const layer = new Konva.Layer();
-          const layer2 = new Konva.Layer();
           
-          var source = new Konva.Circle({
-            radius: 4,
-            fill: 'grey'
-          });
+          {% comment %} var cir = new Konva.Circle({
+            radius: 2,
+            fill: 'grey',
+            name: 'node'
+          }); {% endcomment %}
           
           var padding = 30;
           for (var i = 0; i < largo / padding; i++) {
@@ -42,7 +42,6 @@
               strokeWidth: 1,
             }));
             
-            layer.add(source);
           }
           layer.add(new Konva.Line({points: [0,0,10,10]}));
           
@@ -54,10 +53,10 @@
             }));
           }
           
-          for(var j = 0; j < alto; j+=30){
-            for(var i = 0; i < largo; i+=30){
+          for(var j = 30; j < alto; j+=30){
+            for(var i = 30; i < largo; i+=30){
 
-              const cir = new Konva.Circle({
+              var cir = new Konva.Circle({
                 x: i,
                 y: j,
                 radius: 4,
@@ -65,7 +64,7 @@
                 name: 'node'
               });
 
-              layer2.add(cir);
+              layer.add(cir);
               }
           }
           
@@ -78,28 +77,30 @@
           
           let drawingLine = false;
           let line;
-          source.on('mousedown', () => {
-            drawingLine = true;
-            const pos = stage.getPointerPosition();
-            line = new Konva.Line({
-              stroke: 'black',
-              strokeWidth: 7,
-              // remove line from hit graph, so we can check intersections
-              listening: false,
-              points: [source.x(), source.y(), pos.x, pos.y]
-            });
-            layer2.add(line);
+          stage.on('mousedown', (e) => {
+            if (e.target.hasName('node')) {
+              drawingLine = true;
+              const pos = stage.getPointerPosition();
+              line = new Konva.Line({
+                stroke: 'black',
+                strokeWidth: 7,
+                // remove line from hit graph, so we can check intersections
+                listening: false,
+                points: [e.target.x(), e.target.y(), pos.x, pos.y]
+              });
+              layer.add(line);
+            }
           });
           
           stage.on('mouseover', (e) => {
-            if (e.target.hasName('target')) {
+            if (e.target.hasName('node')) {
               e.target.stroke('black');
               layer.draw();
             }
           });
           
           stage.on('mouseout', (e) => {
-            if (e.target.hasName('target')) {
+            if (e.target.hasName('node')) {
               e.target.stroke(null);
               layer.draw();
             }
@@ -121,11 +122,17 @@
             if (!line) {
               return;
             }
-            if (!e.target.hasName('target')) {
+            if (!e.target.hasName('node')) {
               line.destroy();
               layer.draw();
               line = null;
             } else {
+              let pos = e.target.getClientRect();
+              const points = line.points().slice();
+              points[2] = pos.x + (e.target.width()/2);
+              points[3] = pos.y + (e.target.height()/2);;
+              line.points(points);
+              layer.batchDraw();
               line = null;
             }
             
