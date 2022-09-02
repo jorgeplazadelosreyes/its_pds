@@ -35,8 +35,8 @@
       var shadowRectangle = new Konva.Rect({
         x: 0,
         y: 0,
-        width: blockSnapSize * 6,
-        height: blockSnapSize * 3,
+        width: blockSnapSize,
+        height: blockSnapSize,
         fill: '#FF7B17',
         opacity: 0.6,
         stroke: '#CF6412',
@@ -48,8 +48,8 @@
         let rectangle = new Konva.Rect({
           x: x,
           y: y,
-          width: blockSnapSize * 6,
-          height: blockSnapSize * 3,
+          width: blockSnapSize ,
+          height: blockSnapSize ,
           fill: '#fff',
           stroke: '#ddd',
           strokeWidth: 1,
@@ -82,12 +82,62 @@
         layer.add(rectangle);
       }
 
-      function toolRectangle(layer, stage) {
+      function newArrow(x, y, layer, stage, tilt) {
+        var arrow = new Konva.Arrow({
+          x: x,
+          y: y,
+          points: [0, 0, 20, 10],
+          pointerLength: 2,
+          pointerWidth: 2,
+          rotation: tilt,
+          fill: 'black',
+          stroke: 'black',
+          strokeWidth: 4,
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: true
+        });
+
+        arrow.on('dragstart', (e) => {
+          shadowRectangle.show();
+          shadowRectangle.moveToTop();
+          arrow.moveToTop();
+        });
+        arrow.on('dragend', (e) => {
+          arrow.position({
+            x: (Math.round(arrow.x() / blockSnapSize) * blockSnapSize) + 10,
+            y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize
+          });
+          stage.batchDraw();
+          shadowRectangle.hide();
+        });
+        arrow.on('dragmove', (e) => {
+          shadowRectangle.position({
+            x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize
+          });
+          stage.batchDraw();
+        });
+
+        var tr2 = new Konva.Transformer({
+          nodes: [arrow],
+          centeredScaling: false,
+        });
+        layer.add(tr2);
+        layer.add(arrow);
+
+      }
+
+
+
+      function toolBar(layer, stage) {
         let rectangle = new Konva.Rect({
           x: 1400,
           y: 10,
-          width: blockSnapSize * 2,
-          height: blockSnapSize * 1,
+          width: blockSnapSize ,
+          height: blockSnapSize,
           fill: '#fff',
           stroke: '#ddd',
           strokeWidth: 1,
@@ -100,8 +150,72 @@
         rectangle.on('pointerdown', function () {
           newRectangle(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
         });
+
+        let arrowVert = new Konva.Arrow({
+          x: 1400,
+          y: 50,
+          points: [0, 0, 20, 10],
+          pointerLength: 2,
+          pointerWidth: 2,
+          rotation: 60,
+          fill: 'black',
+          stroke: 'black',
+          strokeWidth: 4,
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: false,
+        });
+        arrowVert.on('pointerdown', function () {
+          newArrow(blockSnapSize * 17, blockSnapSize * 3, layer, stage, 60);
+        });
+
+        let arrowHor = new Konva.Arrow({
+          x: 1415,
+          y: 60,
+          points: [0, 0, 20, 10],
+          pointerLength: 2,
+          pointerWidth: 2,
+          rotation: -25,
+          fill: 'black',
+          stroke: 'black',
+          strokeWidth: 4,
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: false,
+        });
+        arrowHor.on('pointerdown', function () {
+          newArrow(blockSnapSize * 17, blockSnapSize * 3, layer, stage, -25);
+        });
+        
+        let arrowDiag = new Konva.Arrow({
+          x: 1450,
+          y: 55,
+          points: [0, 0, 20, 10],
+          pointerLength: 2,
+          pointerWidth: 2,
+          rotation: 15,
+          fill: 'black',
+          stroke: 'black',
+          strokeWidth: 4,
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: false,
+        });
+        arrowDiag.on('pointerdown', function () {
+          newArrow(blockSnapSize * 17, blockSnapSize * 3, layer, stage, 15);
+        });
         
         layer.add(rectangle);
+        layer.add(arrowVert);
+        layer.add(arrowHor);
+        layer.add(arrowDiag);
+
       }
 
       var stage = new Konva.Stage({
@@ -133,9 +247,8 @@
       var layer = new Konva.Layer();
       shadowRectangle.hide();
       layer.add(shadowRectangle);
-      newRectangle(blockSnapSize * 3, blockSnapSize * 3, layer, stage);
-      newRectangle(blockSnapSize * 10, blockSnapSize * 3, layer, stage);
-      toolRectangle( layer, stage)
+
+      toolBar( layer, stage)
 
       stage.add(gridLayer);
       stage.add(layer);
