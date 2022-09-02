@@ -27,6 +27,7 @@
           });
           
           const layer = new Konva.Layer();
+          const layer2 = new Konva.Layer();
           
           var source = new Konva.Circle({
             radius: 4,
@@ -44,6 +45,7 @@
             layer.add(source);
           }
           layer.add(new Konva.Line({points: [0,0,10,10]}));
+          
           for (var j = 0; j < largo / padding; j++) {
             layer.add(new Konva.Line({
               points: [0, Math.round(j * padding), largo, Math.round(j * padding)],
@@ -52,7 +54,20 @@
             }));
           }
           
-          
+          for(var j = 0; j < alto; j+=30){
+            for(var i = 0; i < largo; i+=30){
+
+              const cir = new Konva.Circle({
+                x: i,
+                y: j,
+                radius: 4,
+                fill: 'grey',
+                name: 'node'
+              });
+
+              layer2.add(cir);
+              }
+          }
           
           
          
@@ -73,7 +88,7 @@
               listening: false,
               points: [source.x(), source.y(), pos.x, pos.y]
             });
-            layer.add(line);
+            layer2.add(line);
           });
           
           stage.on('mouseover', (e) => {

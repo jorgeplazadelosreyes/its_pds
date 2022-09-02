@@ -7,3 +7,6 @@ def say_hello(request):
 
 def grids(request):
     return render(request, "grid.html")
+
+def gr(request):
+    return render(request, "gr.html")
