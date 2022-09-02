@@ -248,7 +248,7 @@
       shadowRectangle.hide();
       layer.add(shadowRectangle);
 
-      toolBar( layer, stage)
+      toolBar( layer, stage);
 
       stage.add(gridLayer);
       stage.add(layer);
@@ -256,3 +256,93 @@
     </script>
   </body>
 </html>
+
+/*
+      function newEmpotrado(x, y, layer, stage) {
+        var empotrado= new Konva.Group({
+          x: x,
+          y: y,
+
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: true
+        });
+
+        var empotrado1 = new Konva.Line({
+          points: [15, 0, 15, 25],
+          stroke: 'red',
+          strokeWidth: 4,
+          lineCap: 'round',
+          lineJoin: 'round',
+          
+        });
+
+        var empotrado2 = new Konva.Line({
+          points: [0, 0, 30, 0],
+          stroke: 'red',
+          strokeWidth: 4,
+          lineCap: 'round',
+          lineJoin: 'round',
+          
+        });
+        empotrado.add(empotrado1);
+        empotrado.add(empotrado2);
+
+        empotrado.on('dragstart', (e) => {
+          shadowRectangle.show();
+          shadowRectangle.moveToTop();
+          empotrado.moveToTop();
+        });
+        empotrado.on('dragend', (e) => {
+          empotrado.position({
+            x: Math.round(empotrado.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(empotrado.y() / blockSnapSize) * blockSnapSize + 30
+          });
+          stage.batchDraw();
+          shadowRectangle.hide();
+        });
+        empotrado.on('dragmove', (e) => {
+          shadowRectangle.position({
+            x: Math.round(empotrado.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(empotrado.y() / blockSnapSize) * blockSnapSize
+          });
+          stage.batchDraw();
+        });
+        layer.add(empotrado);
+      }
+      */
+
+      /*
+      var empotrado = new Konva.Group({
+        x: 1420,
+        y: 150,
+      });
+
+      var empotrado1 = new Konva.Line({
+        points: [15, 0, 15, -25],
+        stroke: 'red',
+        strokeWidth: 4,
+        lineCap: 'round',
+        lineJoin: 'round',
+        
+      });
+
+
+      var empotrado2 = new Konva.Line({
+        points: [0, 0, 30, 0],
+        stroke: 'red',
+        strokeWidth: 4,
+        lineCap: 'round',
+        lineJoin: 'round',
+        
+      });
+
+      empotrado.add(empotrado1);
+      empotrado.add(empotrado2);
+
+      empotrado.on('pointerdown', function () {
+        newEmpotrado(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
+      });
+      */

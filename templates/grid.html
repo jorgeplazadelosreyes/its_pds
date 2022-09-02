@@ -44,11 +44,11 @@
           
       var layer = new Konva.Layer();
         
-      {% comment %} var cir = new Konva.Circle({
+      /* var cir = new Konva.Circle({
         radius: 2,
         fill: 'grey',
         name: 'node'
-      }); {% endcomment %}
+      }); */
         
       var padding = 30;
       for (var i = 0; i < largo / padding; i++) {
@@ -122,7 +122,7 @@
         layer.add(rectangle);
       }
 
-      function newArrow(x, y, layer, stage, tilt) {
+      function newArrow(x, y, layer, stage, tilt, offsetx, offsety) {
         var arrow = new Konva.Arrow({
           x: x,
           y: y,
@@ -147,8 +147,9 @@
         });
         arrow.on('dragend', (e) => {
           arrow.position({
-            x: (Math.round(arrow.x() / blockSnapSize) * blockSnapSize) + 10,
-            y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize
+            x: (Math.round(arrow.x() / blockSnapSize) * blockSnapSize) + offsetx,
+            y: (Math.round(arrow.y() / blockSnapSize) * blockSnapSize) + offsety,
+
           });
           stage.batchDraw();
           shadowRectangle.hide();
@@ -160,16 +161,165 @@
           });
           stage.batchDraw();
         });
-
+        /*
         var tr2 = new Konva.Transformer({
           nodes: [arrow],
           centeredScaling: false,
         });
         layer.add(tr2);
+        */
         layer.add(arrow);
 
       }
 
+      function newFijo(x, y, layer, stage) {
+        let fijo = new Konva.RegularPolygon({
+          x: x,
+          y: y,
+          sides: 3,
+          radius: 15,
+          fill: 'grey',
+          stroke: 'black',
+          strokeWidth: 2,
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: true
+        });
+        fijo.on('dragstart', (e) => {
+          shadowRectangle.show();
+          shadowRectangle.moveToTop();
+          fijo.moveToTop();
+        });
+        fijo.on('dragend', (e) => {
+          fijo.position({
+            x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize +15,
+            y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize + 15
+          });
+          stage.batchDraw();
+          shadowRectangle.hide();
+        });
+        fijo.on('dragmove', (e) => {
+          shadowRectangle.position({
+            x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize
+          });
+          stage.batchDraw();
+        });
+        layer.add(fijo);
+      }
+
+      function newDeslizante(x, y, layer, stage) {
+        var deslizante = new Konva.Group({
+          x: x,
+          y: y,
+
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: true
+        });
+
+        var deslizanteT = new Konva.RegularPolygon({
+          x: 15,
+          y: -13,
+          sides: 3,
+          radius: 15,
+          fill: 'gray',
+          stroke: 'black',
+          strokeWidth: 2,
+        });
+
+        var deslizanteL = new Konva.Line({
+          points: [0, 0, 30, 0],
+          stroke: 'red',
+          strokeWidth: 4,
+          lineCap: 'round',
+          lineJoin: 'round',
+         
+        });
+        deslizante.add(deslizanteT);
+        deslizante.add(deslizanteL);
+
+        deslizante.on('dragstart', (e) => {
+          shadowRectangle.show();
+          shadowRectangle.moveToTop();
+          deslizante.moveToTop();
+        });
+        deslizante.on('dragend', (e) => {
+          deslizante.position({
+            x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(deslizante.y() / blockSnapSize) * blockSnapSize + 30
+          });
+          stage.batchDraw();
+          shadowRectangle.hide();
+        });
+        deslizante.on('dragmove', (e) => {
+          shadowRectangle.position({
+            x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(deslizante.y() / blockSnapSize) * blockSnapSize
+          });
+          stage.batchDraw();
+        });
+        layer.add(deslizante);
+      }
+
+      function newEmpotrado(x, y, layer, stage) {
+        var empotrado= new Konva.Group({
+          x: x,
+          y: y,
+
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: true
+        });
+
+        var empotrado1 = new Konva.Line({
+          points: [15, 0, 15, -25],
+          stroke: 'red',
+          strokeWidth: 4,
+          lineCap: 'round',
+          lineJoin: 'round',
+          
+        });
+
+        var empotrado2 = new Konva.Line({
+          points: [0, 0, 30, 0],
+          stroke: 'red',
+          strokeWidth: 4,
+          lineCap: 'round',
+          lineJoin: 'round',
+          
+        });
+        empotrado.add(empotrado1);
+        empotrado.add(empotrado2);
+
+        empotrado.on('dragstart', (e) => {
+          shadowRectangle.show();
+          shadowRectangle.moveToTop();
+          empotrado.moveToTop();
+        });
+        empotrado.on('dragend', (e) => {
+          empotrado.position({
+            x: Math.round(empotrado.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(empotrado.y() / blockSnapSize) * blockSnapSize + 30
+          });
+          stage.batchDraw();
+          shadowRectangle.hide();
+        });
+        empotrado.on('dragmove', (e) => {
+          shadowRectangle.position({
+            x: Math.round(empotrado.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(empotrado.y() / blockSnapSize) * blockSnapSize
+          });
+          stage.batchDraw();
+        });
+        layer.add(empotrado);
+      }
 
       function toolBar(layer, stage) {
         let rectangle = new Konva.Rect({
@@ -196,7 +346,7 @@
           points: [0, 0, 20, 10],
           pointerLength: 2,
           pointerWidth: 2,
-          rotation: 60,
+          rotation: 62,
           fill: 'black',
           stroke: 'black',
           strokeWidth: 4,
@@ -207,7 +357,7 @@
           draggable: false,
         });
         arrowVert.on('pointerdown', function () {
-          newArrow(blockSnapSize * 17, blockSnapSize * 3, layer, stage, 60);
+          newArrow(blockSnapSize * 17, blockSnapSize * 3, layer, stage, 62, 15, 0);
         });
 
         let arrowHor = new Konva.Arrow({
@@ -227,7 +377,7 @@
           draggable: false,
         });
         arrowHor.on('pointerdown', function () {
-          newArrow(blockSnapSize * 17, blockSnapSize * 3, layer, stage, -25);
+          newArrow(blockSnapSize * 17, blockSnapSize * 3, layer, stage, -25, 0, 15);
         });
         
         let arrowDiag = new Konva.Arrow({
@@ -247,13 +397,92 @@
           draggable: false,
         });
         arrowDiag.on('pointerdown', function () {
-          newArrow(blockSnapSize * 17, blockSnapSize * 3, layer, stage, 15);
+          newArrow(blockSnapSize * 17, blockSnapSize * 3, layer, stage, 15, 0, 0);
         });
+
+        var fijo = new Konva.RegularPolygon({
+          x: 1420,
+          y: 100,
+          sides: 3,
+          radius: 10,
+          fill: 'gray',
+          stroke: 'black',
+          strokeWidth: 2,
+        });
+
+        fijo.on('pointerdown', function () {
+          newFijo(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
+        });
+
+        var deslizante = new Konva.Group({
+          x: 1420,
+          y: 150,
+        });
+
+        var deslizanteT = new Konva.RegularPolygon({
+          x: 15,
+          y: -10,
+          sides: 3,
+          radius: 10,
+          fill: 'gray',
+          stroke: 'black',
+          strokeWidth: 2,
+        });
+
+        var deslizanteL = new Konva.Line({
+          points: [0, 0, 30, 0],
+          stroke: 'red',
+          strokeWidth: 4,
+          lineCap: 'round',
+          lineJoin: 'round',
+          
+        });
+
+        deslizante.add(deslizanteT);
+        deslizante.add(deslizanteL);
+
+        deslizante.on('pointerdown', function () {
+          newDeslizante(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
+        });
+
+      var empotrado = new Konva.Group({
+        x: 1420,
+        y: 200,
+      });
+
+      var empotrado1 = new Konva.Line({
+        points: [15, 0, 15, -25],
+        stroke: 'red',
+        strokeWidth: 4,
+        lineCap: 'round',
+        lineJoin: 'round',
+        
+      });
+
+
+      var empotrado2 = new Konva.Line({
+        points: [0, 0, 30, 0],
+        stroke: 'red',
+        strokeWidth: 4,
+        lineCap: 'round',
+        lineJoin: 'round',
+        
+      });
+
+      empotrado.add(empotrado1);
+      empotrado.add(empotrado2);
+
+      empotrado.on('pointerdown', function () {
+        newEmpotrado(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
+      });
         
         layer.add(rectangle);
         layer.add(arrowVert);
         layer.add(arrowHor);
         layer.add(arrowDiag);
+        layer.add(fijo);
+        layer.add(deslizante);
+        layer.add(empotrado)
 
       }
         
