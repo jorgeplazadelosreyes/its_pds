@@ -10,3 +10,13 @@ def grids(request):
 
 def gr(request):
     return render(request, "gr.html")
+
+def etapa2(request):
+    return render(request, "etapa2.html")
+
+def etapa3(request):
+    return render(request, "etapa3.html")
+
+def etapa4(request):
+    return render(request, "etapa4.html")
+
