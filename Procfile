@@ -1,0 +1,1 @@
+web: gunicorn itsjlp.wsgi --log-file -
