@@ -129,5 +129,5 @@ STATICFILES_DIR = (
     os.path.join(BASE_DIR, "static")
 )
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"import django_on_heroku
-django_on_heroku.settings(locals())
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"import django_heroku
+django_heroku.settings(locals())
