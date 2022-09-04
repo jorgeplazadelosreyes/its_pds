@@ -84,7 +84,7 @@
         var arrow = new Konva.Arrow({
           x: x,
           y: y,
-          points: [0, 0, 20, 10],
+          points: [0, 0, 75, 0],
           pointerLength: 2,
           pointerWidth: 2,
           fill: 'black',
@@ -94,7 +94,8 @@
           shadowBlur: 2,
           shadowOffset: {x : 1, y : 1},
           shadowOpacity: 0.4,
-          draggable: true
+          draggable: true,
+          rotation: 0
         });
 
         arrow.on('dragstart', (e) => {
@@ -118,15 +119,37 @@
           });
           stage.batchDraw();
         });
-        
+
         var tr = new Konva.Transformer({
           nodes: [arrow],
           centeredScaling: false,
-          resizeEnabled: false,
+          resizeEnabled: true,
+          rotation: 0,
         });
         layer.add(tr);
         
         layer.add(arrow);
+        stage.on('click tap', function (e) {
+          if (e.target === arrow) {
+            tr.nodes([arrow]);
+          }
+          // if click on empty area - remove all selections
+          if (e.target === stage) {
+            tr.nodes([]);
+            return;
+          }
+
+          const metaPressed = e.evt.ctrlKey;
+          const isSelected = tr.nodes().indexOf(e.target) >= 0;
+
+          if (metaPressed && isSelected) {
+            // if we pressed keys and node was selected
+            // we need to remove it from selection:
+            tr.nodes([]);
+            const nodes = e.target.destroy(); // use slice to have new copy of array
+            // remove node from array
+          }
+        });
 
       }
 
@@ -173,6 +196,27 @@
         });
         layer.add(tr);
         layer.add(fijo);
+        stage.on('click tap', function (e) {
+          if (e.target === fijo) {
+            tr.nodes([fijo]);
+          }
+          // if click on empty area - remove all selections
+          if (e.target === stage) {
+            tr.nodes([]);
+            return;
+          }
+
+          const metaPressed = e.evt.ctrlKey;
+          const isSelected = tr.nodes().indexOf(e.target) >= 0;
+
+          if (metaPressed && isSelected) {
+            // if we pressed keys and node was selected
+            // we need to remove it from selection:
+            tr.nodes([]);
+            const nodes = e.target.destroy(); // use slice to have new copy of array
+            // remove node from array
+          }
+        });
       }
 
       function newDeslizante(x, y, layer, stage) {
@@ -235,6 +279,27 @@
         });
         layer.add(tr);
         layer.add(deslizante);
+        stage.on('click tap', function (e) {
+          if (e.target === deslizante) {
+            tr.nodes([deslizante]);
+          }
+          // if click on empty area - remove all selections
+          if (e.target === stage) {
+            tr.nodes([]);
+            return;
+          }
+
+          const metaPressed = e.evt.ctrlKey;
+          const isSelected = tr.nodes().indexOf(e.target) >= 0;
+
+          if (metaPressed && isSelected) {
+            // if we pressed keys and node was selected
+            // we need to remove it from selection:
+            tr.nodes([]);
+            const nodes = e.target.destroy(); // use slice to have new copy of array
+            // remove node from array
+          }
+        });
       }
 
       function newEmpotrado(x, y, layer, stage) {
@@ -296,6 +361,27 @@
         });
         layer.add(tr);
         layer.add(empotrado);
+        stage.on('click tap', function (e) {
+          if (e.target === empotrado) {
+            tr.nodes([empotrado]);
+          }
+          // if click on empty area - remove all selections
+          if (e.target === stage) {
+            tr.nodes([]);
+            return;
+          }
+
+          const metaPressed = e.evt.ctrlKey;
+          const isSelected = tr.nodes().indexOf(e.target) >= 0;
+
+          if (metaPressed && isSelected) {
+            // if we pressed keys and node was selected
+            // we need to remove it from selection:
+            tr.nodes([]);
+            const nodes = e.target.destroy(); // use slice to have new copy of array
+            // remove node from array
+          }
+        });
       }
 
       function newRotula(x, y, layer, stage) {
@@ -335,6 +421,7 @@
           stage.batchDraw();
         });
         layer.add(rotula);
+        
       }
 
       function newBiela(x, y, layer, stage) {
@@ -650,14 +737,9 @@
         layer.add(biela);
 
       }
-        
-        
-        
-        
-        
-        
-        
-        
+      
+      
+      
         let drawingLine = false;
         let line;
         stage.on('mousedown', (e) => {
