@@ -1,1 +1,1 @@
-web: gunicorn itsjlp.wsgi --log-file -
+web: gunicorn itsjlp.wsgi
