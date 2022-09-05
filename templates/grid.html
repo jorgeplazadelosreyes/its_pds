@@ -81,47 +81,76 @@
 
 
       function newArrow(x, y, layer, stage) {
-        var arrow = new Konva.Arrow({
+        var arrow= new Konva.Group({
           x: x,
           y: y,
+
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: true
+        });
+
+        var arrowL = new Konva.Arrow({
+          
           points: [0, 0, 75, 0],
           pointerLength: 2,
           pointerWidth: 2,
           fill: 'black',
           stroke: 'black',
           strokeWidth: 4,
-          shadowColor: 'black',
-          shadowBlur: 2,
-          shadowOffset: {x : 1, y : 1},
-          shadowOpacity: 0.4,
+          
           draggable: true,
           rotation: 0
         });
 
-        arrow.on('dragstart', (e) => {
+        var arrowFX = new Konva.Text({
+          
+          text: 'F X',
+          fontSize: 12,
+          fontFamily: 'Calibri',
+          fill: 'balck',
+          draggable: true,
+        });
+
+        var arrowFY = new Konva.Text({
+          x: arrowFX.getAbsolutePosition().x +30,
+          text: 'F Y',
+          fontSize: 12,
+          fontFamily: 'Calibri',
+          fill: 'balck',
+          draggable: true,
+        });
+
+        arrow.add(arrowL);
+        arrow.add(arrowFX);
+        arrow.add(arrowFY);
+
+        arrowL.on('dragstart', (e) => {
           shadowRectangle.show();
           shadowRectangle.moveToTop();
-          arrow.moveToTop();
+          arrowL.moveToTop();
         });
-        arrow.on('dragend', (e) => {
-          arrow.position({
-            x: (Math.round(arrow.x() / blockSnapSize) * blockSnapSize) ,
-            y: (Math.round(arrow.y() / blockSnapSize) * blockSnapSize),
+        arrowL.on('dragend', (e) => {
+          arrowL.position({
+            x: (Math.round(arrowL.x() / blockSnapSize) * blockSnapSize) ,
+            y: (Math.round(arrowL.y() / blockSnapSize) * blockSnapSize),
 
           });
           stage.batchDraw();
           shadowRectangle.hide();
         });
-        arrow.on('dragmove', (e) => {
+        arrowL.on('dragmove', (e) => {
           shadowRectangle.position({
-            x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize,
-            y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize
+            x: (Math.round(arrowL.x() / blockSnapSize) * blockSnapSize) + 510,
+            y: (Math.round(arrowL.y() / blockSnapSize) * blockSnapSize) + 90
           });
           stage.batchDraw();
         });
 
         var tr = new Konva.Transformer({
-          nodes: [arrow],
+          nodes: [arrowFX, arrowFY, arrowL],
           centeredScaling: false,
           resizeEnabled: true,
           rotation: 0,
@@ -129,9 +158,10 @@
         layer.add(tr);
         
         layer.add(arrow);
+        
         stage.on('click tap', function (e) {
-          if (e.target === arrow) {
-            tr.nodes([arrow]);
+          if (e.target === arrowL) {
+            tr.nodes([arrowFX, arrowFY, arrowL]);
           }
           // if click on empty area - remove all selections
           if (e.target === stage) {
@@ -150,6 +180,74 @@
             // remove node from array
           }
         });
+        
+        arrowFX.on('dblclick dbltap', () => {
+        // create textarea over canvas with absolute position
+
+        // first we need to find position for textarea
+        // how to find it?
+
+        // at first lets find position of text node relative to the stage:
+        var textPosition = arrowFX.getAbsolutePosition();
+
+        // then lets find position of stage container on the page:
+        var stageBox = stage.container().getBoundingClientRect();
+
+        // so position of textarea will be the sum of positions above:
+        var areaPosition = {
+          x: stageBox.left + textPosition.x,
+          y: stageBox.top + textPosition.y,
+        };
+
+        // create textarea and style it
+        var textarea = document.createElement('textarea');
+        document.body.appendChild(textarea);
+
+        textarea.value = "ingresa el valor de x";
+        textarea.style.position = 'absolute';
+        textarea.style.top = areaPosition.y + 'px';
+        textarea.style.left = areaPosition.x + 'px';
+        textarea.style.width = arrowFX.width();
+
+        textarea.focus();
+
+        textarea.addEventListener('keydown', function (e) {
+          // hide on enter
+          if (e.keyCode === 13) {
+            arrowFX.text(textarea.value);
+            document.body.removeChild(textarea);
+          }
+        });
+      });
+
+      arrowFY.on('dblclick dbltap', () => {
+        var textPosition = arrowFY.getAbsolutePosition();
+
+        var stageBox = stage.container().getBoundingClientRect();
+
+        var areaPosition = {
+          x: stageBox.left + textPosition.x,
+          y: stageBox.top + textPosition.y,
+        };
+
+        var textarea = document.createElement('textarea');
+        document.body.appendChild(textarea);
+
+        textarea.value = "ingresa el valor de y";
+        textarea.style.position = 'absolute';
+        textarea.style.top = areaPosition.y + 'px';
+        textarea.style.left = areaPosition.x + 'px';
+        textarea.style.width = arrowFY.width();
+
+        textarea.focus();
+
+        textarea.addEventListener('keydown', function (e) {
+          if (e.keyCode === 13) {
+            arrowFY.text(textarea.value);
+            document.body.removeChild(textarea);
+          }
+        });
+      });
 
       }
 
