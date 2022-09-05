@@ -812,7 +812,46 @@
         layer.draw();
     </script>
     <div>
+      <input id="btn" type="button" value="Guardar" style="float: left;" >
+      <script>
+
+        var json = "hello"
+        
+        let btn = document.getElementById("btn");
+        btn.addEventListener('click', event => {
+
+          json = stage.toJSON();
+
+          /* //aqui solo estoy imprimiendo el json para asegurarme que se guardo
+          var jsonText = new Konva.Text({
+            x: 0,
+            y: 365,
+            text: json,
+            fontSize: 12,
+            fontFamily: 'Calibri',
+            fill: 'balck',
+          });
+          layer.add(jsonText);
+          */
+
+
+        });
+      </script>
+        <input id="btn2" type="button" value="cargar" style="float: Center;" >
+        
+      <script>
+        //este boton no esta funcionando bien
+        let btn2 = document.getElementById("btn2");
+        btn2.addEventListener('click', event => {
+
+          var stage = Konva.Node.create(json, 'container');
+          
+
+
+        });
+      </script>
       <input type="button" value="Siguiente Etapa" style="float: right;" onclick="location.href='{% url 'etapa 2' %}'">
     </div>
+  
   </body>
 </html>

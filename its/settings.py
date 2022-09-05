@@ -123,3 +123,5 @@ os.makedirs(STATIC_ROOT, exist_ok=True)
 STATICFILES_DIR = (
     os.path.join(BASE_DIR, "static")
 )
+
+
