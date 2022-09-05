@@ -229,6 +229,7 @@
           shadowOffset: {x : 1, y : 1},
           shadowOpacity: 0.4,
           draggable: true
+
         });
 
         var deslizanteT = new Konva.RegularPolygon({
@@ -273,15 +274,15 @@
           stage.batchDraw();
         });
         var tr = new Konva.Transformer({
-          nodes: [deslizante],
+          nodes: [deslizanteT, deslizanteL],
           centeredScaling: false,
           resizeEnabled: false,
         });
         layer.add(tr);
         layer.add(deslizante);
         stage.on('click tap', function (e) {
-          if (e.target === deslizante) {
-            tr.nodes([deslizante]);
+          if (e.target === deslizanteT || deslizanteL) {
+            tr.nodes([deslizanteT,deslizanteL]);
           }
           // if click on empty area - remove all selections
           if (e.target === stage) {
@@ -297,6 +298,7 @@
             // we need to remove it from selection:
             tr.nodes([]);
             const nodes = e.target.destroy(); // use slice to have new copy of array
+            
             // remove node from array
           }
         });
@@ -362,8 +364,8 @@
         layer.add(tr);
         layer.add(empotrado);
         stage.on('click tap', function (e) {
-          if (e.target === empotrado) {
-            tr.nodes([empotrado]);
+          if (e.target === empotrado || empotrado1 || empotrado2) {
+            tr.nodes([empotrado,empotrado1,empotrado2]);
           }
           // if click on empty area - remove all selections
           if (e.target === stage) {
@@ -420,8 +422,34 @@
           });
           stage.batchDraw();
         });
+        var tr = new Konva.Transformer({
+          nodes: [rotula],
+          centeredScaling: false,
+          resizeEnabled: false,
+        });
+        layer.add(tr)
         layer.add(rotula);
-        
+        stage.on('click tap', function (e) {
+          if (e.target === rotula) {
+            tr.nodes([rotula]);
+          }
+          // if click on empty area - remove all selections
+          if (e.target === stage) {
+            tr.nodes([]);
+            return;
+          }
+
+          const metaPressed = e.evt.ctrlKey;
+          const isSelected = tr.nodes().indexOf(e.target) >= 0;
+
+          if (metaPressed && isSelected) {
+            // if we pressed keys and node was selected
+            // we need to remove it from selection:
+            tr.nodes([]);
+            const nodes = e.target.destroy(); // use slice to have new copy of array
+            // remove node from array
+          }
+        });
       }
 
       function newBiela(x, y, layer, stage) {
@@ -529,9 +557,31 @@
         b1.on('dragend', updateLine);
         b2.on('dragend', updateLine);
 
+        var tr = new Konva.Transformer({
+          nodes: [b1,b2,line],
+          centeredScaling: false,
+          resizeEnabled: false,
+        });
+        layer.add(tr)
         layer.add(line);
         layer.add(b1);
         layer.add(b2);
+
+      
+        stage.on('click tap', function (e) {
+          const metaPressed = e.evt.ctrlKey;
+          if (e.target === stage) {
+            tr.nodes([]);
+            return;
+          }
+          if (metaPressed && (e.target === b1 || b2 || line)) {
+            // if we pressed keys and node was selected
+            // we need to remove it from selection:
+            tr.nodes([]);
+            const nodes = e.target.destroy(); // use slice to have new copy of array
+            // remove node from array
+          }
+        });
       }
       
       function toolBar(layer, stage) {
