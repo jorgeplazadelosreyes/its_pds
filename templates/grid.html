@@ -682,6 +682,76 @@
             // remove node from array
           }
         });
+
+      }
+      
+      function newMomento(x, y, layer, stage) {
+
+          var momento = new Konva.Arc({
+            x: x,
+            y: y,
+            innerRadius: 10,
+            outerRadius: 20,
+            angle: 180,
+            fill: 'yellow',
+            stroke: 'black',
+            strokeWidth: 4,
+            shadowColor: 'black',
+            shadowBlur: 2,
+            shadowOffset: {x : 1, y : 1},
+            shadowOpacity: 0.4,
+            draggable: true
+          });
+
+          momento.on('dragstart', (e) => {
+            shadowRectangle.show();
+            shadowRectangle.moveToTop();
+            momento.moveToTop();
+          });
+          momento.on('dragend', (e) => {
+            momento.position({
+              x: Math.round(momento.x() / blockSnapSize) * blockSnapSize + 15,
+              y: Math.round(momento.y() / blockSnapSize) * blockSnapSize 
+            });
+            stage.batchDraw();
+            shadowRectangle.hide();
+          });
+          momento.on('dragmove', (e) => {
+            shadowRectangle.position({
+              x: Math.round(momento.x() / blockSnapSize) * blockSnapSize,
+              y: Math.round(momento.y() / blockSnapSize) * blockSnapSize
+            });
+            stage.batchDraw();
+          });
+          var tr = new Konva.Transformer({
+            nodes: [momento],
+            centeredScaling: false,
+            resizeEnabled: false,
+          });
+          layer.add(tr)
+          layer.add(momento);
+          stage.on('click tap', function (e) {
+            if (e.target === momento) {
+              tr.nodes([momento]);
+            }
+            // if click on empty area - remove all selections
+            if (e.target === stage) {
+              tr.nodes([]);
+              return;
+            }
+
+            const metaPressed = e.evt.ctrlKey;
+            const isSelected = tr.nodes().indexOf(e.target) >= 0;
+
+            if (metaPressed && isSelected) {
+              // if we pressed keys and node was selected
+              // we need to remove it from selection:
+              tr.nodes([]);
+              const nodes = e.target.destroy(); // use slice to have new copy of array
+              // remove node from array
+            }
+          });
+          
       }
       
       function toolBar(layer, stage) {
@@ -869,7 +939,7 @@
           newBiela(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
         });
         var bielaText = new Konva.Text({
-          x: largo - 50,
+          x: largo - 45,
           y: 365,
           text: 'Biela',
           fontSize: 12,
@@ -878,6 +948,39 @@
         });
         layer.add(bielaText);
         // BIELA
+        // MOMENTO
+        
+        let momento = new Konva.Arc({
+          x: largo - 33,
+          y: 390,
+          innerRadius: 10,
+          outerRadius: 20,
+          angle: 180,
+          fill: 'yellow',
+          stroke: 'black',
+          strokeWidth: 4,
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: false,
+        });
+
+        momento.on('pointerdown', function () {
+          newMomento(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
+        });
+
+        var momentoText = new Konva.Text({
+          x: largo - 55,
+          y: 420,
+          text: 'Momento',
+          fontSize: 12,
+          fontFamily: 'Calibri',
+          fill: 'balck',
+        });
+        layer.add(momentoText);
+        // MOMENTO
+        
 
         layer.add(arrow);
         layer.add(fijo);
@@ -885,10 +988,46 @@
         layer.add(empotrado);
         layer.add(rotula);
         layer.add(biela);
+        layer.add(momento);
 
       }
       
+      var mesure = new Konva.Group({
+        x: 30,
+        y: 30,
+        
+      });
       
+      var mesureC = new Konva.Rect({
+        x: 0,
+        y: 0,
+        width: 30,
+        height: 30,
+        fill: 'gray',
+        stroke: 'black',
+        strokeWidth: 4,
+      });
+      
+      var mesureX = new Konva.Text({
+        x: 5,
+        y: 35,
+        text: '1 mt',
+        fontSize: 10,
+        fontFamily: 'Calibri',
+        fill: 'black',
+      });
+      
+      var mesureY = new Konva.Text({
+        x: 35,
+        y: 5,
+        text: '1 mt',
+        fontSize: 10,
+        fontFamily: 'Calibri',
+        fill: 'black',
+      });
+
+      mesure.add(mesureC, mesureX, mesureY);
+      layer.add(mesure);
       
         let drawingLine = false;
         let line;
