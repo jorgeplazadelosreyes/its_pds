@@ -41,14 +41,14 @@
       
 			data = $("#homework-details").data("homeworkDiagram")
 
-			var stage = Konva.Node.create(data, "container")
+			//var stage = Konva.Node.create(data, "container")
 
-      /*const stage = new Konva.Stage({
+      const stage = new Konva.Stage({
           container: 'container',
           width: largo,
           height: alto
         });
-		*/
+		
       
 			var layer = new Konva.Layer();
 				
@@ -85,7 +85,8 @@
 					shadowOffset: {x : 1, y : 1},
 					shadowOpacity: 0.4,
 					draggable: true,
-					rotation: 0
+					rotation: 0,
+          name: "arrow",
 				});
 
 				arrow.on('dragstart', (e) => {
@@ -156,7 +157,8 @@
           shadowBlur: 2,
           shadowOffset: {x : 1, y : 1},
           shadowOpacity: 0.4,
-          draggable: true
+          draggable: true,
+          name: "fijo",
         });
         fijo.on('dragstart', (e) => {
           shadowRectangle.show();
@@ -218,7 +220,8 @@
           shadowBlur: 2,
           shadowOffset: {x : 1, y : 1},
           shadowOpacity: 0.4,
-          draggable: true
+          draggable: true,
+          name: "deslizante",
         });
 
         var deslizanteT = new Konva.RegularPolygon({
@@ -301,7 +304,8 @@
           shadowBlur: 2,
           shadowOffset: {x : 1, y : 1},
           shadowOpacity: 0.4,
-          draggable: true
+          draggable: true,
+          name: "empotrado",
         });
 
         var empotrado1 = new Konva.Line({
@@ -387,7 +391,8 @@
           shadowBlur: 2,
           shadowOffset: {x : 1, y : 1},
           shadowOpacity: 0.4,
-          draggable: true
+          draggable: true,
+          name: "rotula",
         });
 
         rotula.on('dragstart', (e) => {
@@ -427,7 +432,8 @@
           shadowBlur: 2,
           shadowOffset: {x : 1, y : 1},
           shadowOpacity: 0.4,
-          draggable: true
+          draggable: true,
+          name: "biela"
         });
 
         var b2 = new Konva.Circle({
@@ -441,12 +447,14 @@
           shadowBlur: 2,
           shadowOffset: {x : 1, y : 1},
           shadowOpacity: 0.4,
-          draggable: true
+          draggable: true,
+          name: "biela"
         });
 
         const line = new Konva.Line({
           points: [x, y, x+30, y],
-          stroke: 'green'
+          stroke: 'green',
+          name: "biela"
         });
 
         b1.on('dragstart', (e) => {
@@ -522,6 +530,74 @@
         layer.add(line);
         layer.add(b1);
         layer.add(b2);
+      }
+
+      function newMomento(x, y, layer, stage) {
+        let momento = new Konva.Arc({
+          x: x,
+          y: y,
+          innerRadius: 10,
+          outerRadius: 20,
+          angle: 180,
+          fill: 'yellow',
+          stroke: 'black',
+          strokeWidth: 4,
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: true,
+          name: "momento",
+        });
+        momento.on('dragstart', (e) => {
+          shadowRectangle.show();
+          shadowRectangle.moveToTop();
+          momento.moveToTop();
+        });
+        momento.on('dragend', (e) => {
+          momento.position({
+            x: Math.round(momento.x() / blockSnapSize) * blockSnapSize +15,
+            y: Math.round(momento.y() / blockSnapSize) * blockSnapSize + 15
+          });
+          stage.batchDraw();
+          shadowRectangle.hide();
+        });
+        momento.on('dragmove', (e) => {
+          shadowRectangle.position({
+            x: Math.round(momento.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(momento.y() / blockSnapSize) * blockSnapSize
+          });
+          stage.batchDraw();
+        });
+
+        var tr = new Konva.Transformer({
+          nodes: [momento],
+          centeredScaling: false,
+          resizeEnabled: false,
+        });
+        layer.add(tr);
+        layer.add(momento);
+        stage.on('click tap', function (e) {
+          if (e.target === momento) {
+            tr.nodes([momento]);
+          }
+          // if click on empty area - remove all selections
+          if (e.target === stage) {
+            tr.nodes([]);
+            return;
+          }
+
+          const metaPressed = e.evt.ctrlKey;
+          const isSelected = tr.nodes().indexOf(e.target) >= 0;
+
+          if (metaPressed && isSelected) {
+            // if we pressed keys and node was selected
+            // we need to remove it from selection:
+            tr.nodes([]);
+            const nodes = e.target.destroy(); // use slice to have new copy of array
+            // remove node from array
+          }
+        });
       }
       
       function toolBar(layer, stage) {
@@ -719,12 +795,44 @@
         layer.add(bielaText);
         // BIELA
 
+        //MOMENTO
+        let momento = new Konva.Arc({
+          x: largo - 37.5,
+          y: 400,
+          innerRadius: 10,
+          outerRadius: 20,
+          angle: 180,
+          fill: 'yellow',
+          stroke: 'black',
+          strokeWidth: 4,
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: false,
+        });
+        momento.on('pointerdown', function () {
+          newMomento(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
+        });
+
+        var momentoText = new Konva.Text({
+          x: largo - 57,
+          y: 425,
+          text: 'momento',
+          fontSize: 12,
+          fontFamily: 'Calibri',
+          fill: 'balck',
+        });
+        layer.add(momentoText);
+        //MOMENTO
+
         layer.add(arrow);
         layer.add(fijo);
         layer.add(deslizante);
         layer.add(empotrado);
         layer.add(rotula);
         layer.add(biela);
+        layer.add(momento);
 
       }
       
@@ -819,8 +927,8 @@
 						csrfmiddlewaretoken: "{{ csrf_token }}"
               		},
               		success: function (data) {
-						console.log(json)
-                		console.log("guardao");
+						        //console.log(json)
+                		console.log(JSON.parse(json)["children"][0]["children"]);
               		},
               		error: function (error) {
                 		console.log("guardaon't")
