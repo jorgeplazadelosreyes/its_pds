@@ -63,21 +63,6 @@
           strokeWidth: 0.5,
         }));
       }
-        
-      for(var j = 30; j < alto; j+=30){
-        for(var i = 30; i < largo - 70; i+=30){
-
-          var cir = new Konva.Circle({
-            x: i,
-            y: j,
-            radius: 4,
-            fill: 'grey',
-            name: 'node'
-          });
-
-          layer.add(cir);
-          }
-      }
 
 
       function newArrow(x, y, layer, stage) {
