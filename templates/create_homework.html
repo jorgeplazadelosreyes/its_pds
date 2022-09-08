@@ -1,0 +1,24 @@
+<div class="text-center">
+    <form action="" method='POST'>
+        {% csrf_token %}
+        <button id="hidden-json-input" name= "json" value="{{ json }}">Crear tarea</button>
+    </form>
+    <table>
+        <thead>
+          <th>Titulo</th>
+          <th>Dificultad</th>
+          <th>Editar</th>
+        </thead>
+        <tbody>
+            {% for homework in homeworks %}
+            <tr>
+                <td>{{ homework.id }}</td>
+                <td>{{ homework.difficulty }}</td>
+                <td>
+                    <input id="btn" type="button" style="float: left;" onclick="location.href='{% url 'edit_homework' homework_id=homework.id %}'" value = "Editar"></button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

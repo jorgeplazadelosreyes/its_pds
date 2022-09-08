@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="https://unpkg.com/konva@8.3.12/konva.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		
+		<meta charset="utf-8" />
+		<title>Etapa 1</title>
+		<h2 style="margin_down:20; outline: black solid; text-align:center">Aca saldra un enunciado </h2>
+		<style>
+			body {
+				margin_top: 20;
+				margin_left: 20;
+				overflow: hidden;
+				background-color: #f0f0f0;
+				outline: black solid
+			}
+		</style>
+  	</head>
+  	<body>
+		<h6 id="homework-details" data-homework-id="{{ homework.id }}" data-homework-diagram = "{{ homework.diagram }}"></h6>
+		<div id="container"></div>
+		<script>
+			var alto = window.innerHeight - 200;
+			var largo = window.innerWidth - 30;
+			var shadowOffset = 20;
+			var tween = null;
+			var blockSnapSize = 30;
+
+			var shadowRectangle = new Konva.Rect({
+				x: 0,
+				y: 0,
+				width: blockSnapSize,
+				height: blockSnapSize,
+				fill: '#FF7B17',
+				opacity: 0.6,
+				stroke: '#CF6412',
+				strokeWidth: 3,
+				dash: [20, 2]
+			});
+      
+			data = $("#homework-details").data("homeworkDiagram")
+
+			var stage = Konva.Node.create(data, "container")
+
+      /*const stage = new Konva.Stage({
+          container: 'container',
+          width: largo,
+          height: alto
+        });
+		*/
+      
+			var layer = new Konva.Layer();
+				
+			var padding = 30;
+			for (var i = 0; i < (largo / padding) - 2; i++) {
+				layer.add(new Konva.Line({
+					points: [Math.round(i * padding) + 0.5, 0, Math.round(i * padding) + 0.5, alto],
+					stroke: '#000000',
+					strokeWidth: 1,
+				}));
+			}
+			layer.add(new Konva.Line({points: [0,0,10,10]}));
+      
+			for (var j = 0; j < (largo / padding); j++) {
+				layer.add(new Konva.Line({
+					points: [0, Math.round(j * padding), largo - 85, Math.round(j * padding)],
+					stroke: '#000000',
+					strokeWidth: 0.5,
+				}));
+			}
+
+			function newArrow(x, y, layer, stage) {
+				var arrow = new Konva.Arrow({
+					x: x,
+					y: y,
+					points: [0, 0, 75, 0],
+					pointerLength: 2,
+					pointerWidth: 2,
+					fill: 'black',
+					stroke: 'black',
+					strokeWidth: 4,
+					shadowColor: 'black',
+					shadowBlur: 2,
+					shadowOffset: {x : 1, y : 1},
+					shadowOpacity: 0.4,
+					draggable: true,
+					rotation: 0
+				});
+
+				arrow.on('dragstart', (e) => {
+					shadowRectangle.show();
+					shadowRectangle.moveToTop();
+					arrow.moveToTop();
+				});
+				arrow.on('dragend', (e) => {
+				arrow.position({
+					x: (Math.round(arrow.x() / blockSnapSize) * blockSnapSize) ,
+					y: (Math.round(arrow.y() / blockSnapSize) * blockSnapSize),
+
+				});
+				stage.batchDraw();
+				shadowRectangle.hide();
+				});
+				arrow.on('dragmove', (e) => {
+				shadowRectangle.position({
+					x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize,
+					y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize
+				});
+				stage.batchDraw();
+				});
+
+				var tr = new Konva.Transformer({
+					nodes: [arrow],
+					centeredScaling: false,
+					resizeEnabled: true,
+					rotation: 0,
+				});
+				layer.add(tr);
+        
+        layer.add(arrow);
+        stage.on('click tap', function (e) {
+          if (e.target === arrow) {
+            tr.nodes([arrow]);
+          }
+          // if click on empty area - remove all selections
+          if (e.target === stage) {
+            tr.nodes([]);
+            return;
+          }
+
+          const metaPressed = e.evt.ctrlKey;
+          const isSelected = tr.nodes().indexOf(e.target) >= 0;
+
+          if (metaPressed && isSelected) {
+            // if we pressed keys and node was selected
+            // we need to remove it from selection:
+            tr.nodes([]);
+            const nodes = e.target.destroy(); // use slice to have new copy of array
+            // remove node from array
+          }
+        });
+
+      }
+
+      function newFijo(x, y, layer, stage) {
+        let fijo = new Konva.RegularPolygon({
+          x: x,
+          y: y,
+          sides: 3,
+          radius: 15,
+          fill: 'grey',
+          stroke: 'black',
+          strokeWidth: 2,
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: true
+        });
+        fijo.on('dragstart', (e) => {
+          shadowRectangle.show();
+          shadowRectangle.moveToTop();
+          fijo.moveToTop();
+        });
+        fijo.on('dragend', (e) => {
+          fijo.position({
+            x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize +15,
+            y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize + 15
+          });
+          stage.batchDraw();
+          shadowRectangle.hide();
+        });
+        fijo.on('dragmove', (e) => {
+          shadowRectangle.position({
+            x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize
+          });
+          stage.batchDraw();
+        });
+
+        var tr = new Konva.Transformer({
+          nodes: [fijo],
+          centeredScaling: false,
+          resizeEnabled: false,
+        });
+        layer.add(tr);
+        layer.add(fijo);
+        stage.on('click tap', function (e) {
+          if (e.target === fijo) {
+            tr.nodes([fijo]);
+          }
+          // if click on empty area - remove all selections
+          if (e.target === stage) {
+            tr.nodes([]);
+            return;
+          }
+
+          const metaPressed = e.evt.ctrlKey;
+          const isSelected = tr.nodes().indexOf(e.target) >= 0;
+
+          if (metaPressed && isSelected) {
+            // if we pressed keys and node was selected
+            // we need to remove it from selection:
+            tr.nodes([]);
+            const nodes = e.target.destroy(); // use slice to have new copy of array
+            // remove node from array
+          }
+        });
+      }
+
+      function newDeslizante(x, y, layer, stage) {
+        var deslizante = new Konva.Group({
+          x: x,
+          y: y,
+
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: true
+        });
+
+        var deslizanteT = new Konva.RegularPolygon({
+          x: 15,
+          y: -13,
+          sides: 3,
+          radius: 15,
+          fill: 'gray',
+          stroke: 'black',
+          strokeWidth: 2,
+        });
+
+        var deslizanteL = new Konva.Line({
+          points: [0, 0, 30, 0],
+          stroke: 'red',
+          strokeWidth: 4,
+          lineCap: 'round',
+          lineJoin: 'round',
+         
+        });
+        deslizante.add(deslizanteT);
+        deslizante.add(deslizanteL);
+
+        deslizante.on('dragstart', (e) => {
+          shadowRectangle.show();
+          shadowRectangle.moveToTop();
+          deslizante.moveToTop();
+        });
+        deslizante.on('dragend', (e) => {
+          deslizante.position({
+            x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(deslizante.y() / blockSnapSize) * blockSnapSize + 30
+          });
+          stage.batchDraw();
+          shadowRectangle.hide();
+        });
+        deslizante.on('dragmove', (e) => {
+          shadowRectangle.position({
+            x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(deslizante.y() / blockSnapSize) * blockSnapSize
+          });
+          stage.batchDraw();
+        });
+        var tr = new Konva.Transformer({
+          nodes: [deslizante],
+          centeredScaling: false,
+          resizeEnabled: false,
+        });
+        layer.add(tr);
+        layer.add(deslizante);
+        stage.on('click tap', function (e) {
+          if (e.target === deslizante) {
+            tr.nodes([deslizante]);
+          }
+          // if click on empty area - remove all selections
+          if (e.target === stage) {
+            tr.nodes([]);
+            return;
+          }
+
+          const metaPressed = e.evt.ctrlKey;
+          const isSelected = tr.nodes().indexOf(e.target) >= 0;
+
+          if (metaPressed && isSelected) {
+            // if we pressed keys and node was selected
+            // we need to remove it from selection:
+            tr.nodes([]);
+            const nodes = e.target.destroy(); // use slice to have new copy of array
+            // remove node from array
+          }
+        });
+      }
+
+      function newEmpotrado(x, y, layer, stage) {
+        var empotrado= new Konva.Group({
+          x: x,
+          y: y,
+
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: true
+        });
+
+        var empotrado1 = new Konva.Line({
+          points: [15, 0, 15, -25],
+          stroke: 'red',
+          strokeWidth: 4,
+          lineCap: 'round',
+          lineJoin: 'round',
+          
+        });
+
+        var empotrado2 = new Konva.Line({
+          points: [0, 0, 30, 0],
+          stroke: 'red',
+          strokeWidth: 4,
+          lineCap: 'round',
+          lineJoin: 'round',
+          
+        });
+        empotrado.add(empotrado1);
+        empotrado.add(empotrado2);
+
+        empotrado.on('dragstart', (e) => {
+          shadowRectangle.show();
+          shadowRectangle.moveToTop();
+          empotrado.moveToTop();
+        });
+        empotrado.on('dragend', (e) => {
+          empotrado.position({
+            x: Math.round(empotrado.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(empotrado.y() / blockSnapSize) * blockSnapSize + 30
+          });
+          stage.batchDraw();
+          shadowRectangle.hide();
+        });
+        empotrado.on('dragmove', (e) => {
+          shadowRectangle.position({
+            x: Math.round(empotrado.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(empotrado.y() / blockSnapSize) * blockSnapSize
+          });
+          stage.batchDraw();
+        });
+        var tr = new Konva.Transformer({
+          nodes: [empotrado],
+          centeredScaling: false,
+          resizeEnabled: false,
+        });
+        layer.add(tr);
+        layer.add(empotrado);
+        stage.on('click tap', function (e) {
+          if (e.target === empotrado) {
+            tr.nodes([empotrado]);
+          }
+          // if click on empty area - remove all selections
+          if (e.target === stage) {
+            tr.nodes([]);
+            return;
+          }
+
+          const metaPressed = e.evt.ctrlKey;
+          const isSelected = tr.nodes().indexOf(e.target) >= 0;
+
+          if (metaPressed && isSelected) {
+            // if we pressed keys and node was selected
+            // we need to remove it from selection:
+            tr.nodes([]);
+            const nodes = e.target.destroy(); // use slice to have new copy of array
+            // remove node from array
+          }
+        });
+      }
+
+      function newRotula(x, y, layer, stage) {
+
+        var rotula = new Konva.Circle({
+          x: x,
+          y: y,
+          radius: 7.5,
+          fill: 'red',
+          stroke: 'black',
+          strokeWidth: 2,
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: true
+        });
+
+        rotula.on('dragstart', (e) => {
+          shadowRectangle.show();
+          shadowRectangle.moveToTop();
+          rotula.moveToTop();
+        });
+        rotula.on('dragend', (e) => {
+          rotula.position({
+            x: Math.round(rotula.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(rotula.y() / blockSnapSize) * blockSnapSize + 30
+          });
+          stage.batchDraw();
+          shadowRectangle.hide();
+        });
+        rotula.on('dragmove', (e) => {
+          shadowRectangle.position({
+            x: Math.round(rotula.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(rotula.y() / blockSnapSize) * blockSnapSize
+          });
+          stage.batchDraw();
+        });
+        layer.add(rotula);
+        
+      }
+
+      function newBiela(x, y, layer, stage) {
+
+        var b1 = new Konva.Circle({
+          x: x,
+          y: y,
+          radius: 7.5,
+          fill: 'green',
+          stroke: 'black',
+          strokeWidth: 2,
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: true
+        });
+
+        var b2 = new Konva.Circle({
+          x: x+30,
+          y: y,
+          radius: 7.5,
+          fill: 'green',
+          stroke: 'black',
+          strokeWidth: 2,
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: true
+        });
+
+        const line = new Konva.Line({
+          points: [x, y, x+30, y],
+          stroke: 'green'
+        });
+
+        b1.on('dragstart', (e) => {
+          shadowRectangle.show();
+          shadowRectangle.moveToTop();
+          b1.moveToTop();
+        });
+        b1.on('dragend', (e) => {
+          b1.position({
+            x: Math.round(b1.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(b1.y() / blockSnapSize) * blockSnapSize
+          });
+          stage.batchDraw();
+          shadowRectangle.hide();
+        });
+        b1.on('dragmove', (e) => {
+          shadowRectangle.position({
+            x: Math.round(b1.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(b1.y() / blockSnapSize) * blockSnapSize
+          });
+          stage.batchDraw();
+        });
+
+        b2.on('dragstart', (e) => {
+          shadowRectangle.show();
+          shadowRectangle.moveToTop();
+          b2.moveToTop();
+        });
+        b2.on('dragend', (e) => {
+          b2.position({
+            x: Math.round(b2.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(b2.y() / blockSnapSize) * blockSnapSize
+          });
+          stage.batchDraw();
+          shadowRectangle.hide();
+        });
+        b2.on('dragmove', (e) => {
+          shadowRectangle.position({
+            x: Math.round(b2.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(b2.y() / blockSnapSize) * blockSnapSize
+          });
+          stage.batchDraw();
+        });
+
+        function updateLine() {
+          const points = [
+            b1.x(),
+            b1.y(),
+            b2.x(),
+            b2.y(),
+          ]
+          line.points(points);
+          layer.batchDraw();
+        }
+
+        function updateLineEnd() {
+          const points = [
+            Math.round(b1.x() / blockSnapSize) * blockSnapSize,
+            Math.round(b1.y() / blockSnapSize) * blockSnapSize,
+            Math.round(b2.x() / blockSnapSize) * blockSnapSize,
+            Math.round(b2.y() / blockSnapSize) * blockSnapSize
+          ]
+          line.points(points);
+          layer.batchDraw();
+        }
+
+        b1.on('dragmove', updateLine);
+        b2.on('dragmove', updateLine);
+
+        b1.on('dragend', updateLine);
+        b2.on('dragend', updateLine);
+
+        layer.add(line);
+        layer.add(b1);
+        layer.add(b2);
+      }
+      
+      function toolBar(layer, stage) {
+        // PRETTY
+        var separadorTool = new Konva.Line({
+          points: [largo - 85, 0, largo - 85, 600],
+          stroke: 'red',
+          strokeWidth: 4,
+          lineCap: 'round',
+          lineJoin: 'round',
+          
+        });
+        layer.add(separadorTool)
+        
+        // ARROW
+        let arrow = new Konva.Arrow({
+          x: largo - 37.5,
+          y: 35,
+          points: [0, 0, 20, 10],
+          pointerLength: 2,
+          pointerWidth: 2,
+          rotation: 62,
+          fill: 'black',
+          stroke: 'black',
+          strokeWidth: 4,
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: false,
+        });
+        arrow.on('pointerdown', function () {
+          newArrow(blockSnapSize * 17, blockSnapSize * 3, layer, stage, 62, 15, 0);
+        });
+
+        var arrowText = new Konva.Text({
+          x: largo - 52,
+          y: 65,
+          text: 'Fuerza',
+          fontSize: 12,
+          fontFamily: 'Calibri',
+          fill: 'balck',
+        });
+        layer.add(arrowText);
+        // ARROW
+        // FIJO
+        var fijo = new Konva.RegularPolygon({
+          x: largo - 35,
+          y: 110,
+          sides: 3,
+          radius: 15,
+          fill: 'gray',
+          stroke: 'black',
+          strokeWidth: 2,
+        });
+        fijo.on('pointerdown', function () {
+          newFijo(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
+        });
+
+        var fijoText = new Konva.Text({
+          x: largo - 43,
+          y: 125,
+          text: 'Fijo',
+          fontSize: 12,
+          fontFamily: 'Calibri',
+          fill: 'balck',
+        });
+        layer.add(fijoText);
+        // FIJO
+        // DESLIZANTE
+        var deslizante = new Konva.Group({
+          x: largo - 50,
+          y: 180,
+        });
+
+        var deslizanteT = new Konva.RegularPolygon({
+          x: 15,
+          y: -10,
+          sides: 3,
+          radius: 15,
+          fill: 'gray',
+          stroke: 'black',
+          strokeWidth: 2,
+        });
+
+        var deslizanteL = new Konva.Line({
+          points: [0, 0, 30, 0],
+          stroke: 'red',
+          strokeWidth: 4,
+          lineCap: 'round',
+          lineJoin: 'round',
+          
+        });
+
+        deslizante.add(deslizanteT);
+        deslizante.add(deslizanteL);
+
+        deslizante.on('pointerdown', function () {
+          newDeslizante(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
+        });
+        var deslizanteText = new Konva.Text({
+          x: largo - 60,
+          y: 185,
+          text: 'Deslizante',
+          fontSize: 12,
+          fontFamily: 'Calibri',
+          fill: 'balck',
+        });
+        layer.add(deslizanteText);
+        // DESLIZANTE
+        // EMPOTRADO
+        var empotrado = new Konva.Group({
+          x: largo - 50,
+          y: 240,
+        });
+
+        var empotrado1 = new Konva.Line({
+          points: [15, 0, 15, -25],
+          stroke: 'red',
+          strokeWidth: 4,
+          lineCap: 'round',
+          lineJoin: 'round',
+          
+        });
+
+        var empotrado2 = new Konva.Line({
+          points: [0, 0, 30, 0],
+          stroke: 'red',
+          strokeWidth: 4,
+          lineCap: 'round',
+          lineJoin: 'round',
+          
+        });
+
+        empotrado.add(empotrado1);
+        empotrado.add(empotrado2);
+
+        empotrado.on('pointerdown', function () {
+          newEmpotrado(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
+        });
+        var empotradoText = new Konva.Text({
+          x: largo - 80,
+          y: 245,
+          text: 'Empotramiento',
+          fontSize: 12,
+          fontFamily: 'Calibri',
+          fill: 'balck',
+        });
+        layer.add(empotradoText);
+        // EMPOTRADO
+        // ROTULA
+        var rotula = new Konva.Circle({
+          x: largo - 35,
+          y: 285,
+          radius: 7.5,
+          fill: 'red',
+          stroke: 'black',
+          strokeWidth: 2,
+        });
+
+        rotula.on('pointerdown', function () {
+          newRotula(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
+        });
+        var rotulaText = new Konva.Text({
+          x: largo - 50,
+          y: 305,
+          text: 'Rotula',
+          fontSize: 12,
+          fontFamily: 'Calibri',
+          fill: 'balck',
+        });
+        layer.add(rotulaText);
+        // ROTULA
+        // BIELA
+        var biela = new Konva.Circle({
+          x: largo - 35,
+          y: 345,
+          radius: 7.5,
+          fill: 'green',
+          stroke: 'black',
+          strokeWidth: 2,
+        });
+
+        biela.on('pointerdown', function () {
+          newBiela(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
+        });
+        var bielaText = new Konva.Text({
+          x: largo - 50,
+          y: 365,
+          text: 'Biela',
+          fontSize: 12,
+          fontFamily: 'Calibri',
+          fill: 'balck',
+        });
+        layer.add(bielaText);
+        // BIELA
+
+        layer.add(arrow);
+        layer.add(fijo);
+        layer.add(deslizante);
+        layer.add(empotrado);
+        layer.add(rotula);
+        layer.add(biela);
+
+      }
+      
+      
+      
+        let drawingLine = false;
+        let line;
+        stage.on('mousedown', (e) => {
+          if (e.target.hasName('node')) {
+            drawingLine = true;
+            const pos = stage.getPointerPosition();
+            line = new Konva.Line({
+              stroke: 'black',
+              strokeWidth: 7,
+              // remove line from hit graph, so we can check intersections
+              listening: false,
+              points: [e.target.x(), e.target.y(), pos.x, pos.y]
+            });
+            layer.add(line);
+          }
+        });
+        
+        stage.on('mouseover', (e) => {
+          if (e.target.hasName('node')) {
+            e.target.stroke('black');
+            layer.draw();
+          }
+        });
+        
+        stage.on('mouseout', (e) => {
+          if (e.target.hasName('node')) {
+            e.target.stroke(null);
+            layer.draw();
+          }
+        });
+        
+        stage.on('mousemove', (e) => {
+          if (!line) {
+            return;
+          }
+          const pos = stage.getPointerPosition();
+          const points = line.points().slice();
+          points[2] = pos.x;
+          points[3] = pos.y;
+          line.points(points);
+          layer.batchDraw();
+        });
+        
+        stage.on('mouseup', (e) => {
+          if (!line) {
+            return;
+          }
+          if (!e.target.hasName('node')) {
+            line.destroy();
+            layer.draw();
+            line = null;
+          } else {
+            let pos = e.target.getClientRect();
+            const points = line.points().slice();
+            points[2] = pos.x + (e.target.width()/2);
+            points[3] = pos.y + (e.target.height()/2);;
+            line.points(points);
+            layer.batchDraw();
+            line = null;
+          }
+          
+        });
+
+        shadowRectangle.hide();
+        layer.add(shadowRectangle);
+
+        toolBar( layer, stage);
+        
+        stage.add(layer);
+        layer.draw();
+    </script>
+    <div>
+        <input id="btn" type="button" style="float: left;" value = "Guardar"></button>
+		<input  style="float: right;" >
+        <script> 
+        $(document).ready(function () {
+			let json = stage.toJSON();
+			let homework_id = $("#homework-details").data("homeworkId")
+			let btn2 = document.getElementById("btn");
+			btn2.addEventListener('click', event => {
+				$.ajax({
+					url: `/homework/${homework_id}/`,
+              		type: "POST",
+              		data:{
+                		"diagram": json,
+                		"id": homework_id,
+						csrfmiddlewaretoken: "{{ csrf_token }}"
+              		},
+              		success: function (data) {
+						console.log(json)
+                		console.log("guardao");
+              		},
+              		error: function (error) {
+                		console.log("guardaon't")
+              		}
+            	});
+          	})
+        });
+        </script>
+    </div>
+  </body>
+</html>
