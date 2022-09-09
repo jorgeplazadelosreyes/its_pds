@@ -19,6 +19,7 @@
   	</head>
   	<body>
 		<h6 id="homework-details" data-homework-id="{{ homework.id }}" data-homework-diagram = "{{ homework.diagram }}"></h6>
+    
 		<div id="container"></div>
 		<script>
 			var alto = window.innerHeight - 200;
@@ -42,6 +43,43 @@
 			data = $("#homework-details").data("homeworkDiagram")
 
 			//var stage = Konva.Node.create(data, "container")
+
+      function loadForm(json){
+        /*
+        layer.find('Line').destroy();
+        layer.find('Circle').destroy();
+        layer.find('Arrow').destroy();
+        layer.draw();
+        */
+        console.log("equis de");
+        
+        console.log(layer)
+        
+        console.log(json)
+        objects=json["children"][0]["children"]
+        console.log(objects["length"])
+        
+        for (var i = 0; i<objects["length"]; i++){
+            console.log(objects[i]["className"]);
+            
+            //console.log(objects[i]["attrs"]["name"]);
+            
+            if(objects[i]["className"]=="Arc"){
+                if(objects[i]["attrs"]["name"]=='momento'){
+                    item=objects[i]
+                    console.log("obj: ",item);
+                    console.log(item["attrs"]["x"], item["attrs"]["y"])
+                    newMomento(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
+                }
+            } 
+
+          
+        }
+      }
+
+      console.log("data entrandte:");
+      console.log(data["children"][0]["children"]);
+      console.log("fin");
 
       const stage = new Konva.Stage({
           container: 'container',
@@ -631,6 +669,8 @@
         });
         arrow.on('pointerdown', function () {
           newArrow(blockSnapSize * 17, blockSnapSize * 3, layer, stage, 62, 15, 0);
+          //let json = stage.toJSON();
+          //console.log(JSON.parse(json)["children"][0]["children"])
         });
 
         var arrowText = new Konva.Text({
@@ -904,20 +944,23 @@
         shadowRectangle.hide();
         layer.add(shadowRectangle);
 
-        toolBar( layer, stage);
+        toolBar(layer, stage);
+        loadForm(data);
         
         stage.add(layer);
         layer.draw();
     </script>
     <div>
         <input id="btn" type="button" style="float: left;" value = "Guardar"></button>
-		<input  style="float: right;" >
-        <script> 
-        $(document).ready(function () {
-			let json = stage.toJSON();
+		
+      <script> 
+      $(document).ready(function () {
+			
 			let homework_id = $("#homework-details").data("homeworkId")
 			let btn2 = document.getElementById("btn");
 			btn2.addEventListener('click', event => {
+
+        let json = stage.toJSON();
 				$.ajax({
 					url: `/homework/${homework_id}/`,
               		type: "POST",
@@ -927,7 +970,7 @@
 						csrfmiddlewaretoken: "{{ csrf_token }}"
               		},
               		success: function (data) {
-						        //console.log(json)
+						        console.log("guardo")
                 		console.log(JSON.parse(json)["children"][0]["children"]);
               		},
               		error: function (error) {
