@@ -49,7 +49,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-CSRF_TRUSTED_ORIGINS=['https://*']
+CSRF_TRUSTED_ORIGINS=['https://itsjlp.herokuapp.com']
 
 ROOT_URLCONF = "its.urls"
 
