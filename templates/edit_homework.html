@@ -71,6 +71,38 @@
                     console.log(item["attrs"]["x"], item["attrs"]["y"])
                     newMomento(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
                 }
+            }
+            if(objects[i]["className"]=="Arrow"){
+              if(objects[i]["attrs"]["name"]=='arrow'){
+                  item=objects[i]
+                  newArrow(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
+              }
+            }
+            if(objects[i]["className"]=="RegularPolygon"){
+              if(objects[i]["attrs"]["name"]=='fijo'){
+                  item=objects[i]
+                  newFijo(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
+              }
+            }
+            if(objects[i]["className"]=="Group"){
+              if(objects[i]["attrs"]["name"]=='deslizante'){
+                  item=objects[i]
+                  newDeslizante(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
+              }
+              else if(objects[i]["attrs"]["name"]=='empotrado'){
+                item=objects[i]
+                newEmpotrado(item["attrs"]["x"], item["attrs"]["y"], layer, stage) 
+              }
+            }
+            if(objects[i]["className"]=="Circle"){
+              if(objects[i]["attrs"]["name"]=='rotula'){
+                item=objects[i]
+                newRotula(item["attrs"]["x"], item["attrs"]["y"], layer, stage) 
+              }
+              else if(objects[i]["attrs"]["name"]=='biela'){
+                item=objects[i]
+                newBiela(item["attrs"]["x"], item["attrs"]["y"], layer, stage) 
+              }
             } 
 
           
