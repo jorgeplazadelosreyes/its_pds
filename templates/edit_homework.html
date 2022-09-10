@@ -69,29 +69,30 @@
                   item=objects[i]
                   console.log("obj: ",item);
                   console.log(item["attrs"]["x"], item["attrs"]["y"])
-                  newMomento(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
-              }
+                  newMomento(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage)
+                  
+                }
           }
           if(objects[i]["className"]=="Arrow"){
             if(objects[i]["attrs"]["name"]=='arrow'){
                 item=objects[i]
-                newArrow(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
+                newArrow(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage)
             }
           }
           if(objects[i]["className"]=="RegularPolygon"){
             if(objects[i]["attrs"]["name"]=='fijo'){
                 item=objects[i]
-                newFijo(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
+                newFijo(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage)
             }
           }
           if(objects[i]["className"]=="Group"){
             if(objects[i]["attrs"]["name"]=='deslizante'){
                 item=objects[i]
-                newDeslizante(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
+                newDeslizante(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage)
             }
             else if(objects[i]["attrs"]["name"]=='empotrado'){
               item=objects[i]
-              newEmpotrado(item["attrs"]["x"], item["attrs"]["y"], layer, stage) 
+              newEmpotrado(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage) 
             }
           }
           if(objects[i]["className"]=="Circle" || objects[i]["className"]=="Line"){
@@ -145,7 +146,7 @@
 				}));
 			}
 
-			function newArrow(x, y, layer, stage) {
+			function newArrow(x, y, rotation, layer, stage) {
 				var arrow = new Konva.Arrow({
 					x: x,
 					y: y,
@@ -162,6 +163,7 @@
 					draggable: true,
 					rotation: 0,
           name: "arrow",
+          rotation: rotation,
 				});
 
 				arrow.on('dragstart', (e) => {
@@ -221,7 +223,7 @@
 
       }
 
-      function newFijo(x, y, layer, stage) {
+      function newFijo(x, y, rotation, layer, stage) {
         let fijo = new Konva.RegularPolygon({
           x: x,
           y: y,
@@ -236,6 +238,7 @@
           shadowOpacity: 0.4,
           draggable: true,
           name: "fijo",
+          rotation: rotation,
         });
         fijo.on('dragstart', (e) => {
           shadowRectangle.show();
@@ -290,7 +293,7 @@
         });
       }
 
-      function newDeslizante(x, y, layer, stage) {
+      function newDeslizante(x, y, rotation, layer, stage) {
         var deslizante = new Konva.Group({
           x: x,
           y: y,
@@ -301,6 +304,7 @@
           shadowOpacity: 0.4,
           draggable: true,
           name: "deslizante",
+          rotation: rotation,
         });
 
         var deslizanteT = new Konva.RegularPolygon({
@@ -376,7 +380,7 @@
         });
       }
 
-      function newEmpotrado(x, y, layer, stage) {
+      function newEmpotrado(x, y, rotation, layer, stage) {
         var empotrado= new Konva.Group({
           x: x,
           y: y,
@@ -387,6 +391,7 @@
           shadowOpacity: 0.4,
           draggable: true,
           name: "empotrado",
+          rotation: rotation,
         });
 
         var empotrado1 = new Konva.Line({
@@ -659,8 +664,8 @@
         
       }
     
-
-      function newMomento(x, y, layer, stage) {
+      function newMomento(x, y, rotation, layer, stage) {
+        
         let momento = new Konva.Arc({
           x: x,
           y: y,
@@ -676,6 +681,7 @@
           shadowOpacity: 0.4,
           draggable: true,
           name: "momento",
+          rotation: rotation,
         });
         momento.on('dragstart', (e) => {
           shadowRectangle.show();
@@ -758,7 +764,7 @@
           draggable: false,
         });
         arrow.on('pointerdown', function () {
-          newArrow(blockSnapSize * 17, blockSnapSize * 3, layer, stage, 62, 15, 0);
+          newArrow(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, 62, 15, 0);
           //let json = stage.toJSON();
           //console.log(JSON.parse(json)["children"][0]["children"])
         });
@@ -784,7 +790,7 @@
           strokeWidth: 2,
         });
         fijo.on('pointerdown', function () {
-          newFijo(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
+          newFijo(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage);
         });
 
         var fijoText = new Konva.Text({
@@ -826,7 +832,7 @@
         deslizante.add(deslizanteL);
 
         deslizante.on('pointerdown', function () {
-          newDeslizante(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
+          newDeslizante(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage);
         });
         var deslizanteText = new Konva.Text({
           x: largo - 60,
@@ -866,7 +872,7 @@
         empotrado.add(empotrado2);
 
         empotrado.on('pointerdown', function () {
-          newEmpotrado(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
+          newEmpotrado(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage);
         });
         var empotradoText = new Konva.Text({
           x: largo - 80,
@@ -942,7 +948,7 @@
           draggable: false,
         });
         momento.on('pointerdown', function () {
-          newMomento(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
+          newMomento(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage);
         });
 
         var momentoText = new Konva.Text({
