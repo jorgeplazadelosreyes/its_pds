@@ -200,7 +200,7 @@
 				var tr = new Konva.Transformer({
 					nodes: [arrow],
 					centeredScaling: false,
-					resizeEnabled: true,
+					resizeEnabled: false,
 					rotation: 0,
           rotationSnaps: [0, 45, 90, 135, 180, 225, 270, 315, 360],
           rotationSnapTolerance: 22.5,
@@ -367,7 +367,7 @@
         layer.add(tr);
         layer.add(deslizante);
         stage.on('click tap', function (e) {
-          if (e.target === deslizante) {
+          if (e.target === deslizanteT) {
             tr.nodes([deslizante]);
           }
           // if click on empty area - remove all selections
@@ -454,7 +454,7 @@
         layer.add(tr);
         layer.add(empotrado);
         stage.on('click tap', function (e) {
-          if (e.target === empotrado) {
+          if (e.target === empotrado1 || e.target === empotrado2) {
             tr.nodes([empotrado]);
           }
           // if click on empty area - remove all selections
