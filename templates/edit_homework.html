@@ -191,6 +191,8 @@
 					centeredScaling: false,
 					resizeEnabled: true,
 					rotation: 0,
+          rotationSnaps: [0, 45, 90, 135, 180, 225, 270, 315, 360],
+          rotationSnapTolerance: 22.5,
 				});
 				layer.add(tr);
         
@@ -260,6 +262,8 @@
           nodes: [fijo],
           centeredScaling: false,
           resizeEnabled: false,
+          rotationSnaps: [0, 90, 180, 270],
+          rotationSnapTolerance: 45,
         });
         layer.add(tr);
         layer.add(fijo);
@@ -344,6 +348,8 @@
           nodes: [deslizante],
           centeredScaling: false,
           resizeEnabled: false,
+          rotationSnaps: [0, 90, 180, 270],
+          rotationSnapTolerance: 45,
         });
         layer.add(tr);
         layer.add(deslizante);
@@ -427,6 +433,9 @@
           nodes: [empotrado],
           centeredScaling: false,
           resizeEnabled: false,
+          rotationSnaps: [0, 90, 180, 270],
+          rotationSnapTolerance: 45,
+        
         });
         layer.add(tr);
         layer.add(empotrado);
