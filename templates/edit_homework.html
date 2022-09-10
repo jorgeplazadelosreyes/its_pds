@@ -602,6 +602,49 @@
         layer.add(b2);
       }
 
+      function newBarra(x, y, layer, stage) {
+        var barra = new Konva.Rect({
+          x: x,
+          y: y,
+          width: 30,
+          height: 30,
+          fill: 'gray',
+          stroke: 'black',
+          strokeWidth: 1,
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: true,
+          name: "barra",
+        });
+
+        barra.on('dragstart', (e) => {
+          shadowRectangle.show();
+          shadowRectangle.moveToTop();
+          barra.moveToTop();
+        });
+        barra.on('dragend', (e) => {
+          barra.position({
+            x: Math.round(barra.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(barra.y() / blockSnapSize) * blockSnapSize
+          });
+          stage.batchDraw();
+          shadowRectangle.hide();
+        });
+        barra.on('dragmove', (e) => {
+          shadowRectangle.position({
+            x: Math.round(barra.x() / blockSnapSize) * blockSnapSize,
+            y: Math.round(barra.y() / blockSnapSize) * blockSnapSize
+          });
+          stage.batchDraw();
+        });
+
+        layer.add(barra);
+        
+      }
+    
+
       function newMomento(x, y, layer, stage) {
         let momento = new Konva.Arc({
           x: x,
@@ -898,6 +941,37 @@
         layer.add(momentoText);
         //MOMENTO
 
+        //BARRA
+        let barra = new Konva.Rect({
+          x: largo -50,
+          y: 450,
+          width: 25,
+          height: 25,
+          
+          fill: 'gray',
+          stroke: 'black',
+          strokeWidth: 3,
+          shadowColor: 'black',
+          shadowBlur: 2,
+          shadowOffset: {x : 1, y : 1},
+          shadowOpacity: 0.4,
+          draggable: false,
+        });
+        barra.on('pointerdown', function () {
+          newBarra(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
+        });
+
+        var barraText = new Konva.Text({
+          x: largo - 50,
+          y: 480,
+          text: 'barra',
+          fontSize: 12,
+          fontFamily: 'Calibri',
+          fill: 'balck',
+        });
+        layer.add(barraText);
+        //BARRA
+
         layer.add(arrow);
         layer.add(fijo);
         layer.add(deslizante);
@@ -905,6 +979,7 @@
         layer.add(rotula);
         layer.add(biela);
         layer.add(momento);
+        layer.add(barra);
 
       }
       
