@@ -60,53 +60,58 @@
         console.log(objects["length"])
         
         for (var i = 0; i<objects["length"]; i++){
-            console.log(objects[i]["className"]);
-            
-            //console.log(objects[i]["attrs"]["name"]);
-            
-            if(objects[i]["className"]=="Arc"){
-                if(objects[i]["attrs"]["name"]=='momento'){
-                    item=objects[i]
-                    console.log("obj: ",item);
-                    console.log(item["attrs"]["x"], item["attrs"]["y"])
-                    newMomento(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
-                }
-            }
-            if(objects[i]["className"]=="Arrow"){
-              if(objects[i]["attrs"]["name"]=='arrow'){
-                  item=objects[i]
-                  newArrow(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
-              }
-            }
-            if(objects[i]["className"]=="RegularPolygon"){
-              if(objects[i]["attrs"]["name"]=='fijo'){
-                  item=objects[i]
-                  newFijo(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
-              }
-            }
-            if(objects[i]["className"]=="Group"){
-              if(objects[i]["attrs"]["name"]=='deslizante'){
-                  item=objects[i]
-                  newDeslizante(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
-              }
-              else if(objects[i]["attrs"]["name"]=='empotrado'){
-                item=objects[i]
-                newEmpotrado(item["attrs"]["x"], item["attrs"]["y"], layer, stage) 
-              }
-            }
-            if(objects[i]["className"]=="Circle"){
-              if(objects[i]["attrs"]["name"]=='rotula'){
-                item=objects[i]
-                newRotula(item["attrs"]["x"], item["attrs"]["y"], layer, stage) 
-              }
-              else if(objects[i]["attrs"]["name"]=='biela'){
-                item=objects[i]
-                newBiela(item["attrs"]["x"], item["attrs"]["y"], layer, stage) 
-              }
-            } 
-
+          console.log(objects[i]["className"]);
           
-        }
+          //console.log(objects[i]["attrs"]["name"]);
+          
+          if(objects[i]["className"]=="Arc"){
+              if(objects[i]["attrs"]["name"]=='momento'){
+                  item=objects[i]
+                  console.log("obj: ",item);
+                  console.log(item["attrs"]["x"], item["attrs"]["y"])
+                  newMomento(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
+              }
+          }
+          if(objects[i]["className"]=="Arrow"){
+            if(objects[i]["attrs"]["name"]=='arrow'){
+                item=objects[i]
+                newArrow(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
+            }
+          }
+          if(objects[i]["className"]=="RegularPolygon"){
+            if(objects[i]["attrs"]["name"]=='fijo'){
+                item=objects[i]
+                newFijo(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
+            }
+          }
+          if(objects[i]["className"]=="Group"){
+            if(objects[i]["attrs"]["name"]=='deslizante'){
+                item=objects[i]
+                newDeslizante(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
+            }
+            else if(objects[i]["attrs"]["name"]=='empotrado'){
+              item=objects[i]
+              newEmpotrado(item["attrs"]["x"], item["attrs"]["y"], layer, stage) 
+            }
+          }
+          if(objects[i]["className"]=="Circle" || objects[i]["className"]=="Line"){
+            if(objects[i]["attrs"]["name"]=='rotula'){
+              item=objects[i]
+              newRotula(item["attrs"]["x"], item["attrs"]["y"], layer, stage) 
+            }
+            else if(objects[i]["attrs"]["name"]=='biela1'){
+              item=objects[i]
+              x1 = item["attrs"]["x"]
+              y1 = item["attrs"]["y"]
+            }
+            else if(objects[i]["attrs"]["name"]=='biela2'){
+              item=objects[i]
+              x2 = item["attrs"]["x"]
+              y2 = item["attrs"]["y"]
+              newBiela(x1,y1,x2,y2,layer,stage)
+            }
+          }
+        }   
       }
 
       console.log("data entrandte:");
@@ -488,43 +493,42 @@
         layer.add(rotula);
         
       }
-
-      function newBiela(x, y, layer, stage) {
+      function newBiela(x1, y1, x2=x1+30, y2=y1, layer, stage) {
 
         var b1 = new Konva.Circle({
-          x: x,
-          y: y,
+          x: x1,
+          y: y1,
           radius: 7.5,
           fill: 'green',
           stroke: 'black',
           strokeWidth: 2,
           shadowColor: 'black',
           shadowBlur: 2,
-          shadowOffset: {x : 1, y : 1},
+          shadowOffset: {x1 : 1, y1 : 1},
           shadowOpacity: 0.4,
           draggable: true,
-          name: "biela"
+          name: "biela1"
         });
 
         var b2 = new Konva.Circle({
-          x: x+30,
-          y: y,
+          x: x2,
+          y: y2,
           radius: 7.5,
           fill: 'green',
           stroke: 'black',
           strokeWidth: 2,
           shadowColor: 'black',
           shadowBlur: 2,
-          shadowOffset: {x : 1, y : 1},
+          shadowOffset: {x2 : 1, y2 : 1},
           shadowOpacity: 0.4,
           draggable: true,
-          name: "biela"
+          name: "biela2"
         });
 
         const line = new Konva.Line({
-          points: [x, y, x+30, y],
+          points: [x1,y1,x2,y2],
           stroke: 'green',
-          name: "biela"
+          name: "bielaL"
         });
 
         b1.on('dragstart', (e) => {
@@ -596,7 +600,9 @@
 
         b1.on('dragend', updateLine);
         b2.on('dragend', updateLine);
-
+        
+        console.log("LINEA")
+        console.log(line)
         layer.add(line);
         layer.add(b1);
         layer.add(b2);
@@ -897,7 +903,7 @@
         });
 
         biela.on('pointerdown', function () {
-          newBiela(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
+          newBiela(blockSnapSize * 17, blockSnapSize * 3, blockSnapSize * 17+30, blockSnapSize * 3,  layer, stage);
         });
         var bielaText = new Konva.Text({
           x: largo - 50,
