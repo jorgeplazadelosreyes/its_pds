@@ -63,6 +63,15 @@
           console.log(objects[i]["className"]);
           
           //console.log(objects[i]["attrs"]["name"]);
+
+          if(objects[i]["className"]=="Rect"){
+            if(objects[i]["attrs"]["name"]=='barra'){
+                item=objects[i]
+                
+                newBarra(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
+                
+              }
+        }
           
           if(objects[i]["className"]=="Arc"){
               if(objects[i]["attrs"]["name"]=='momento'){
