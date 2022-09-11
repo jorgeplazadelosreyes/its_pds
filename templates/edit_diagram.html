@@ -1098,13 +1098,14 @@
         layer.draw();
     </script>
     <div>
-        <input id="btn" type="button" style="float: left;" value = "Guardar"></button>
-		
+        <input id="save_btn" type="button" style="float: left;" value = "Guardar"/>
+        <input id="next_btn" method = "POST" type="button" style="float: right;" onclick="location.href='{% url 'edit_forces' homework_id=homework.id %}'" value = "Siguiente etapa"/>
+        
       <script> 
       $(document).ready(function () {
 			
 			let homework_id = $("#homework-details").data("homeworkId")
-			let btn2 = document.getElementById("btn");
+			let btn2 = document.getElementById("save_btn");
 			btn2.addEventListener('click', event => {
 
         let json = stage.toJSON();
@@ -1114,7 +1115,7 @@
               		data:{
                 		"diagram": json,
                 		"id": homework_id,
-						csrfmiddlewaretoken: "{{ csrf_token }}"
+						        csrfmiddlewaretoken: "{{ csrf_token }}"
               		},
               		success: function (data) {
 						        console.log("guardo")

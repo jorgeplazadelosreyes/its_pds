@@ -19,5 +19,5 @@ class CreateHomework(View):
             data = request.POST.get("json")
             new_homework = Homework(diagram = data)
             new_homework.save()
-            return redirect("edit_homework", homework_id=new_homework.id)
+            return redirect("edit_diagram", homework_id=new_homework.id)
 

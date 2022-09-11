@@ -15,7 +15,7 @@
                 <td>{{ homework.id }}</td>
                 <td>{{ homework.difficulty }}</td>
                 <td>
-                    <input id="btn" type="button" style="float: left;" onclick="location.href='{% url 'edit_homework' homework_id=homework.id %}'" value = "Editar"></button>
+                    <input id="btn" type="button" style="float: left;" onclick="location.href='{% url 'edit_diagram' homework_id=homework.id %}'" value = "Editar"/>
                 </td>
             </tr>
             {% endfor %}

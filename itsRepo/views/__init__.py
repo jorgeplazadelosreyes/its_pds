@@ -1,3 +1,4 @@
 from .createHomework import CreateHomework
-from .editHomework import EditHomework
+from .editDiagram import EditDiagram
 from .viewHomework import ViewHomework
+from .editForces import EditForces
