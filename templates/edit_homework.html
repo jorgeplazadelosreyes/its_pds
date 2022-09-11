@@ -192,36 +192,108 @@
 
           if(arrow.rotation() == 0){
             arrow.position({
-              x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 15,
-              y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 15
+              x: Math.round((arrow.x() ) / blockSnapSize) * blockSnapSize  ,
+              y: Math.round((arrow.y() ) / blockSnapSize) * blockSnapSize + 15
             });
           }
           else if(Math.round(arrow.rotation()) == 45){
             arrow.position({
-              x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 60,
-              y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize - 15
+              x: Math.round((arrow.x() + 15) / blockSnapSize) * blockSnapSize ,
+              y: Math.round((arrow.y() + 15) / blockSnapSize) * blockSnapSize 
             });
           }
           else if(Math.round(arrow.rotation()) == 90){
             arrow.position({
-              x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 60,
+              x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 15,
+              y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 0
+            });
+          }
+          else if(Math.round(arrow.rotation()) == 135){
+            arrow.position({
+              x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 0,
+              y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 0
+            });
+          }
+          else if(Math.round(arrow.rotation()) == 180){
+            arrow.position({
+              x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 0,
               y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 15
+            });
+          }
+          else if(Math.round(arrow.rotation()) == -135){
+            arrow.position({
+              x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize - 20,
+              y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 10
             });
           }
           else if(Math.round(arrow.rotation()) == -90){
             arrow.position({
-              x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize +15,
-              y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 15
+              x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 15,
+              y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 0
+            });
+          }
+          else if(Math.round(arrow.rotation()) == -45){
+            arrow.position({
+              x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 0,
+              y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 0
             });
           }
 				stage.batchDraw();
 				shadowRectangle.hide();
 				});
 				arrow.on('dragmove', (e) => {
-				shadowRectangle.position({
-					x: Math.round((arrow.x() + 45) / blockSnapSize) * blockSnapSize,
-					y: Math.round((arrow.y() + 45) / blockSnapSize) * blockSnapSize
-				});
+          if(arrow.rotation() == 0){
+            shadowRectangle.position({
+              x: Math.round((arrow.x() + 60) / blockSnapSize) * blockSnapSize,
+              y: Math.round((arrow.y() ) / blockSnapSize) * blockSnapSize
+            });
+          }
+
+          else if(Math.round(arrow.rotation()) == 90){
+            shadowRectangle.position({
+              x: Math.round((arrow.x() + 0) / blockSnapSize) * blockSnapSize,
+              y: Math.round((arrow.y() + 60) / blockSnapSize) * blockSnapSize
+            });
+          }
+          else if(Math.round(arrow.rotation()) == 135){
+            shadowRectangle.position({
+              x: Math.round((arrow.x() - 60) / blockSnapSize) * blockSnapSize,
+              y: Math.round((arrow.y() + 30) / blockSnapSize) * blockSnapSize
+            });
+          }
+          else if(Math.round(arrow.rotation()) == 180){
+            shadowRectangle.position({
+              x: Math.round((arrow.x() - 90) / blockSnapSize) * blockSnapSize,
+              y: Math.round((arrow.y() + 0) / blockSnapSize) * blockSnapSize
+            });
+          }
+          else if(Math.round(arrow.rotation()) == -135){
+            shadowRectangle.position({
+              x: Math.round((arrow.x() - 90) / blockSnapSize) * blockSnapSize,
+              y: Math.round((arrow.y() - 60) / blockSnapSize) * blockSnapSize
+            });
+          }
+          else if(Math.round(arrow.rotation()) == -90){
+            shadowRectangle.position({
+              x: Math.round((arrow.x() - 0) / blockSnapSize) * blockSnapSize,
+              y: Math.round((arrow.y() - 90) / blockSnapSize) * blockSnapSize
+            });
+          }
+          else if(Math.round(arrow.rotation()) == -45){
+            shadowRectangle.position({
+              x: Math.round((arrow.x() + 30) / blockSnapSize) * blockSnapSize,
+              y: Math.round((arrow.y() - 60) / blockSnapSize) * blockSnapSize
+            });
+          }
+
+
+          else {
+            shadowRectangle.position({
+              x: Math.round((arrow.x() + 45) / blockSnapSize) * blockSnapSize,
+              y: Math.round((arrow.y() + 45) / blockSnapSize) * blockSnapSize
+            });
+          }
+				
 				stage.batchDraw();
 				});
 
