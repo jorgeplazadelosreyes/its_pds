@@ -386,10 +386,12 @@
           shadowRectangle.hide();
         });
         fijo.on('dragmove', (e) => {
+          
           shadowRectangle.position({
             x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize,
             y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize
           });
+          
           stage.batchDraw();
         });
 
@@ -467,38 +469,41 @@
         });
         deslizante.on('dragend', (e) => {
 
-          if(deslizante.rotation() == 0){
-            deslizante.position({
-              x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize ,
-              y: Math.round(deslizante.y() / blockSnapSize) * blockSnapSize + 30
-            });
-          }
-          else if(deslizante.rotation() == 90){
-            deslizante.position({
-              x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize + 0,
-              y: Math.round(deslizante.y() / blockSnapSize) * blockSnapSize + 0
-            });
-          }
-          else if(deslizante.rotation() == 180){
-            deslizante.position({
-              x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize + 30,
-              y: Math.round(deslizante.y() / blockSnapSize) * blockSnapSize + 0
-            });
-          }
-          else if(Math.round(deslizante.rotation()) == -90){
-            deslizante.position({
-              x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize + 30,
-              y: Math.round(deslizante.y() / blockSnapSize) * blockSnapSize + 30
-            });
-          }
+          
+          deslizante.position({
+            x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize ,
+            y: Math.round(deslizante.y() / blockSnapSize) * blockSnapSize 
+          });
+          
           stage.batchDraw();
           shadowRectangle.hide();
         });
         deslizante.on('dragmove', (e) => {
-          shadowRectangle.position({
-            x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize,
-            y: Math.round(deslizante.y() / blockSnapSize) * blockSnapSize
-          });
+          console.log(deslizante.rotation())
+          if(Math.round(deslizante.rotation()) == 0){
+            shadowRectangle.position({
+              x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize,
+              y: Math.round((deslizante.y() -30) / blockSnapSize) * blockSnapSize
+            });
+          }
+          else if(Math.round(deslizante.rotation()) == 90){
+            shadowRectangle.position({
+              x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize,
+              y: Math.round((deslizante.y()) / blockSnapSize) * blockSnapSize
+            });
+          }
+          else if(Math.round(deslizante.rotation()) == 180){
+            shadowRectangle.position({
+              x: Math.round((deslizante.x() - 30) / blockSnapSize) * blockSnapSize,
+              y: Math.round((deslizante.y()) / blockSnapSize) * blockSnapSize
+            });
+          }
+          else if(Math.round(deslizante.rotation()) == -90){
+            shadowRectangle.position({
+              x: Math.round((deslizante.x() - 30) / blockSnapSize) * blockSnapSize,
+              y: Math.round((deslizante.y() - 30) / blockSnapSize) * blockSnapSize
+            });
+          }
           stage.batchDraw();
         });
         var tr = new Konva.Transformer({
@@ -573,38 +578,40 @@
           empotrado.moveToTop();
         });
         empotrado.on('dragend', (e) => {
-          if(empotrado.rotation() == 0){
-            empotrado.position({
-              x: Math.round(empotrado.x() / blockSnapSize) * blockSnapSize ,
-              y: Math.round(empotrado.y() / blockSnapSize) * blockSnapSize + 30
-            });
-          }
-          else if(empotrado.rotation() == 90){
-            empotrado.position({
-              x: Math.round(empotrado.x() / blockSnapSize) * blockSnapSize + 0,
-              y: Math.round(empotrado.y() / blockSnapSize) * blockSnapSize + 0
-            });
-          }
-          else if(empotrado.rotation() == 180){
-            empotrado.position({
-              x: Math.round(empotrado.x() / blockSnapSize) * blockSnapSize + 30,
-              y: Math.round(empotrado.y() / blockSnapSize) * blockSnapSize + 0
-            });
-          }
-          else if(Math.round(empotrado.rotation()) == -90){
-            empotrado.position({
-              x: Math.round(empotrado.x() / blockSnapSize) * blockSnapSize + 30,
-              y: Math.round(empotrado.y() / blockSnapSize) * blockSnapSize + 30
-            });
-          }
+          
+          empotrado.position({
+            x: Math.round(empotrado.x() / blockSnapSize) * blockSnapSize ,
+            y: Math.round(empotrado.y() / blockSnapSize) * blockSnapSize 
+          });
+          
           stage.batchDraw();
           shadowRectangle.hide();
         });
         empotrado.on('dragmove', (e) => {
-          shadowRectangle.position({
-            x: Math.round(empotrado.x() / blockSnapSize) * blockSnapSize,
-            y: Math.round(empotrado.y() / blockSnapSize) * blockSnapSize
-          });
+          if(Math.round(empotrado.rotation()) == 0){
+            shadowRectangle.position({
+              x: Math.round((empotrado.x()) / blockSnapSize) * blockSnapSize,
+              y: Math.round((empotrado.y() - 30) / blockSnapSize) * blockSnapSize
+            });
+          }
+          else if(Math.round(empotrado.rotation()) == 90){
+            shadowRectangle.position({
+              x: Math.round((empotrado.x()) / blockSnapSize) * blockSnapSize,
+              y: Math.round((empotrado.y()) / blockSnapSize) * blockSnapSize
+            });
+          }
+          else if(Math.round(empotrado.rotation()) == 180){
+            shadowRectangle.position({
+              x: Math.round((empotrado.x() - 30) / blockSnapSize) * blockSnapSize,
+              y: Math.round((empotrado.y()) / blockSnapSize) * blockSnapSize
+            });
+          }
+          else if(Math.round(empotrado.rotation()) == -90){
+            shadowRectangle.position({
+              x: Math.round((empotrado.x() - 30) / blockSnapSize) * blockSnapSize,
+              y: Math.round((empotrado.y() - 30) / blockSnapSize) * blockSnapSize
+            });
+          }
           stage.batchDraw();
         });
         var tr = new Konva.Transformer({
