@@ -10,7 +10,7 @@
         <div class="container">
             <div class="text-center row align-item-center">
                 <div class="col" style="background-color: #393E46">
-                    <h1 style="margin-top:20px; color: #EEEEEE">ITS Estatica</h1>
+                    <h1 style="margin-top:20px; color: #EEEEEE">ITS Estática</h1>
                 </div>
             </div>
             <div style="max-height: 500px;overflow: auto;">
@@ -30,7 +30,9 @@
                             <td>{{ homework.id }}</td>
                             <td>Titulo</td>
                             <td>{{ homework.difficulty }}</td>
-                            <td><input id="btn" type="button" style="float: left;" onclick="location.href='{% url 'edit_homework' homework_id=homework.id %}'" value = "Editar"></button></td>
+                            <td>
+                                <input id="btn" type="button" style="float: left;" onclick="location.href='{% url 'edit_diagram' homework_id=homework.id %}'" value = "Editar"/>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -39,7 +41,8 @@
             <div class="text-end row" style="margin-top:10px">
                 <form action="" method='POST'>
                     {% csrf_token %}
-                    <button type="submit" class="btn text-white" style="background-color: #393E46" id="hidden-json-input" name= "json" value="{{ json }}">Crear tarea</button>                </form>
+                    <button type="submit" class="btn text-white" style="background-color: #393E46" id="hidden-json-input" name= "json" value="{{ json }}">Crear tarea</button>                
+                </form>
             </div>
         </div>
     </div>

@@ -5,7 +5,7 @@
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		
 		<meta charset="utf-8" />
-		<title>Editar fuerzas</title>
+		<title>Diagramar fuerzas</title>
 		<h2 style="margin_down:20; outline: black solid; text-align:center">Aca saldra un enunciado </h2>
 		<style>
 			body {
@@ -181,122 +181,6 @@
             rotation: rotation,
           });
   
-          arrow.on('dragstart', (e) => {
-            shadowRectangle.show();
-            shadowRectangle.moveToTop();
-            arrow.moveToTop();
-          });
-          
-          arrow.on('dragend', (e) => {
-            console.log("rotation: ", arrow.rotation())
-  
-            if(arrow.rotation() == 0){
-              arrow.position({
-                x: Math.round((arrow.x() ) / blockSnapSize) * blockSnapSize  ,
-                y: Math.round((arrow.y() ) / blockSnapSize) * blockSnapSize + 15
-              });
-            }
-            else if(Math.round(arrow.rotation()) == 45){
-              arrow.position({
-                x: Math.round((arrow.x() + 15) / blockSnapSize) * blockSnapSize ,
-                y: Math.round((arrow.y() + 15) / blockSnapSize) * blockSnapSize 
-              });
-            }
-            else if(Math.round(arrow.rotation()) == 90){
-              arrow.position({
-                x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 15,
-                y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 0
-              });
-            }
-            else if(Math.round(arrow.rotation()) == 135){
-              arrow.position({
-                x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 0,
-                y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 0
-              });
-            }
-            else if(Math.round(arrow.rotation()) == 180){
-              arrow.position({
-                x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 0,
-                y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 15
-              });
-            }
-            else if(Math.round(arrow.rotation()) == -135){
-              arrow.position({
-                x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize - 20,
-                y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 10
-              });
-            }
-            else if(Math.round(arrow.rotation()) == -90){
-              arrow.position({
-                x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 15,
-                y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 0
-              });
-            }
-            else if(Math.round(arrow.rotation()) == -45){
-              arrow.position({
-                x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 0,
-                y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 0
-              });
-            }
-          stage.batchDraw();
-          shadowRectangle.hide();
-          });
-          arrow.on('dragmove', (e) => {
-            if(arrow.rotation() == 0){
-              shadowRectangle.position({
-                x: Math.round((arrow.x() + 60) / blockSnapSize) * blockSnapSize,
-                y: Math.round((arrow.y() ) / blockSnapSize) * blockSnapSize
-              });
-            }
-  
-            else if(Math.round(arrow.rotation()) == 90){
-              shadowRectangle.position({
-                x: Math.round((arrow.x() + 0) / blockSnapSize) * blockSnapSize,
-                y: Math.round((arrow.y() + 60) / blockSnapSize) * blockSnapSize
-              });
-            }
-            else if(Math.round(arrow.rotation()) == 135){
-              shadowRectangle.position({
-                x: Math.round((arrow.x() - 60) / blockSnapSize) * blockSnapSize,
-                y: Math.round((arrow.y() + 30) / blockSnapSize) * blockSnapSize
-              });
-            }
-            else if(Math.round(arrow.rotation()) == 180){
-              shadowRectangle.position({
-                x: Math.round((arrow.x() - 90) / blockSnapSize) * blockSnapSize,
-                y: Math.round((arrow.y() + 0) / blockSnapSize) * blockSnapSize
-              });
-            }
-            else if(Math.round(arrow.rotation()) == -135){
-              shadowRectangle.position({
-                x: Math.round((arrow.x() - 90) / blockSnapSize) * blockSnapSize,
-                y: Math.round((arrow.y() - 60) / blockSnapSize) * blockSnapSize
-              });
-            }
-            else if(Math.round(arrow.rotation()) == -90){
-              shadowRectangle.position({
-                x: Math.round((arrow.x() - 0) / blockSnapSize) * blockSnapSize,
-                y: Math.round((arrow.y() - 90) / blockSnapSize) * blockSnapSize
-              });
-            }
-            else if(Math.round(arrow.rotation()) == -45){
-              shadowRectangle.position({
-                x: Math.round((arrow.x() + 30) / blockSnapSize) * blockSnapSize,
-                y: Math.round((arrow.y() - 60) / blockSnapSize) * blockSnapSize
-              });
-            }
-  
-  
-            else {
-              shadowRectangle.position({
-                x: Math.round((arrow.x() + 45) / blockSnapSize) * blockSnapSize,
-                y: Math.round((arrow.y() + 45) / blockSnapSize) * blockSnapSize
-              });
-            }
-          
-          stage.batchDraw();
-          });
-  
           var tr = new Konva.Transformer({
             nodes: [arrow],
             centeredScaling: false,
@@ -309,27 +193,12 @@
           
           layer.add(arrow);
           stage.on('click tap', function (e) {
-            if (e.target === arrow) {
-              tr.nodes([arrow]);
-            }
             // if click on empty area - remove all selections
             if (e.target === stage) {
               tr.nodes([]);
               return;
             }
-  
-            const metaPressed = e.evt.ctrlKey;
-            const isSelected = tr.nodes().indexOf(e.target) >= 0;
-  
-            if (metaPressed && isSelected) {
-              // if we pressed keys and node was selected
-              // we need to remove it from selection:
-              tr.nodes([]);
-              const nodes = e.target.destroy(); // use slice to have new copy of array
-              // remove node from array
-            }
           });
-  
         }
   
         function newFijo(x, y, rotation, layer, stage) {
@@ -349,84 +218,9 @@
             name: "fijo",
             rotation: rotation,
           });
-          fijo.on('dragstart', (e) => {
-            shadowRectangle.show();
-            shadowRectangle.moveToTop();
-            fijo.moveToTop();
-          });
-          fijo.on('dragend', (e) => {
-  
-            console.log("rotation: ", fijo.rotation())
-  
-            if(fijo.rotation() == 0){
-              fijo.position({
-                x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize +15,
-                y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize + 15
-              });
-            }
-            else if(fijo.rotation() == 90){
-              fijo.position({
-                x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize +15,
-                y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize + 15
-              });
-            }
-            else if(fijo.rotation() == 180){
-              fijo.position({
-                x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize +15,
-                y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize + 15
-              });
-            }
-            else if(Math.round(fijo.rotation()) == -90){
-              fijo.position({
-                x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize +15,
-                y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize + 15
-              });
-            }
-            stage.batchDraw();
-            shadowRectangle.hide();
-          });
-          fijo.on('dragmove', (e) => {
-            
-            shadowRectangle.position({
-              x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize,
-              y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize
-            });
-            
-            stage.batchDraw();
-          });
-  
-          var tr = new Konva.Transformer({
-            nodes: [fijo],
-            centeredScaling: false,
-            resizeEnabled: false,
-            rotationSnaps: [0, 90, 180, 270],
-            rotationSnapTolerance: 45,
-          });
-          layer.add(tr);
-          layer.add(fijo);
-          stage.on('click tap', function (e) {
-            if (e.target === fijo) {
-              tr.nodes([fijo]);
-            }
-            // if click on empty area - remove all selections
-            if (e.target === stage) {
-              tr.nodes([]);
-              return;
-            }
-  
-            const metaPressed = e.evt.ctrlKey;
-            const isSelected = tr.nodes().indexOf(e.target) >= 0;
-  
-            if (metaPressed && isSelected) {
-              // if we pressed keys and node was selected
-              // we need to remove it from selection:
-              tr.nodes([]);
-              const nodes = e.target.destroy(); // use slice to have new copy of array
-              // remove node from array
-            }
-          });
-        }
 
+          layer.add(fijo);
+        }
         
         function toolBar(layer, stage) {
           // PRETTY
@@ -457,7 +251,7 @@
             shadowOpacity: 0.4,
             draggable: false,
           });
-
+  
           var arrowText = new Konva.Text({
             x: largo - 52,
             y: 65,
@@ -573,7 +367,7 @@
             stroke: 'black',
             strokeWidth: 2,
           });
-  
+
           var rotulaText = new Konva.Text({
             x: largo - 50,
             y: 305,
@@ -593,7 +387,6 @@
             stroke: 'black',
             strokeWidth: 2,
           });
-  
           var bielaText = new Konva.Text({
             x: largo - 50,
             y: 365,
@@ -671,6 +464,25 @@
           layer.add(barra);
   
         }
+        
+        
+        
+        let drawingLine = false;
+        let line;
+        stage.on('mousedown', (e) => {
+          if (e.target.hasName('node')) {
+            drawingLine = true;
+            const pos = stage.getPointerPosition();
+            line = new Konva.Line({
+              stroke: 'black',
+              strokeWidth: 7,
+              // remove line from hit graph, so we can check intersections
+              listening: false,
+              points: [e.target.x(), e.target.y(), pos.x, pos.y]
+            });
+            layer.add(line);
+          }
+        });
           
         stage.on('mouseover', (e) => {
           if (e.target.hasName('node')) {
@@ -728,7 +540,7 @@
     </script>
     <div>
       <input id="btn_save" type="button" style="float: left;" value = "Guardar"/>
-      <input id="next_btn" type="button" style="float: right;" onclick="location.href='{% url 'diagram_forces' homework_id=homework.id %}'" value = "Siguiente etapa"/>
+      <input id="next_btn" type="button" style="float: right;" onclick="location.href='{% url 'balance_equations' homework_id=homework.id %}'" value = "Siguiente etapa"/>
     </div>
   </body>
 </html>

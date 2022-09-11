@@ -9,6 +9,3 @@ class EditDiagram(View):
             "homework": homework
         }
         return render(request, "edit_diagram.html", context)
-    
-    def post(self, request, homework_id):
-        return render(request, "edit_forces.html")
