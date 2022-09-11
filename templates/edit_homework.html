@@ -122,10 +122,6 @@
               item=objects[i]
               x2 = item["attrs"]["x"]
               y2 = item["attrs"]["y"]
-              
-
-              console.log(typeof(x1), typeof(x2), typeof(y1), typeof(y2))
-
               if(typeof(x1) != "undefined" && typeof(x2) != "undefined" && typeof(y1) != "undefined" && typeof(y2)){
                 newBiela( x1, y1, x2, y2, layer, stage)
               }
@@ -190,19 +186,41 @@
 					shadowRectangle.moveToTop();
 					arrow.moveToTop();
 				});
+        
 				arrow.on('dragend', (e) => {
-				arrow.position({
-					x: (Math.round(arrow.x() / blockSnapSize) * blockSnapSize) ,
-					y: (Math.round(arrow.y() / blockSnapSize) * blockSnapSize),
+          console.log("rotation: ", arrow.rotation())
 
-				});
+          if(arrow.rotation() == 0){
+            arrow.position({
+              x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 15,
+              y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 15
+            });
+          }
+          else if(Math.round(arrow.rotation()) == 45){
+            arrow.position({
+              x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 60,
+              y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize - 15
+            });
+          }
+          else if(Math.round(arrow.rotation()) == 90){
+            arrow.position({
+              x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 60,
+              y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 15
+            });
+          }
+          else if(Math.round(arrow.rotation()) == -90){
+            arrow.position({
+              x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize +15,
+              y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 15
+            });
+          }
 				stage.batchDraw();
 				shadowRectangle.hide();
 				});
 				arrow.on('dragmove', (e) => {
 				shadowRectangle.position({
-					x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize,
-					y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize
+					x: Math.round((arrow.x() + 45) / blockSnapSize) * blockSnapSize,
+					y: Math.round((arrow.y() + 45) / blockSnapSize) * blockSnapSize
 				});
 				stage.batchDraw();
 				});
@@ -265,10 +283,33 @@
           fijo.moveToTop();
         });
         fijo.on('dragend', (e) => {
-          fijo.position({
-            x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize +15,
-            y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize + 15
-          });
+
+          console.log("rotation: ", fijo.rotation())
+
+          if(fijo.rotation() == 0){
+            fijo.position({
+              x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize +15,
+              y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize + 15
+            });
+          }
+          else if(fijo.rotation() == 90){
+            fijo.position({
+              x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize +15,
+              y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize + 15
+            });
+          }
+          else if(fijo.rotation() == 180){
+            fijo.position({
+              x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize +15,
+              y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize + 15
+            });
+          }
+          else if(Math.round(fijo.rotation()) == -90){
+            fijo.position({
+              x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize +15,
+              y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize + 15
+            });
+          }
           stage.batchDraw();
           shadowRectangle.hide();
         });
@@ -353,10 +394,31 @@
           deslizante.moveToTop();
         });
         deslizante.on('dragend', (e) => {
-          deslizante.position({
-            x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize,
-            y: Math.round(deslizante.y() / blockSnapSize) * blockSnapSize + 30
-          });
+
+          if(deslizante.rotation() == 0){
+            deslizante.position({
+              x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize ,
+              y: Math.round(deslizante.y() / blockSnapSize) * blockSnapSize + 30
+            });
+          }
+          else if(deslizante.rotation() == 90){
+            deslizante.position({
+              x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize + 0,
+              y: Math.round(deslizante.y() / blockSnapSize) * blockSnapSize + 0
+            });
+          }
+          else if(deslizante.rotation() == 180){
+            deslizante.position({
+              x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize + 30,
+              y: Math.round(deslizante.y() / blockSnapSize) * blockSnapSize + 0
+            });
+          }
+          else if(Math.round(deslizante.rotation()) == -90){
+            deslizante.position({
+              x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize + 30,
+              y: Math.round(deslizante.y() / blockSnapSize) * blockSnapSize + 30
+            });
+          }
           stage.batchDraw();
           shadowRectangle.hide();
         });
@@ -439,10 +501,30 @@
           empotrado.moveToTop();
         });
         empotrado.on('dragend', (e) => {
-          empotrado.position({
-            x: Math.round(empotrado.x() / blockSnapSize) * blockSnapSize,
-            y: Math.round(empotrado.y() / blockSnapSize) * blockSnapSize + 30
-          });
+          if(empotrado.rotation() == 0){
+            empotrado.position({
+              x: Math.round(empotrado.x() / blockSnapSize) * blockSnapSize ,
+              y: Math.round(empotrado.y() / blockSnapSize) * blockSnapSize + 30
+            });
+          }
+          else if(empotrado.rotation() == 90){
+            empotrado.position({
+              x: Math.round(empotrado.x() / blockSnapSize) * blockSnapSize + 0,
+              y: Math.round(empotrado.y() / blockSnapSize) * blockSnapSize + 0
+            });
+          }
+          else if(empotrado.rotation() == 180){
+            empotrado.position({
+              x: Math.round(empotrado.x() / blockSnapSize) * blockSnapSize + 30,
+              y: Math.round(empotrado.y() / blockSnapSize) * blockSnapSize + 0
+            });
+          }
+          else if(Math.round(empotrado.rotation()) == -90){
+            empotrado.position({
+              x: Math.round(empotrado.x() / blockSnapSize) * blockSnapSize + 30,
+              y: Math.round(empotrado.y() / blockSnapSize) * blockSnapSize + 30
+            });
+          }
           stage.batchDraw();
           shadowRectangle.hide();
         });
@@ -491,7 +573,7 @@
         var rotula = new Konva.Circle({
           x: x,
           y: y,
-          radius: 7.5,
+          radius: 15,
           fill: 'red',
           stroke: 'black',
           strokeWidth: 2,
@@ -510,8 +592,8 @@
         });
         rotula.on('dragend', (e) => {
           rotula.position({
-            x: Math.round(rotula.x() / blockSnapSize) * blockSnapSize,
-            y: Math.round(rotula.y() / blockSnapSize) * blockSnapSize + 30
+            x: Math.round(rotula.x() / blockSnapSize) * blockSnapSize + 15,
+            y: Math.round(rotula.y() / blockSnapSize) * blockSnapSize + 15
           });
           stage.batchDraw();
           shadowRectangle.hide();
@@ -531,7 +613,7 @@
         var b1 = new Konva.Circle({
           x: x1,
           y: y1,
-          radius: 7.5,
+          radius: 15,
           fill: 'green',
           stroke: 'black',
           strokeWidth: 2,
@@ -546,7 +628,7 @@
         var b2 = new Konva.Circle({
           x: x2,
           y: y2,
-          radius: 7.5,
+          radius: 15,
           fill: 'green',
           stroke: 'black',
           strokeWidth: 2,
@@ -571,8 +653,8 @@
         });
         b1.on('dragend', (e) => {
           b1.position({
-            x: Math.round(b1.x() / blockSnapSize) * blockSnapSize,
-            y: Math.round(b1.y() / blockSnapSize) * blockSnapSize
+            x: Math.round(b1.x() / blockSnapSize) * blockSnapSize +15,
+            y: Math.round(b1.y() / blockSnapSize) * blockSnapSize +15
           });
           stage.batchDraw();
           shadowRectangle.hide();
@@ -592,8 +674,8 @@
         });
         b2.on('dragend', (e) => {
           b2.position({
-            x: Math.round(b2.x() / blockSnapSize) * blockSnapSize,
-            y: Math.round(b2.y() / blockSnapSize) * blockSnapSize
+            x: Math.round(b2.x() / blockSnapSize) * blockSnapSize +15,
+            y: Math.round(b2.y() / blockSnapSize) * blockSnapSize +15
           });
           stage.batchDraw();
           shadowRectangle.hide();
@@ -709,8 +791,8 @@
         });
         momento.on('dragend', (e) => {
           momento.position({
-            x: Math.round(momento.x() / blockSnapSize) * blockSnapSize +15,
-            y: Math.round(momento.y() / blockSnapSize) * blockSnapSize + 15
+            x: Math.round(momento.x() / blockSnapSize) * blockSnapSize + 15,
+            y: Math.round(momento.y() / blockSnapSize) * blockSnapSize +7.5
           });
           stage.batchDraw();
           shadowRectangle.hide();
