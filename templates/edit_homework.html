@@ -113,12 +113,22 @@
               item=objects[i]
               x1 = item["attrs"]["x"]
               y1 = item["attrs"]["y"]
+
+              if(typeof(x1) != "undefined" && typeof(x2) != "undefined" && typeof(y1) != "undefined" && typeof(y2)){
+                newBiela( x1, y1, x2, y2, layer, stage)
+              }
             }
             else if(objects[i]["attrs"]["name"]=='biela2'){
               item=objects[i]
               x2 = item["attrs"]["x"]
               y2 = item["attrs"]["y"]
-              newBiela(x1,y1,x2,y2,layer,stage)
+              
+
+              console.log(typeof(x1), typeof(x2), typeof(y1), typeof(y2))
+
+              if(typeof(x1) != "undefined" && typeof(x2) != "undefined" && typeof(y1) != "undefined" && typeof(y2)){
+                newBiela( x1, y1, x2, y2, layer, stage)
+              }
             }
           }
         }   
