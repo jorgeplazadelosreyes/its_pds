@@ -90,7 +90,17 @@
             if(String( objects[i]["attrs"]["name"] ).substring(0,5) == 'arrow' && String( objects[i]["attrs"]["name"] ).substring(6,10) != "tool"){
                 item=objects[i]
                 counter[0] = counter[0] + 1
-                newArrow(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+                num = String(item["attrs"]["name"]).split("_")[1]
+                
+                
+                for (var j = 0; j<objects["length"]; j++){
+                  
+                  if(String( objects[j]["attrs"]["name"] ).split("_")[0] == 'textArrow' && String( objects[j]["attrs"]["name"] ).split("_")[1] == num){
+                    magn = String(objects[j]["attrs"]["text"])
+                    console.log(num, item["attrs"]["name"], magn)
+                  }
+                }
+                newArrow(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, num, magn)
             }
           }
           if(objects[i]["className"]=="RegularPolygon"){
@@ -172,7 +182,7 @@
 				}));
 			}
 
-			function newArrow(x, y, rotation, layer, stage, count) {
+			function newArrow(x, y, rotation, layer, stage, count, magnitud = 0) {
 				var arrow = new Konva.Arrow({
 					x: x,
 					y: y,
@@ -190,6 +200,7 @@
 					rotation: 0,
           name: "arrow_" + count.toString(),
           rotation: rotation,
+          magnitud: magnitud,
 				});
 
 				arrow.on('dragstart', (e) => {
@@ -318,7 +329,7 @@
           rotationSnapTolerance: 22.5,
 				});
 				layer.add(tr);
-        
+
         layer.add(arrow);
         stage.on('click tap', function (e) {
           if (e.target === arrow) {
@@ -341,6 +352,69 @@
             // remove node from array
           }
         });
+
+        /// fuerza en arrow
+
+        var textNode = new Konva.Text({
+          text: magnitud,
+          x: x,
+          y: x,
+          fontSize: 10,
+          name: "textArrow_" + count.toString(),
+        });
+  
+        layer.add(textNode);
+
+        arrow.on('dragstart', (e) => {
+					textNode.moveToTop();
+          console.log(arrow.name(),  " magnitud: ", arrow.magnitud)
+				});
+        
+				arrow.on('dragend', (e) => {
+
+          textNode.position({
+            x: Math.round((arrow.x() ) / blockSnapSize) * blockSnapSize + 15,
+            y: Math.round((arrow.y() ) / blockSnapSize) * blockSnapSize + 15
+          });
+          
+          stage.batchDraw();
+          
+				});
+  
+        textNode.on('dblclick dbltap', () => {
+         
+          var textPosition = textNode.getAbsolutePosition();
+          var stageBox = stage.container().getBoundingClientRect();
+  
+          var areaPosition = {
+            x: arrow.x() + 15,
+            y: arrow.y() + 15,
+          };
+  
+          // create textarea and style it
+          var textarea = document.createElement('textarea');
+          document.body.appendChild(textarea);
+  
+          textarea.value = textNode.text();
+          textarea.style.position = 'absolute';
+          textarea.style.top = areaPosition.y + 'px';
+          textarea.style.left = areaPosition.x + 'px';
+          textarea.style.width = textNode.width();
+  
+          textarea.focus();
+  
+          textarea.addEventListener('keydown', function (e) {
+            // hide on enter
+            if (e.keyCode === 13) {
+              textNode.text(textarea.value);
+              arrow.magnitud = textarea.value;
+              console.log("magn: ", arrow.magnitud)
+              document.body.removeChild(textarea);
+            }
+          });
+        });
+
+        // fuerza en arrow
 
       }
 
@@ -965,7 +1039,7 @@
         });
         arrow.on('pointerdown', function () {
           counter[0] = counter[0] + 1
-          newArrow(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[0]);
+          newArrow(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[0], 0);
           //let json = stage.toJSON();
           //console.log(JSON.parse(json)["children"][0]["children"])
         });
