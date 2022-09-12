@@ -75,7 +75,7 @@
                 item=objects[i]
                 counter[6] = counter[6] + 1
                 console.log(counter[6])
-                newMomento(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+                newMomento(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1], objects[i]["attrs"]["magnitud"])
                 
               }
           }
@@ -106,26 +106,26 @@
             if(String( objects[i]["attrs"]["name"] ).substring(0,4) == 'fijo' && String( objects[i]["attrs"]["name"] ).substring(5,9) != "tool"){
                 item=objects[i]
                 counter[1] = counter[1] + 1
-                newFijo(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+                newFijo(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1], objects[i]["attrs"]["magnitud_x"], objects[i]["attrs"]["magnitud_y"])
             }
           }
           if(objects[i]["className"]=="Group"){
             if(String( objects[i]["attrs"]["name"] ).substring(0,10) == 'deslizante' && String( objects[i]["attrs"]["name"] ).substring(11,15) != "tool"){
                 item=objects[i]
                 counter[2] = counter[2] + 1
-                newDeslizante(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+                newDeslizante(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1], objects[i]["attrs"]["magnitud"])
             }
             else if(String( objects[i]["attrs"]["name"] ).substring(0,9) == 'empotrado' && String( objects[i]["attrs"]["name"] ).substring(10,14) != "tool"){
               item=objects[i]
               counter[3] = counter[3] + 1
-              newEmpotrado(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1]) 
+              newEmpotrado(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1], objects[i]["attrs"]["magnitud_x"], objects[i]["attrs"]["magnitud_y"], objects[i]["attrs"]["magnitud_m"]) 
             }
           }
           if(objects[i]["className"]=="Circle" || objects[i]["className"]=="Line"){
             if(String( objects[i]["attrs"]["name"] ).substring(0,6) == 'rotula' && String( objects[i]["attrs"]["name"] ).substring(7,11) != "tool"){
               item=objects[i]
               counter[4] = counter[4] + 1
-              newRotula(item["attrs"]["x"], item["attrs"]["y"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1]) 
+              newRotula(item["attrs"]["x"], item["attrs"]["y"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
             }
             else if(String( objects[i]["attrs"]["name"] ).substring(0,6) == 'biela1' && String( objects[i]["attrs"]["name"] ).substring(7,11) != "tool"){
               item=objects[i]
@@ -524,7 +524,7 @@
 
       }
 
-      function newFijo(x, y, rotation, layer, stage, count) {
+      function newFijo(x, y, rotation, layer, stage, count, magnitud_x="Fx", magnitud_y="Fy") {
         let fijo = new Konva.RegularPolygon({
           x: x,
           y: y,
@@ -540,6 +540,8 @@
           draggable: true,
           name: "fijo_" + count.toString(),
           rotation: rotation,
+          magnitud_x: magnitud_x,
+          magnitud_y: magnitud_y
         });
         fijo.on('dragstart', (e) => {
           shadowRectangle.show();
@@ -620,7 +622,7 @@
         });
       }
 
-      function newDeslizante(x, y, rotation, layer, stage, count) {
+      function newDeslizante(x, y, rotation, layer, stage, count, magnitud = "D") {
         var deslizante = new Konva.Group({
           x: x,
           y: y,
@@ -632,6 +634,7 @@
           draggable: true,
           name: "deslizante_" + count.toString(),
           rotation: rotation,
+          magnitud: magnitud
         });
 
         var deslizanteT = new Konva.RegularPolygon({
@@ -732,7 +735,7 @@
         });
       }
 
-      function newEmpotrado(x, y, rotation, layer, stage, count) {
+      function newEmpotrado(x, y, rotation, layer, stage, count, magnitud_x="Ex", magnitud_y="Ey", magnitud_m="Em") {
         var empotrado= new Konva.Group({
           x: x,
           y: y,
@@ -744,6 +747,9 @@
           draggable: true,
           name: "empotrado_" + count.toString(),
           rotation: rotation,
+          magnitud_x: magnitud_x,
+          magnitud_y: magnitud_y,
+          magnitud_m: magnitud_m
         });
 
         var empotrado1 = new Konva.Line({
@@ -1041,7 +1047,7 @@
         
       }
     
-      function newMomento(x, y, rotation, layer, stage, count, name = null) {
+      function newMomento(x, y, rotation, layer, stage, count, name = null, magnitud="M") {
         
         let momento = new Konva.Arc({
           x: x,
@@ -1059,6 +1065,7 @@
           draggable: true,
           name: "momento_" + count.toString(),
           rotation: rotation,
+          magnitud: magnitud
         });
         
         momento.on('dragstart', (e) => {
