@@ -98,9 +98,10 @@
                   if(String( objects[j]["attrs"]["name"] ).split("_")[0] == 'textArrow' && String( objects[j]["attrs"]["name"] ).split("_")[1] == num){
                     magn = String(objects[j]["attrs"]["text"])
                     console.log(num, item["attrs"]["name"], magn)
+                    item["attrs"]["magnitud"] = magn
                   }
                 }
-                newArrow(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, num, magn)
+                newArrow(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, num, item["attrs"]["magnitud"])
             }
           }
           if(objects[i]["className"]=="RegularPolygon"){
