@@ -74,13 +74,19 @@
         }
           
           if(objects[i]["className"]=="Arc"){
-              if(objects[i]["attrs"]["name"]=='momento'){
-                  item=objects[i]
-                  console.log("obj: ",item);
-                  console.log(item["attrs"]["x"], item["attrs"]["y"])
-                  newMomento(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage)
-                  
-                }
+
+            var str = objects[i]["attrs"]["name"]
+
+
+            console.log("this moment: ",  str)
+
+            if(objects[i]["attrs"]["name"]=='momento'){
+                item=objects[i]
+                console.log("obj: ",item);
+                console.log(item["attrs"]["x"], item["attrs"]["y"])
+                newMomento(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage)
+                
+              }
           }
           if(objects[i]["className"]=="Arrow"){
             if(objects[i]["attrs"]["name"]=='arrow'){
@@ -427,7 +433,7 @@
         });
       }
 
-      function newDeslizante(x, y, rotation, layer, stage) {
+      function newDeslizante(x, y, rotation, layer, stage, count) {
         var deslizante = new Konva.Group({
           x: x,
           y: y,
@@ -538,7 +544,7 @@
         });
       }
 
-      function newEmpotrado(x, y, rotation, layer, stage) {
+      function newEmpotrado(x, y, rotation, layer, stage, count) {
         var empotrado= new Konva.Group({
           x: x,
           y: y,
@@ -647,7 +653,7 @@
         });
       }
 
-      function newRotula(x, y, layer, stage) {
+      function newRotula(x, y, layer, stage, count) {
 
         var rotula = new Konva.Circle({
           x: x,
@@ -687,7 +693,7 @@
         layer.add(rotula);
         
       }
-      function newBiela(x1, y1, x2=x1+30, y2=y1, layer, stage) {
+      function newBiela(x1, y1, x2=x1+30, y2=y1, layer, stage, count) {
 
         var b1 = new Konva.Circle({
           x: x1,
@@ -844,7 +850,7 @@
         
       }
     
-      function newMomento(x, y, rotation, layer, stage) {
+      function newMomento(x, y, rotation, layer, stage, count) {
         
         let momento = new Konva.Arc({
           x: x,
@@ -860,7 +866,7 @@
           shadowOffset: {x : 1, y : 1},
           shadowOpacity: 0.4,
           draggable: true,
-          name: "momento",
+          name: "momento_" + count.toString(),
           rotation: rotation,
         });
         momento.on('dragstart', (e) => {
@@ -914,7 +920,7 @@
         });
       }
       
-      function toolBar(layer, stage) {
+      function toolBar(layer, stage, counter) {
         // PRETTY
         var separadorTool = new Konva.Line({
           points: [largo - 85, 0, largo - 85, 600],
@@ -944,7 +950,8 @@
           draggable: false,
         });
         arrow.on('pointerdown', function () {
-          newArrow(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, 62, 15, 0);
+          counter[0] = counter[0] + 1
+          newArrow(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, 62, 15, 0, counter[0]);
           //let json = stage.toJSON();
           //console.log(JSON.parse(json)["children"][0]["children"])
         });
@@ -970,7 +977,8 @@
           strokeWidth: 2,
         });
         fijo.on('pointerdown', function () {
-          newFijo(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage);
+          counter[1] = counter[1] + 1
+          newFijo(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[1]);
         });
 
         var fijoText = new Konva.Text({
@@ -1012,7 +1020,8 @@
         deslizante.add(deslizanteL);
 
         deslizante.on('pointerdown', function () {
-          newDeslizante(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage);
+          counter[2] = counter[2] + 1
+          newDeslizante(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[2]);
         });
         var deslizanteText = new Konva.Text({
           x: largo - 60,
@@ -1052,7 +1061,8 @@
         empotrado.add(empotrado2);
 
         empotrado.on('pointerdown', function () {
-          newEmpotrado(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage);
+          counter[3] = counter[3] + 1
+          newEmpotrado(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[3]);
         });
         var empotradoText = new Konva.Text({
           x: largo - 80,
@@ -1075,7 +1085,8 @@
         });
 
         rotula.on('pointerdown', function () {
-          newRotula(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
+          counter[4] = counter[4] + 1
+          newRotula(blockSnapSize * 17, blockSnapSize * 3, layer, stage, counter[4]);
         });
         var rotulaText = new Konva.Text({
           x: largo - 50,
@@ -1098,7 +1109,8 @@
         });
 
         biela.on('pointerdown', function () {
-          newBiela(blockSnapSize * 17, blockSnapSize * 3, blockSnapSize * 17+30, blockSnapSize * 3,  layer, stage);
+          counter[5] = counter[5] + 1
+          newBiela(blockSnapSize * 17, blockSnapSize * 3, blockSnapSize * 17+30, blockSnapSize * 3,  layer, stage, counter[5]);
         });
         var bielaText = new Konva.Text({
           x: largo - 50,
@@ -1128,7 +1140,9 @@
           draggable: false,
         });
         momento.on('pointerdown', function () {
-          newMomento(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage);
+          counter[6] = counter[6] + 1
+          
+          newMomento(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[6]);
         });
 
         var momentoText = new Konva.Text({
@@ -1252,7 +1266,10 @@
         shadowRectangle.hide();
         layer.add(shadowRectangle);
 
-        toolBar(layer, stage);
+        //counter[ARROW, FIJO, DESLIZANTE, EMPOTRADO, ROTULA, BIELA, MOMENTO]
+        counter = [0, 0, 0, 0, 0, 0, 0]
+        
+        toolBar(layer, stage, counter);
         loadForm(data);
         
         stage.add(layer);
