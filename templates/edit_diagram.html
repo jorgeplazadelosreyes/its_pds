@@ -45,24 +45,17 @@
 			//var stage = Konva.Node.create(data, "container")
 
       function loadForm(json, counter){
-        /*
-        layer.find('Line').destroy();
-        layer.find('Circle').destroy();
-        layer.find('Arrow').destroy();
-        layer.draw();
-        */
-        console.log("equis de");
         
         console.log(layer)
         
         console.log(json)
         objects=json["children"][0]["children"]
-        console.log(objects["length"])
+
+        var fuerzas = []
+        
         
         for (var i = 0; i<objects["length"]; i++){
           console.log(objects[i]["className"]);
-          
-          //console.log(objects[i]["attrs"]["name"]);
 
           if(objects[i]["className"]=="Rect"){
             if(objects[i]["attrs"]["name"]=='barra'){
@@ -102,6 +95,11 @@
                   }
                 }
                 newArrow(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, num, item["attrs"]["magnitud"])
+                
+                var newForce = [];
+
+                newForce.push(item["attrs"]["name"], item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], item["attrs"]["magnitud"])
+                fuerzas.push(newForce)
             }
           }
           if(objects[i]["className"]=="RegularPolygon"){
@@ -134,7 +132,7 @@
               x1 = item["attrs"]["x"]
               y1 = item["attrs"]["y"]
 
-              if(typeof(x1) != "undefined" && typeof(x2) != "undefined" && typeof(y1) != "undefined" && typeof(y2)){
+              if(typeof(x1) != undefined && typeof(x2) != undefined && typeof(y1) != undefined && typeof(y2) != undefined){
                 counter[5] = counter[5] + 1
                 }newBiela( x1, y1, x2, y2, layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
               }
@@ -143,14 +141,15 @@
               item=objects[i]
               x2 = item["attrs"]["x"]
               y2 = item["attrs"]["y"]
-              if(typeof(x1) != "undefined" && typeof(x2) != "undefined" && typeof(y1) != "undefined" && typeof(y2)){
+              if(typeof(x1) != undefined && typeof(x2) != undefined && typeof(y1) != undefined && typeof(y2) != undefined){
                 counter[5] = counter[5] + 1
                 newBiela( x1, y1, x2, y2, layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
               }
             }
           }
+          
+          return fuerzas;
         }   
-      
 
       console.log("data entrandte:");
       console.log(data["children"][0]["children"]);
@@ -183,7 +182,113 @@
 				}));
 			}
 
-			function newArrow(x, y, rotation, layer, stage, count, magnitud = 0) {
+      function descomponerFuerzas(fuerzas){
+        var Fx = []
+        var Fy = []
+
+        for( i=0; i<fuerzas.length; i++){
+          if(fuerzas[i][3] == undefined){
+            fuerzas[i][3] = 0
+          }
+          
+          if( Math.round(fuerzas[i][3]) == 0){
+            var f = []
+            f.push(fuerzas[i][0], parseInt(fuerzas[i][4]))
+            Fx.push(f)
+          }
+
+          else if( Math.round(fuerzas[i][3]) == 45){
+            var fx = []
+            var fy = []
+
+            f = -0.707 * parseInt(fuerzas[i][4])
+            fy.push(fuerzas[i][0], f)
+            
+            Fy.push(fy)
+
+            f = 0.707 * parseInt(fuerzas[i][4])
+            fx.push(fuerzas[i][0], f)
+            Fx.push(fx)
+          }
+
+          else if( Math.round(fuerzas[i][3]) == 90){
+            var fy = []
+
+            f = -1 * parseInt(fuerzas[i][4])
+            fy.push(fuerzas[i][0], f)
+            
+            Fy.push(fy)
+          }
+
+          else if( Math.round(fuerzas[i][3]) == 135){
+            var fx = []
+            var fy = []
+
+            f = -0.707 * parseInt(fuerzas[i][4])
+            fy.push(fuerzas[i][0], f)
+            
+            Fy.push(fy)
+
+            f = -0.707 * parseInt(fuerzas[i][4])
+            fx.push(fuerzas[i][0], f)
+            Fx.push(fx)
+          }
+
+          else if( Math.round(fuerzas[i][3]) == 180 ||  Math.round(fuerzas[i][3]) == -180 ){
+            var fx = []
+
+            f = -1 * parseInt(fuerzas[i][4])
+            fx.push(fuerzas[i][0], f)
+            
+            Fx.push(fx)
+          }
+
+          else if( Math.round(fuerzas[i][3]) == -135){
+            
+            var fx = []
+            var fy = []
+
+            f1 = 0.707 * parseInt(fuerzas[i][4])
+            fy.push(fuerzas[i][0], f1)
+            
+            Fy.push(fy)
+
+            f = -0.707 * parseInt(fuerzas[i][4])
+            fx.push(fuerzas[i][0], f)
+            Fx.push(fx)
+
+            
+          }
+
+          else if( Math.round(fuerzas[i][3]) == -90){
+            var fy = []
+
+            f = 1 * parseInt(fuerzas[i][4])
+            fy.push(fuerzas[i][0], f)
+            
+            Fy.push(fy)
+          }
+
+          else if( Math.round(fuerzas[i][3]) == -45){
+            var fx = []
+            var fy = []
+
+            f = 0.707 * parseInt(fuerzas[i][4])
+            fy.push(fuerzas[i][0], f)
+            
+            Fy.push(fy)
+
+            f = 0.707 * parseInt(fuerzas[i][4])
+            fx.push(fuerzas[i][0], f)
+            Fx.push(fx)
+          }
+
+        }
+        return {Fx, Fy}
+      }
+      
+
+			function newArrow(x, y, rotation = 0, layer, stage, count, magnitud = 0) {
 				var arrow = new Konva.Arrow({
 					x: x,
 					y: y,
@@ -1366,7 +1471,16 @@
         counter = [0, 0, 0, 0, 0, 0, 0]
         
         toolBar(layer, stage, counter);
-        loadForm(data, counter);
+        fuerzas = loadForm(data, counter);
+        console.log("fuerzas")
+        console.log(fuerzas)
+
+        descompuestas = descomponerFuerzas(fuerzas)
+        console.log("fx")
+        console.log(descompuestas.Fx)
+        console.log("fy")
+        console.log(descompuestas.Fy)
+
         
         stage.add(layer);
         layer.draw();
