@@ -52,7 +52,8 @@
         console.log(json)
         objects=json["children"][0]["children"]
 
-        var fuerzas = []
+        var fuerzas  = []
+        var momentos = []
         
         
         for (var i = 0; i<objects["length"]; i++){
@@ -75,9 +76,23 @@
             if( String( objects[i]["attrs"]["name"] ).substring(0,7) == 'momento' && String( objects[i]["attrs"]["name"] ).substring(8,12) != "tool"){
                 item=objects[i]
                 counter[6] = counter[6] + 1
-                console.log(counter[6])
-                newMomento(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1], objects[i]["attrs"]["magnitud"])
+                num = String(item["attrs"]["name"]).split("_")[1]
                 
+                
+                for (var j = 0; j<objects["length"]; j++){
+                  
+                  if(String( objects[j]["attrs"]["name"] ).split("_")[0] == 'textMoment' && String( objects[j]["attrs"]["name"] ).split("_")[1] == num){
+                    magn = String(objects[j]["attrs"]["text"])
+                    console.log(num, item["attrs"]["name"], magn)
+                    item["attrs"]["magnitud"] = magn
+                  }
+                }
+                newMomento(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, num, item["attrs"]["magnitud"])
+                
+                var newM = [];
+
+                newM.push(item["attrs"]["name"], item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], item["attrs"]["magnitud"])
+                momentos.push(newM)
               }
           }
           if(objects[i]["className"]=="Arrow"){
@@ -149,7 +164,7 @@
             }
           }
           
-          return fuerzas;
+          return {fuerzas, momentos};
         }   
 
       console.log("data entrandte:");
@@ -182,6 +197,18 @@
 					strokeWidth: 0.5,
 				}));
 			}
+
+      function cambiarPosMom(momentos){
+        
+
+        for( i=0; i<momentos.length; i++){
+          
+          momentos[i][2] = momentos[i][2] + 7.5;
+           
+        }
+
+        return momentos;
+      }
 
       function cambiarPos(fuerzas){
         
@@ -248,7 +275,7 @@
           
           if( Math.round(fuerzas[i][3]) == 0){
             var f = []
-            f.push(fuerzas[i][0], parseInt(fuerzas[i][4]))
+            f.push(fuerzas[i][0], parseInt(fuerzas[i][4]), Math.round(fuerzas[i][1]), Math.round(fuerzas[i][2]))
             Fx.push(f)
           }
 
@@ -257,12 +284,12 @@
             var fy = []
 
             f = -0.707 * parseInt(fuerzas[i][4])
-            fy.push(fuerzas[i][0], f)
+            fy.push(fuerzas[i][0], f, Math.round(fuerzas[i][1]), Math.round(fuerzas[i][2]))
             
             Fy.push(fy)
 
             f = 0.707 * parseInt(fuerzas[i][4])
-            fx.push(fuerzas[i][0], f)
+            fx.push(fuerzas[i][0], f, Math.round(fuerzas[i][1]), Math.round(fuerzas[i][2]))
             Fx.push(fx)
           }
 
@@ -270,7 +297,7 @@
             var fy = []
 
             f = -1 * parseInt(fuerzas[i][4])
-            fy.push(fuerzas[i][0], f)
+            fy.push(fuerzas[i][0], f, Math.round(fuerzas[i][1]), Math.round(fuerzas[i][2]))
             
             Fy.push(fy)
           }
@@ -280,12 +307,12 @@
             var fy = []
 
             f = -0.707 * parseInt(fuerzas[i][4])
-            fy.push(fuerzas[i][0], f)
+            fy.push(fuerzas[i][0], f, Math.round(fuerzas[i][1]), Math.round(fuerzas[i][2]))
             
             Fy.push(fy)
 
             f = -0.707 * parseInt(fuerzas[i][4])
-            fx.push(fuerzas[i][0], f)
+            fx.push(fuerzas[i][0], f, Math.round(fuerzas[i][1]), Math.round(fuerzas[i][2]))
             Fx.push(fx)
           }
 
@@ -293,7 +320,7 @@
             var fx = []
 
             f = -1 * parseInt(fuerzas[i][4])
-            fx.push(fuerzas[i][0], f)
+            fx.push(fuerzas[i][0], f, Math.round(fuerzas[i][1]), Math.round(fuerzas[i][2]))
             
             Fx.push(fx)
           }
@@ -304,12 +331,12 @@
             var fy = []
 
             f1 = 0.707 * parseInt(fuerzas[i][4])
-            fy.push(fuerzas[i][0], f1)
+            fy.push(fuerzas[i][0], f1, Math.round(fuerzas[i][1]), Math.round(fuerzas[i][2]))
             
             Fy.push(fy)
 
             f = -0.707 * parseInt(fuerzas[i][4])
-            fx.push(fuerzas[i][0], f)
+            fx.push(fuerzas[i][0], f, Math.round(fuerzas[i][1]), Math.round(fuerzas[i][2]))
             Fx.push(fx)
 
             
@@ -319,7 +346,7 @@
             var fy = []
 
             f = 1 * parseInt(fuerzas[i][4])
-            fy.push(fuerzas[i][0], f)
+            fy.push(fuerzas[i][0], f, Math.round(fuerzas[i][1]), Math.round(fuerzas[i][2]))
             
             Fy.push(fy)
           }
@@ -329,12 +356,12 @@
             var fy = []
 
             f = 0.707 * parseInt(fuerzas[i][4])
-            fy.push(fuerzas[i][0], f)
+            fy.push(fuerzas[i][0], f, Math.round(fuerzas[i][1]), Math.round(fuerzas[i][2]))
             
             Fy.push(fy)
 
             f = 0.707 * parseInt(fuerzas[i][4])
-            fx.push(fuerzas[i][0], f)
+            fx.push(fuerzas[i][0], f, Math.round(fuerzas[i][1]), Math.round(fuerzas[i][2]))
             Fx.push(fx)
           }
 
@@ -1104,7 +1131,7 @@
         
       }
     
-      function newMomento(x, y, rotation, layer, stage, count, name = null, magnitud="M") {
+      function newMomento(x, y, rotation, layer, stage, count, magnitud="M") {
         
         let momento = new Konva.Arc({
           x: x,
@@ -1151,6 +1178,8 @@
           nodes: [momento],
           centeredScaling: false,
           resizeEnabled: false,
+          rotationSnaps: [0],
+          rotationSnapTolerance: 360,
         });
         layer.add(tr);
         layer.add(momento);
@@ -1175,6 +1204,69 @@
             // remove node from array
           }
         });
+
+        /// fuerza en momento
+
+        var textNode = new Konva.Text({
+          text: magnitud,
+          x: x,
+          y: x,
+          fontSize: 10,
+          name: "textMoment_" + count.toString(),
+        });
+  
+        layer.add(textNode);
+
+        momento.on('dragstart', (e) => {
+					textNode.moveToTop();
+          console.log(momento.name(),  " magnitud: ", momento.magnitud)
+				});
+        
+				momento.on('dragend', (e) => {
+
+          textNode.position({
+            x: Math.round((momento.x() ) / blockSnapSize) * blockSnapSize + 15,
+            y: Math.round((momento.y() ) / blockSnapSize) * blockSnapSize + 15
+          });
+          
+          stage.batchDraw();
+          
+				});
+  
+        textNode.on('dblclick dbltap', () => {
+         
+          var textPosition = textNode.getAbsolutePosition();
+          var stageBox = stage.container().getBoundingClientRect();
+  
+          var areaPosition = {
+            x: momento.x() + 15,
+            y: momento.y() + 15,
+          };
+  
+          // create textarea and style it
+          var textarea = document.createElement('textarea');
+          document.body.appendChild(textarea);
+  
+          textarea.value = textNode.text();
+          textarea.style.position = 'absolute';
+          textarea.style.top = areaPosition.y + 'px';
+          textarea.style.left = areaPosition.x + 'px';
+          textarea.style.width = textNode.width();
+  
+          textarea.focus();
+  
+          textarea.addEventListener('keydown', function (e) {
+            // hide on enter
+            if (e.keyCode === 13) {
+              textNode.text(textarea.value);
+              momento.magnitud = textarea.value;
+              console.log("magn: ", momento.magnitud)
+              document.body.removeChild(textarea);
+            }
+          });
+        });
+
+        // fuerza en momento
       }
       
       function toolBar(layer, stage, counter) {
@@ -1535,12 +1627,15 @@
         counter = [0, 0, 0, 0, 0, 0, 0]
         
         toolBar(layer, stage, counter);
-        fuerzas = loadForm(data, counter);
+        fuerzasTotales = loadForm(data, counter);
         
 
-        fuerzas = cambiarPos(fuerzas)
+        fuerzas = cambiarPos(fuerzasTotales.fuerzas)
+        momentos = cambiarPosMom(fuerzasTotales.momentos)
         console.log("fuerzas")
         console.log(fuerzas)
+        console.log("Momentos")
+        console.log(momentos)
 
         descompuestas = descomponerFuerzas(fuerzas)
         console.log("fx")
