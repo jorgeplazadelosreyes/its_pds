@@ -119,6 +119,9 @@
             }
           }
           if(objects[i]["className"]=="RegularPolygon"){
+
+            console.log(objects[i]["attrs"]["magnitud_x"], objects[i]["attrs"]["magnitud_y"])
+
             if(String( objects[i]["attrs"]["name"] ).substring(0,4) == 'fijo' && String( objects[i]["attrs"]["name"] ).substring(5,9) != "tool"){
                 item=objects[i]
                 counter[1] = counter[1] + 1
@@ -200,7 +203,6 @@
 
       function cambiarPosMom(momentos){
         
-
         for( i=0; i<momentos.length; i++){
           
           momentos[i][2] = momentos[i][2] + 7.5;
@@ -624,8 +626,8 @@
           draggable: true,
           name: "fijo_" + count.toString(),
           rotation: rotation,
-          magnitud_x: magnitud_x,
-          magnitud_y: magnitud_y
+          magnitud_x: magnitud_x + "_" + count.toString(),
+          magnitud_y: magnitud_y + "_" + count.toString(),
         });
         fijo.on('dragstart', (e) => {
           shadowRectangle.show();
@@ -718,7 +720,7 @@
           draggable: true,
           name: "deslizante_" + count.toString(),
           rotation: rotation,
-          magnitud: magnitud
+          magnitud: magnitud + "_" + count.toString(),
         });
 
         var deslizanteT = new Konva.RegularPolygon({
@@ -831,8 +833,8 @@
           draggable: true,
           name: "empotrado_" + count.toString(),
           rotation: rotation,
-          magnitud_x: magnitud_x,
-          magnitud_y: magnitud_y,
+          magnitud_x: magnitud_x + "_" + count.toString(),
+          magnitud_y: magnitud_y + "_" + count.toString(),
           magnitud_m: magnitud_m
         });
 
