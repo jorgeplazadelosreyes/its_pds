@@ -1,44 +1,45 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<script src="https://unpkg.com/konva@8.3.12/konva.min.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		
-		<meta charset="utf-8" />
-		<title>Editar DCL</title>
-		<h2 style="margin_down:20; outline: black solid; text-align:center">Aca saldra un enunciado </h2>
-		<style>
-			body {
-				margin_top: 20;
-				margin_left: 20;
-				overflow: hidden;
-				background-color: #f0f0f0;
-				outline: black solid
-			}
-		</style>
-  	</head>
-  	<body>
-		<h6 id="homework-details" data-homework-id="{{ homework.id }}" data-homework-diagram = "{{ homework.diagram }}"></h6>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://unpkg.com/konva@8.3.12/konva.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous"/>
+	<title>Editar DCL</title>
+	<!-- <h2 style="margin_down:20; outline: black solid; text-align:center">Aca saldra un enunciado </h2> -->
+	<style>
+		body {
+			margin_top: 20;
+			margin_left: 20;
+			overflow: hidden;
+			background-color: #f0f0f0;
+			outline: black solid
+		}
+	</style>
+</head>
+<body>
+	<h6 id="homework-details" data-homework-id="{{ homework.id }}" data-homework-diagram = "{{ homework.diagram }}"></h6>
     
-		<div id="container"></div>
-		<script>
-			var alto = window.innerHeight - 200;
-			var largo = window.innerWidth - 30;
-			var shadowOffset = 20;
-			var tween = null;
-			var blockSnapSize = 30;
+	<div id="container"></div>
+	<script>
+  	var alto = window.innerHeight - 200;
+		var largo = window.innerWidth - 30;
+		var shadowOffset = 20;
+		var tween = null;
+		var blockSnapSize = 30;
 
-			var shadowRectangle = new Konva.Rect({
-				x: 0,
-				y: 0,
-				width: blockSnapSize,
-				height: blockSnapSize,
-				fill: '#FF7B17',
-				opacity: 0.6,
-				stroke: '#CF6412',
-				strokeWidth: 3,
-				dash: [20, 2]
-			});
+		var shadowRectangle = new Konva.Rect({
+			x: 0,
+			y: 0,
+			width: blockSnapSize,
+			height: blockSnapSize,
+			fill: '#FF7B17',
+			opacity: 0.6,
+			stroke: '#CF6412',
+			strokeWidth: 3,
+			dash: [20, 2]
+		});
       
 			data = $("#homework-details").data("homeworkDiagram")
 
@@ -1295,25 +1296,41 @@
         
         stage.add(layer);
         layer.draw();
-    </script>
-    <div>
-        <input id="save_btn" type="button" style="float: left;" value = "Guardar"/>
-        <input id="next_btn" type="button" style="float: right;" onclick="location.href='{% url 'edit_forces' homework_id=homework.id %}'" value = "Siguiente etapa"/>
-        
-      <script> 
+  </script>
+    <div class="container">
+      <div class="row mb-3">
+        <label for="exampleFormControlTextarea1" class="form-label">Enunciado:</label>
+        <textarea class="form-control" id="statement-text" rows="3"></textarea>
+        <div class="custom-file">
+          <input type="file" class="custom-file-input" id="customFile">
+          <label class="custom-file-label" for="customFile"></label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm">
+          <input id="save_btn" type="button" style="float: left;" value = "Guardar"/>
+        </div>
+        <div class="col-sm"></div>
+        <div class="col-sm">
+          <input id="next_btn" type="button" style="float: right;" onclick="location.href='{% url 'edit_forces' homework_id=homework.id %}'" value = "Salir"/>
+        </div>
+      </div>
+    </div>
+    <script> 
       $(document).ready(function () {
-			
 			let homework_id = $("#homework-details").data("homeworkId")
 			let btn2 = document.getElementById("save_btn");
 			btn2.addEventListener('click', event => {
-
+        let str_statement = $("#statement-text").val()
         let json = stage.toJSON();
+        console.log(statement)
 				$.ajax({
 					url: `/homework/${homework_id}/`,
               		type: "POST",
               		data:{
                 		"diagram": json,
-                		"id": homework_id,
+                		"id": homework_id, 
+                    "str_statement": str_statement,
 						        csrfmiddlewaretoken: "{{ csrf_token }}"
               		},
               		success: function (data) {
@@ -1326,7 +1343,6 @@
             	});
           	})
         });
-        </script>
-    </div>
+    </script>
   </body>
 </html>
