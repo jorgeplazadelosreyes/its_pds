@@ -46,24 +46,17 @@
 			//var stage = Konva.Node.create(data, "container")
 
       function loadForm(json, counter){
-        /*
-        layer.find('Line').destroy();
-        layer.find('Circle').destroy();
-        layer.find('Arrow').destroy();
-        layer.draw();
-        */
-        console.log("equis de");
         
         console.log(layer)
         
         console.log(json)
         objects=json["children"][0]["children"]
-        console.log(objects["length"])
+
+        var fuerzas = []
+        
         
         for (var i = 0; i<objects["length"]; i++){
           console.log(objects[i]["className"]);
-          
-          //console.log(objects[i]["attrs"]["name"]);
 
           if(objects[i]["className"]=="Rect"){
             if(objects[i]["attrs"]["name"]=='barra'){
@@ -83,7 +76,7 @@
                 item=objects[i]
                 counter[6] = counter[6] + 1
                 console.log(counter[6])
-                newMomento(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+                newMomento(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1], objects[i]["attrs"]["magnitud"])
                 
               }
           }
@@ -91,40 +84,56 @@
             if(String( objects[i]["attrs"]["name"] ).substring(0,5) == 'arrow' && String( objects[i]["attrs"]["name"] ).substring(6,10) != "tool"){
                 item=objects[i]
                 counter[0] = counter[0] + 1
-                newArrow(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+                num = String(item["attrs"]["name"]).split("_")[1]
+                
+                
+                for (var j = 0; j<objects["length"]; j++){
+                  
+                  if(String( objects[j]["attrs"]["name"] ).split("_")[0] == 'textArrow' && String( objects[j]["attrs"]["name"] ).split("_")[1] == num){
+                    magn = String(objects[j]["attrs"]["text"])
+                    console.log(num, item["attrs"]["name"], magn)
+                    item["attrs"]["magnitud"] = magn
+                  }
+                }
+                newArrow(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, num, item["attrs"]["magnitud"])
+                
+                var newForce = [];
+
+                newForce.push(item["attrs"]["name"], item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], item["attrs"]["magnitud"])
+                fuerzas.push(newForce)
             }
           }
           if(objects[i]["className"]=="RegularPolygon"){
             if(String( objects[i]["attrs"]["name"] ).substring(0,4) == 'fijo' && String( objects[i]["attrs"]["name"] ).substring(5,9) != "tool"){
                 item=objects[i]
                 counter[1] = counter[1] + 1
-                newFijo(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+                newFijo(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1], objects[i]["attrs"]["magnitud_x"], objects[i]["attrs"]["magnitud_y"])
             }
           }
           if(objects[i]["className"]=="Group"){
             if(String( objects[i]["attrs"]["name"] ).substring(0,10) == 'deslizante' && String( objects[i]["attrs"]["name"] ).substring(11,15) != "tool"){
                 item=objects[i]
                 counter[2] = counter[2] + 1
-                newDeslizante(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+                newDeslizante(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1], objects[i]["attrs"]["magnitud"])
             }
             else if(String( objects[i]["attrs"]["name"] ).substring(0,9) == 'empotrado' && String( objects[i]["attrs"]["name"] ).substring(10,14) != "tool"){
               item=objects[i]
               counter[3] = counter[3] + 1
-              newEmpotrado(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1]) 
+              newEmpotrado(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1], objects[i]["attrs"]["magnitud_x"], objects[i]["attrs"]["magnitud_y"], objects[i]["attrs"]["magnitud_m"]) 
             }
           }
           if(objects[i]["className"]=="Circle" || objects[i]["className"]=="Line"){
             if(String( objects[i]["attrs"]["name"] ).substring(0,6) == 'rotula' && String( objects[i]["attrs"]["name"] ).substring(7,11) != "tool"){
               item=objects[i]
               counter[4] = counter[4] + 1
-              newRotula(item["attrs"]["x"], item["attrs"]["y"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1]) 
+              newRotula(item["attrs"]["x"], item["attrs"]["y"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
             }
             else if(String( objects[i]["attrs"]["name"] ).substring(0,6) == 'biela1' && String( objects[i]["attrs"]["name"] ).substring(7,11) != "tool"){
               item=objects[i]
               x1 = item["attrs"]["x"]
               y1 = item["attrs"]["y"]
 
-              if(typeof(x1) != "undefined" && typeof(x2) != "undefined" && typeof(y1) != "undefined" && typeof(y2)){
+              if(typeof(x1) != undefined && typeof(x2) != undefined && typeof(y1) != undefined && typeof(y2) != undefined){
                 counter[5] = counter[5] + 1
                 }newBiela( x1, y1, x2, y2, layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
               }
@@ -133,14 +142,15 @@
               item=objects[i]
               x2 = item["attrs"]["x"]
               y2 = item["attrs"]["y"]
-              if(typeof(x1) != "undefined" && typeof(x2) != "undefined" && typeof(y1) != "undefined" && typeof(y2)){
+              if(typeof(x1) != undefined && typeof(x2) != undefined && typeof(y1) != undefined && typeof(y2) != undefined){
                 counter[5] = counter[5] + 1
                 newBiela( x1, y1, x2, y2, layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
               }
             }
           }
+          
+          return fuerzas;
         }   
-      
 
       console.log("data entrandte:");
       console.log(data["children"][0]["children"]);
@@ -173,7 +183,113 @@
 				}));
 			}
 
-			function newArrow(x, y, rotation, layer, stage, count) {
+      function descomponerFuerzas(fuerzas){
+        var Fx = []
+        var Fy = []
+
+        for( i=0; i<fuerzas.length; i++){
+          if(fuerzas[i][3] == undefined){
+            fuerzas[i][3] = 0
+          }
+          
+          if( Math.round(fuerzas[i][3]) == 0){
+            var f = []
+            f.push(fuerzas[i][0], parseInt(fuerzas[i][4]))
+            Fx.push(f)
+          }
+
+          else if( Math.round(fuerzas[i][3]) == 45){
+            var fx = []
+            var fy = []
+
+            f = -0.707 * parseInt(fuerzas[i][4])
+            fy.push(fuerzas[i][0], f)
+            
+            Fy.push(fy)
+
+            f = 0.707 * parseInt(fuerzas[i][4])
+            fx.push(fuerzas[i][0], f)
+            Fx.push(fx)
+          }
+
+          else if( Math.round(fuerzas[i][3]) == 90){
+            var fy = []
+
+            f = -1 * parseInt(fuerzas[i][4])
+            fy.push(fuerzas[i][0], f)
+            
+            Fy.push(fy)
+          }
+
+          else if( Math.round(fuerzas[i][3]) == 135){
+            var fx = []
+            var fy = []
+
+            f = -0.707 * parseInt(fuerzas[i][4])
+            fy.push(fuerzas[i][0], f)
+            
+            Fy.push(fy)
+
+            f = -0.707 * parseInt(fuerzas[i][4])
+            fx.push(fuerzas[i][0], f)
+            Fx.push(fx)
+          }
+
+          else if( Math.round(fuerzas[i][3]) == 180 ||  Math.round(fuerzas[i][3]) == -180 ){
+            var fx = []
+
+            f = -1 * parseInt(fuerzas[i][4])
+            fx.push(fuerzas[i][0], f)
+            
+            Fx.push(fx)
+          }
+
+          else if( Math.round(fuerzas[i][3]) == -135){
+            
+            var fx = []
+            var fy = []
+
+            f1 = 0.707 * parseInt(fuerzas[i][4])
+            fy.push(fuerzas[i][0], f1)
+            
+            Fy.push(fy)
+
+            f = -0.707 * parseInt(fuerzas[i][4])
+            fx.push(fuerzas[i][0], f)
+            Fx.push(fx)
+
+            
+          }
+
+          else if( Math.round(fuerzas[i][3]) == -90){
+            var fy = []
+
+            f = 1 * parseInt(fuerzas[i][4])
+            fy.push(fuerzas[i][0], f)
+            
+            Fy.push(fy)
+          }
+
+          else if( Math.round(fuerzas[i][3]) == -45){
+            var fx = []
+            var fy = []
+
+            f = 0.707 * parseInt(fuerzas[i][4])
+            fy.push(fuerzas[i][0], f)
+            
+            Fy.push(fy)
+
+            f = 0.707 * parseInt(fuerzas[i][4])
+            fx.push(fuerzas[i][0], f)
+            Fx.push(fx)
+          }
+
+        }
+        return {Fx, Fy}
+      }
+      
+
+			function newArrow(x, y, rotation = 0, layer, stage, count, magnitud = 0) {
 				var arrow = new Konva.Arrow({
 					x: x,
 					y: y,
@@ -191,6 +307,7 @@
 					rotation: 0,
           name: "arrow_" + count.toString(),
           rotation: rotation,
+          magnitud: magnitud,
 				});
 
 				arrow.on('dragstart', (e) => {
@@ -319,7 +436,7 @@
           rotationSnapTolerance: 22.5,
 				});
 				layer.add(tr);
-        
+
         layer.add(arrow);
         stage.on('click tap', function (e) {
           if (e.target === arrow) {
@@ -343,9 +460,72 @@
           }
         });
 
+        /// fuerza en arrow
+
+        var textNode = new Konva.Text({
+          text: magnitud,
+          x: x,
+          y: x,
+          fontSize: 10,
+          name: "textArrow_" + count.toString(),
+        });
+  
+        layer.add(textNode);
+
+        arrow.on('dragstart', (e) => {
+					textNode.moveToTop();
+          console.log(arrow.name(),  " magnitud: ", arrow.magnitud)
+				});
+        
+				arrow.on('dragend', (e) => {
+
+          textNode.position({
+            x: Math.round((arrow.x() ) / blockSnapSize) * blockSnapSize + 15,
+            y: Math.round((arrow.y() ) / blockSnapSize) * blockSnapSize + 15
+          });
+          
+          stage.batchDraw();
+          
+				});
+  
+        textNode.on('dblclick dbltap', () => {
+         
+          var textPosition = textNode.getAbsolutePosition();
+          var stageBox = stage.container().getBoundingClientRect();
+  
+          var areaPosition = {
+            x: arrow.x() + 15,
+            y: arrow.y() + 15,
+          };
+  
+          // create textarea and style it
+          var textarea = document.createElement('textarea');
+          document.body.appendChild(textarea);
+  
+          textarea.value = textNode.text();
+          textarea.style.position = 'absolute';
+          textarea.style.top = areaPosition.y + 'px';
+          textarea.style.left = areaPosition.x + 'px';
+          textarea.style.width = textNode.width();
+  
+          textarea.focus();
+  
+          textarea.addEventListener('keydown', function (e) {
+            // hide on enter
+            if (e.keyCode === 13) {
+              textNode.text(textarea.value);
+              arrow.magnitud = textarea.value;
+              console.log("magn: ", arrow.magnitud)
+              document.body.removeChild(textarea);
+            }
+          });
+        });
+
+        // fuerza en arrow
+
       }
 
-      function newFijo(x, y, rotation, layer, stage, count) {
+      function newFijo(x, y, rotation, layer, stage, count, magnitud_x="Fx", magnitud_y="Fy") {
         let fijo = new Konva.RegularPolygon({
           x: x,
           y: y,
@@ -361,6 +541,8 @@
           draggable: true,
           name: "fijo_" + count.toString(),
           rotation: rotation,
+          magnitud_x: magnitud_x,
+          magnitud_y: magnitud_y
         });
         fijo.on('dragstart', (e) => {
           shadowRectangle.show();
@@ -441,7 +623,7 @@
         });
       }
 
-      function newDeslizante(x, y, rotation, layer, stage, count) {
+      function newDeslizante(x, y, rotation, layer, stage, count, magnitud = "D") {
         var deslizante = new Konva.Group({
           x: x,
           y: y,
@@ -453,6 +635,7 @@
           draggable: true,
           name: "deslizante_" + count.toString(),
           rotation: rotation,
+          magnitud: magnitud
         });
 
         var deslizanteT = new Konva.RegularPolygon({
@@ -553,7 +736,7 @@
         });
       }
 
-      function newEmpotrado(x, y, rotation, layer, stage, count) {
+      function newEmpotrado(x, y, rotation, layer, stage, count, magnitud_x="Ex", magnitud_y="Ey", magnitud_m="Em") {
         var empotrado= new Konva.Group({
           x: x,
           y: y,
@@ -565,6 +748,9 @@
           draggable: true,
           name: "empotrado_" + count.toString(),
           rotation: rotation,
+          magnitud_x: magnitud_x,
+          magnitud_y: magnitud_y,
+          magnitud_m: magnitud_m
         });
 
         var empotrado1 = new Konva.Line({
@@ -862,7 +1048,7 @@
         
       }
     
-      function newMomento(x, y, rotation, layer, stage, count, name = null) {
+      function newMomento(x, y, rotation, layer, stage, count, name = null, magnitud="M") {
         
         let momento = new Konva.Arc({
           x: x,
@@ -880,6 +1066,7 @@
           draggable: true,
           name: "momento_" + count.toString(),
           rotation: rotation,
+          magnitud: magnitud
         });
         
         momento.on('dragstart', (e) => {
@@ -966,7 +1153,7 @@
         });
         arrow.on('pointerdown', function () {
           counter[0] = counter[0] + 1
-          newArrow(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[0]);
+          newArrow(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[0], 0);
           //let json = stage.toJSON();
           //console.log(JSON.parse(json)["children"][0]["children"])
         });
@@ -1292,7 +1479,16 @@
         counter = [0, 0, 0, 0, 0, 0, 0]
         
         toolBar(layer, stage, counter);
-        loadForm(data, counter);
+        fuerzas = loadForm(data, counter);
+        console.log("fuerzas")
+        console.log(fuerzas)
+
+        descompuestas = descomponerFuerzas(fuerzas)
+        console.log("fx")
+        console.log(descompuestas.Fx)
+        console.log("fy")
+        console.log(descompuestas.Fy)
+
         
         stage.add(layer);
         layer.draw();
