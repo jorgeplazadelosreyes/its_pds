@@ -47,9 +47,6 @@
 
       function loadForm(json, counter){
         
-        console.log(layer)
-        
-        console.log(json)
         objects=json["children"][0]["children"]
 
         var fuerzas  = []
@@ -57,7 +54,7 @@
         
         
         for (var i = 0; i<objects["length"]; i++){
-          console.log(objects[i]["className"]);
+          
 
           if(objects[i]["className"]=="Rect"){
             if(objects[i]["attrs"]["name"]=='barra'){
@@ -70,9 +67,6 @@
           
           if(objects[i]["className"]=="Arc"){
 
-            console.log("this moment: ",  String(objects[i]["attrs"]["name"]).substring(8,10))
-            
-            console.log(counter)
             if( String( objects[i]["attrs"]["name"] ).substring(0,7) == 'momento' && String( objects[i]["attrs"]["name"] ).substring(8,12) != "tool"){
                 item=objects[i]
                 counter[6] = counter[6] + 1
@@ -83,7 +77,7 @@
                   
                   if(String( objects[j]["attrs"]["name"] ).split("_")[0] == 'textMoment' && String( objects[j]["attrs"]["name"] ).split("_")[1] == num){
                     magn = String(objects[j]["attrs"]["text"])
-                    console.log(num, item["attrs"]["name"], magn)
+                    
                     item["attrs"]["magnitud"] = magn
                   }
                 }
@@ -106,7 +100,7 @@
                   
                   if(String( objects[j]["attrs"]["name"] ).split("_")[0] == 'textArrow' && String( objects[j]["attrs"]["name"] ).split("_")[1] == num){
                     magn = String(objects[j]["attrs"]["text"])
-                    console.log(num, item["attrs"]["name"], magn)
+                    
                     item["attrs"]["magnitud"] = magn
                   }
                 }
@@ -130,11 +124,13 @@
           }
           if(objects[i]["className"]=="Group"){
             if(String( objects[i]["attrs"]["name"] ).substring(0,10) == 'deslizante' && String( objects[i]["attrs"]["name"] ).substring(11,15) != "tool"){
-                item=objects[i]
+              console.log(objects[i]["attrs"]["magnitud"])  
+              item=objects[i]
                 counter[2] = counter[2] + 1
                 newDeslizante(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1], objects[i]["attrs"]["magnitud"])
             }
             else if(String( objects[i]["attrs"]["name"] ).substring(0,9) == 'empotrado' && String( objects[i]["attrs"]["name"] ).substring(10,14) != "tool"){
+              console.log(objects[i]["attrs"]["magnitud_x"], objects[i]["attrs"]["magnitud_y"])
               item=objects[i]
               counter[3] = counter[3] + 1
               newEmpotrado(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1], objects[i]["attrs"]["magnitud_x"], objects[i]["attrs"]["magnitud_y"], objects[i]["attrs"]["magnitud_m"]) 
@@ -400,10 +396,11 @@
 					shadowRectangle.moveToTop();
 					arrow.moveToTop();
           console.log(arrow.name())
+          console.log("rotation: ", arrow.rotation())
 				});
         
 				arrow.on('dragend', (e) => {
-          console.log("rotation: ", arrow.rotation())
+          
 
           if(arrow.rotation() == 0){
             arrow.position({
@@ -559,7 +556,6 @@
 
         arrow.on('dragstart', (e) => {
 					textNode.moveToTop();
-          console.log(arrow.name(),  " magnitud: ", arrow.magnitud)
 				});
         
 				arrow.on('dragend', (e) => {
@@ -600,7 +596,6 @@
             if (e.keyCode === 13) {
               textNode.text(textarea.value);
               arrow.magnitud = textarea.value;
-              console.log("magn: ", arrow.magnitud)
               document.body.removeChild(textarea);
             }
           });
@@ -634,10 +629,10 @@
           shadowRectangle.moveToTop();
           fijo.moveToTop();
           console.log(fijo.name())
+          console.log("rotation: ", fijo.rotation())
         });
         fijo.on('dragend', (e) => {
 
-          console.log("rotation: ", fijo.rotation())
 
           if(fijo.rotation() == 0){
             fijo.position({
@@ -749,6 +744,7 @@
           shadowRectangle.moveToTop();
           deslizante.moveToTop();
           console.log(deslizante.name())
+          console.log(deslizante.rotation())
         });
         deslizante.on('dragend', (e) => {
 
@@ -762,7 +758,7 @@
           shadowRectangle.hide();
         });
         deslizante.on('dragmove', (e) => {
-          console.log(deslizante.rotation())
+          
           if(Math.round(deslizante.rotation()) == 0){
             shadowRectangle.position({
               x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize,
@@ -1084,8 +1080,6 @@
         b1.on('dragend', updateLine);
         b2.on('dragend', updateLine);
         
-        console.log("LINEA")
-        console.log(line)
         layer.add(line);
         layer.add(b1);
         layer.add(b2);
@@ -1221,7 +1215,6 @@
 
         momento.on('dragstart', (e) => {
 					textNode.moveToTop();
-          console.log(momento.name(),  " magnitud: ", momento.magnitud)
 				});
         
 				momento.on('dragend', (e) => {
@@ -1262,7 +1255,6 @@
             if (e.keyCode === 13) {
               textNode.text(textarea.value);
               momento.magnitud = textarea.value;
-              console.log("magn: ", momento.magnitud)
               document.body.removeChild(textarea);
             }
           });
@@ -1304,8 +1296,7 @@
         arrow.on('pointerdown', function () {
           counter[0] = counter[0] + 1
           newArrow(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[0], 0);
-          //let json = stage.toJSON();
-          //console.log(JSON.parse(json)["children"][0]["children"])
+
         });
 
         var arrowText = new Konva.Text({
