@@ -6,4 +6,4 @@ class Homework(models.Model):
     title = models.CharField(max_length=20)
     statement_text = models.TextField(null=True, blank=True, default="")
     statement_file = models.FileField(null=True)
-    difficulty = models.IntegerField(null=True)
+    difficulty = models.IntegerField(null=True, default=0)

@@ -27,18 +27,6 @@
         var shadowOffset = 20;
         var tween = null;
         var blockSnapSize = 30;
-  
-        var shadowRectangle = new Konva.Rect({
-          x: 0,
-          y: 0,
-          width: blockSnapSize,
-          height: blockSnapSize,
-          fill: '#FF7B17',
-          opacity: 0.6,
-          stroke: '#CF6412',
-          strokeWidth: 3,
-          dash: [20, 2]
-        });
         
         data = $("#homework-details").data("homeworkDiagram")
   
@@ -83,6 +71,8 @@
                   }
             }
             if(objects[i]["className"]=="Arrow"){
+              console.log("PILLE UNA FLECHA")
+              console.log(objects[i]["attrs"]["name"])
               if(objects[i]["attrs"]["name"]=='arrow'){
                   item=objects[i]
                   newArrow(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage)
@@ -171,165 +161,11 @@
             fill: 'black',
             stroke: 'black',
             strokeWidth: 4,
-            shadowColor: 'black',
-            shadowBlur: 2,
-            shadowOffset: {x : 1, y : 1},
-            shadowOpacity: 0.4,
-            draggable: true,
+            draggable: false,
             rotation: 0,
-            name: "arrow",
             rotation: rotation,
           });
-  
-          arrow.on('dragstart', (e) => {
-            shadowRectangle.show();
-            shadowRectangle.moveToTop();
-            arrow.moveToTop();
-          });
-          
-          arrow.on('dragend', (e) => {
-            console.log("rotation: ", arrow.rotation())
-  
-            if(arrow.rotation() == 0){
-              arrow.position({
-                x: Math.round((arrow.x() ) / blockSnapSize) * blockSnapSize  ,
-                y: Math.round((arrow.y() ) / blockSnapSize) * blockSnapSize + 15
-              });
-            }
-            else if(Math.round(arrow.rotation()) == 45){
-              arrow.position({
-                x: Math.round((arrow.x() + 15) / blockSnapSize) * blockSnapSize ,
-                y: Math.round((arrow.y() + 15) / blockSnapSize) * blockSnapSize 
-              });
-            }
-            else if(Math.round(arrow.rotation()) == 90){
-              arrow.position({
-                x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 15,
-                y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 0
-              });
-            }
-            else if(Math.round(arrow.rotation()) == 135){
-              arrow.position({
-                x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 0,
-                y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 0
-              });
-            }
-            else if(Math.round(arrow.rotation()) == 180){
-              arrow.position({
-                x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 0,
-                y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 15
-              });
-            }
-            else if(Math.round(arrow.rotation()) == -135){
-              arrow.position({
-                x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize - 20,
-                y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 10
-              });
-            }
-            else if(Math.round(arrow.rotation()) == -90){
-              arrow.position({
-                x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 15,
-                y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 0
-              });
-            }
-            else if(Math.round(arrow.rotation()) == -45){
-              arrow.position({
-                x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 0,
-                y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 0
-              });
-            }
-          stage.batchDraw();
-          shadowRectangle.hide();
-          });
-          arrow.on('dragmove', (e) => {
-            if(arrow.rotation() == 0){
-              shadowRectangle.position({
-                x: Math.round((arrow.x() + 60) / blockSnapSize) * blockSnapSize,
-                y: Math.round((arrow.y() ) / blockSnapSize) * blockSnapSize
-              });
-            }
-  
-            else if(Math.round(arrow.rotation()) == 90){
-              shadowRectangle.position({
-                x: Math.round((arrow.x() + 0) / blockSnapSize) * blockSnapSize,
-                y: Math.round((arrow.y() + 60) / blockSnapSize) * blockSnapSize
-              });
-            }
-            else if(Math.round(arrow.rotation()) == 135){
-              shadowRectangle.position({
-                x: Math.round((arrow.x() - 60) / blockSnapSize) * blockSnapSize,
-                y: Math.round((arrow.y() + 30) / blockSnapSize) * blockSnapSize
-              });
-            }
-            else if(Math.round(arrow.rotation()) == 180){
-              shadowRectangle.position({
-                x: Math.round((arrow.x() - 90) / blockSnapSize) * blockSnapSize,
-                y: Math.round((arrow.y() + 0) / blockSnapSize) * blockSnapSize
-              });
-            }
-            else if(Math.round(arrow.rotation()) == -135){
-              shadowRectangle.position({
-                x: Math.round((arrow.x() - 90) / blockSnapSize) * blockSnapSize,
-                y: Math.round((arrow.y() - 60) / blockSnapSize) * blockSnapSize
-              });
-            }
-            else if(Math.round(arrow.rotation()) == -90){
-              shadowRectangle.position({
-                x: Math.round((arrow.x() - 0) / blockSnapSize) * blockSnapSize,
-                y: Math.round((arrow.y() - 90) / blockSnapSize) * blockSnapSize
-              });
-            }
-            else if(Math.round(arrow.rotation()) == -45){
-              shadowRectangle.position({
-                x: Math.round((arrow.x() + 30) / blockSnapSize) * blockSnapSize,
-                y: Math.round((arrow.y() - 60) / blockSnapSize) * blockSnapSize
-              });
-            }
-  
-  
-            else {
-              shadowRectangle.position({
-                x: Math.round((arrow.x() + 45) / blockSnapSize) * blockSnapSize,
-                y: Math.round((arrow.y() + 45) / blockSnapSize) * blockSnapSize
-              });
-            }
-          
-          stage.batchDraw();
-          });
-  
-          var tr = new Konva.Transformer({
-            nodes: [arrow],
-            centeredScaling: false,
-            resizeEnabled: false,
-            rotation: 0,
-            rotationSnaps: [0, 45, 90, 135, 180, 225, 270, 315, 360],
-            rotationSnapTolerance: 22.5,
-          });
-          layer.add(tr);
-          
           layer.add(arrow);
-          stage.on('click tap', function (e) {
-            if (e.target === arrow) {
-              tr.nodes([arrow]);
-            }
-            // if click on empty area - remove all selections
-            if (e.target === stage) {
-              tr.nodes([]);
-              return;
-            }
-  
-            const metaPressed = e.evt.ctrlKey;
-            const isSelected = tr.nodes().indexOf(e.target) >= 0;
-  
-            if (metaPressed && isSelected) {
-              // if we pressed keys and node was selected
-              // we need to remove it from selection:
-              tr.nodes([]);
-              const nodes = e.target.destroy(); // use slice to have new copy of array
-              // remove node from array
-            }
-          });
-  
         }
   
         function newFijo(x, y, rotation, layer, stage) {
@@ -341,196 +177,56 @@
             fill: 'grey',
             stroke: 'black',
             strokeWidth: 2,
-            shadowColor: 'black',
-            shadowBlur: 2,
-            shadowOffset: {x : 1, y : 1},
-            shadowOpacity: 0.4,
-            draggable: true,
-            name: "fijo",
+            draggable: false,
             rotation: rotation,
           });
-          fijo.on('dragstart', (e) => {
-            shadowRectangle.show();
-            shadowRectangle.moveToTop();
-            fijo.moveToTop();
-          });
-          fijo.on('dragend', (e) => {
-  
-            console.log("rotation: ", fijo.rotation())
-  
-            if(fijo.rotation() == 0){
-              fijo.position({
-                x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize +15,
-                y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize + 15
-              });
-            }
-            else if(fijo.rotation() == 90){
-              fijo.position({
-                x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize +15,
-                y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize + 15
-              });
-            }
-            else if(fijo.rotation() == 180){
-              fijo.position({
-                x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize +15,
-                y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize + 15
-              });
-            }
-            else if(Math.round(fijo.rotation()) == -90){
-              fijo.position({
-                x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize +15,
-                y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize + 15
-              });
-            }
-            stage.batchDraw();
-            shadowRectangle.hide();
-          });
-          fijo.on('dragmove', (e) => {
-            
-            shadowRectangle.position({
-              x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize,
-              y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize
-            });
-            
-            stage.batchDraw();
-          });
-  
-          var tr = new Konva.Transformer({
-            nodes: [fijo],
-            centeredScaling: false,
-            resizeEnabled: false,
-            rotationSnaps: [0, 90, 180, 270],
-            rotationSnapTolerance: 45,
-          });
-          layer.add(tr);
           layer.add(fijo);
           stage.on('click tap', function (e) {
             if (e.target === fijo) {
-              tr.nodes([fijo]);
-            }
-            // if click on empty area - remove all selections
-            if (e.target === stage) {
-              tr.nodes([]);
-              return;
-            }
-  
-            const metaPressed = e.evt.ctrlKey;
-            const isSelected = tr.nodes().indexOf(e.target) >= 0;
-  
-            if (metaPressed && isSelected) {
-              // if we pressed keys and node was selected
-              // we need to remove it from selection:
-              tr.nodes([]);
-              const nodes = e.target.destroy(); // use slice to have new copy of array
-              // remove node from array
+              newCorrect(e.target.x,e.target.y, layer, stage);
             }
           });
         }
-
-        
-        function toolBar(layer, stage) {
-          // PRETTY
-          var separadorTool = new Konva.Line({
-            points: [largo - 85, 0, largo - 85, 600],
-            stroke: 'red',
-            strokeWidth: 4,
-            lineCap: 'round',
-            lineJoin: 'round',
-            
-          });
-          layer.add(separadorTool)
-          
-          // ARROW
-          let arrow = new Konva.Arrow({
-            x: largo - 37.5,
-            y: 35,
-            points: [0, 0, 20, 10],
-            pointerLength: 2,
-            pointerWidth: 2,
-            rotation: 62,
-            fill: 'black',
-            stroke: 'black',
-            strokeWidth: 4,
-            shadowColor: 'black',
-            shadowBlur: 2,
-            shadowOffset: {x : 1, y : 1},
-            shadowOpacity: 0.4,
-            draggable: false,
-          });
-
-          var arrowText = new Konva.Text({
-            x: largo - 52,
-            y: 65,
-            text: 'Fuerza',
-            fontSize: 12,
-            fontFamily: 'Calibri',
-            fill: 'balck',
-          });
-          layer.add(arrowText);
-          // ARROW
-          // FIJO
-          var fijo = new Konva.RegularPolygon({
-            x: largo - 35,
-            y: 110,
-            sides: 3,
-            radius: 15,
-            fill: 'gray',
-            stroke: 'black',
-            strokeWidth: 2,
-          });
-  
-          var fijoText = new Konva.Text({
-            x: largo - 43,
-            y: 125,
-            text: 'Fijo',
-            fontSize: 12,
-            fontFamily: 'Calibri',
-            fill: 'balck',
-          });
-          layer.add(fijoText);
-          // FIJO
-          // DESLIZANTE
+        function newDeslizante(x, y, rotation, layer, stage) {
           var deslizante = new Konva.Group({
-            x: largo - 50,
-            y: 180,
+            x: x,
+            y: y,
+            draggable: false,
+            rotation: rotation,
           });
-  
           var deslizanteT = new Konva.RegularPolygon({
             x: 15,
-            y: -10,
+            y: -13,
             sides: 3,
             radius: 15,
             fill: 'gray',
             stroke: 'black',
             strokeWidth: 2,
           });
-  
           var deslizanteL = new Konva.Line({
             points: [0, 0, 30, 0],
             stroke: 'red',
             strokeWidth: 4,
             lineCap: 'round',
             lineJoin: 'round',
-            
           });
-  
           deslizante.add(deslizanteT);
           deslizante.add(deslizanteL);
-  
-          var deslizanteText = new Konva.Text({
-            x: largo - 60,
-            y: 185,
-            text: 'Deslizante',
-            fontSize: 12,
-            fontFamily: 'Calibri',
-            fill: 'balck',
+          layer.add(deslizante);
+
+          stage.on('click tap', function (e) {
+            if (e.target === deslizante) {
+              newCorrect(e.target.x,e.target.y, layer, stage);
+            }
           });
-          layer.add(deslizanteText);
-          // DESLIZANTE
-          // EMPOTRADO
-          var empotrado = new Konva.Group({
-            x: largo - 50,
-            y: 240,
+        }
+
+        function newEmpotrado(x, y, rotation, layer, stage) {
+          var empotrado= new Konva.Group({
+            x: x,
+            y: y,
+            draggable: false,
+            rotation: rotation,
           });
   
           var empotrado1 = new Konva.Line({
@@ -539,188 +235,124 @@
             strokeWidth: 4,
             lineCap: 'round',
             lineJoin: 'round',
-            
           });
-  
           var empotrado2 = new Konva.Line({
             points: [0, 0, 30, 0],
             stroke: 'red',
             strokeWidth: 4,
             lineCap: 'round',
             lineJoin: 'round',
-            
           });
-  
           empotrado.add(empotrado1);
           empotrado.add(empotrado2);
-  
-          var empotradoText = new Konva.Text({
-            x: largo - 80,
-            y: 245,
-            text: 'Empotramiento',
-            fontSize: 12,
-            fontFamily: 'Calibri',
-            fill: 'balck',
+          layer.add(empotrado);
+
+          stage.on('click tap', function (e) {
+            if (e.target === empotrado) {
+              newCorrect(e.target.x,e.target.y, layer, stage);
+            }
           });
-          layer.add(empotradoText);
-          // EMPOTRADO
-          // ROTULA
+        }
+
+        function newRotula(x, y, layer, stage) {
+          console.log("AQUI ENTRO A UNA ROTULA")
           var rotula = new Konva.Circle({
-            x: largo - 35,
-            y: 285,
-            radius: 7.5,
+            x: x,
+            y: y,
+            radius: 15,
             fill: 'red',
             stroke: 'black',
             strokeWidth: 2,
+            draggable: false,
           });
-  
-          var rotulaText = new Konva.Text({
-            x: largo - 50,
-            y: 305,
-            text: 'Rotula',
-            fontSize: 12,
-            fontFamily: 'Calibri',
-            fill: 'balck',
+          layer.add(rotula);
+          stage.on('click tap', function (e) {
+            if (e.target === rotula) {
+              newCorrect(e.target.x,e.target.y, layer, stage);
+            }
           });
-          layer.add(rotulaText);
-          // ROTULA
-          // BIELA
-          var biela = new Konva.Circle({
-            x: largo - 35,
-            y: 345,
-            radius: 7.5,
+        }
+
+        function newBiela(x1, y1, x2=x1+30, y2=y1, layer, stage) {
+          var b1 = new Konva.Circle({
+            x: x1,
+            y: y1,
+            radius: 15,
             fill: 'green',
             stroke: 'black',
             strokeWidth: 2,
+            draggable: false,
           });
-  
-          var bielaText = new Konva.Text({
-            x: largo - 50,
-            y: 365,
-            text: 'Biela',
-            fontSize: 12,
-            fontFamily: 'Calibri',
-            fill: 'balck',
+          var b2 = new Konva.Circle({
+            x: x2,
+            y: y2,
+            radius: 15,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 2,
+            draggable: false,
           });
-          layer.add(bielaText);
-          // BIELA
-  
-          //MOMENTO
+          const line = new Konva.Line({
+            points: [x1,y1,x2,y2],
+            stroke: 'green',
+          });
+          layer.add(line);
+          layer.add(b1);
+          layer.add(b2);
+
+          stage.on('click tap', function (e) {
+            if (e.target === biela) {
+              newCorrect(e.target.x,e.target.y, layer, stage);
+            }
+          });
+        }
+
+        function newBarra(x, y, layer, stage) {
+          var barra = new Konva.Rect({
+            x: x,
+            y: y,
+            width: 30,
+            height: 30,
+            fill: 'gray',
+            stroke: 'black',
+            strokeWidth: 1,
+            draggable: false,
+          });
+          layer.add(barra);
+        }
+
+        function newMomento(x, y, rotation, layer, stage, name = null) {
+        
           let momento = new Konva.Arc({
-            x: largo - 37.5,
-            y: 400,
+            x: x,
+            y: y,
             innerRadius: 10,
             outerRadius: 20,
             angle: 180,
             fill: 'yellow',
             stroke: 'black',
             strokeWidth: 4,
-            shadowColor: 'black',
-            shadowBlur: 2,
-            shadowOffset: {x : 1, y : 1},
-            shadowOpacity: 0.4,
             draggable: false,
+            rotation: rotation,
           });
-  
-          var momentoText = new Konva.Text({
-            x: largo - 57,
-            y: 425,
-            text: 'momento',
-            fontSize: 12,
-            fontFamily: 'Calibri',
-            fill: 'balck',
-          });
-          layer.add(momentoText);
-          //MOMENTO
-  
-          //BARRA
-          let barra = new Konva.Rect({
-            x: largo -50,
-            y: 450,
-            width: 25,
-            height: 25,
-            
-            fill: 'gray',
-            stroke: 'black',
-            strokeWidth: 3,
-            shadowColor: 'black',
-            shadowBlur: 2,
-            shadowOffset: {x : 1, y : 1},
-            shadowOpacity: 0.4,
-            draggable: false,
-          });
-  
-          var barraText = new Konva.Text({
-            x: largo - 50,
-            y: 480,
-            text: 'barra',
-            fontSize: 12,
-            fontFamily: 'Calibri',
-            fill: 'balck',
-          });
-          layer.add(barraText);
-          //BARRA
-  
-          layer.add(arrow);
-          layer.add(fijo);
-          layer.add(deslizante);
-          layer.add(empotrado);
-          layer.add(rotula);
-          layer.add(biela);
           layer.add(momento);
-          layer.add(barra);
-  
         }
-          
-        stage.on('mouseover', (e) => {
-          if (e.target.hasName('node')) {
-            e.target.stroke('black');
-            layer.draw();
-          }
-        });
-          
-        stage.on('mouseout', (e) => {
-          if (e.target.hasName('node')) {
-            e.target.stroke(null);
-            layer.draw();
-          }
-        });
-          
-        stage.on('mousemove', (e) => {
-          if (!line) {
-            return;
-          }
-          const pos = stage.getPointerPosition();
-          const points = line.points().slice();
-          points[2] = pos.x;
-          points[3] = pos.y;
-          line.points(points);
-          layer.batchDraw();
-        });
-          
-        stage.on('mouseup', (e) => {
-          if (!line) {
-            return;
-          }
-          if (!e.target.hasName('node')) {
-            line.destroy();
-            layer.draw();
-            line = null;
-          } else {
-            let pos = e.target.getClientRect();
-            const points = line.points().slice();
-            points[2] = pos.x + (e.target.width()/2);
-            points[3] = pos.y + (e.target.height()/2);;
-            line.points(points);
-            layer.batchDraw();
-            line = null;
-          }      
-        });
-  
-        shadowRectangle.hide();
-        layer.add(shadowRectangle);
 
-        toolBar(layer, stage);
+        function newCorrect(x, y, layer, stage) {
+          var correct = new Konva.Rect({
+            x: x,
+            y: y,
+            width: 30,
+            height: 30,
+            fill: rgba(0, 255, 0, 0.5),
+            stroke: 'green',
+            strokeWidth: 1,
+            draggable: false,
+            name: "correct",
+          });
+          layer.add(correct);
+        }
+
         loadForm(data);
         
         stage.add(layer);
