@@ -19,7 +19,7 @@
 	</style>
 </head>
 <body>
-	<h6 id="homework-details" data-homework-id="{{ homework.id }}" data-homework-diagram = "{{ homework.diagram }}" data-homework-statement="{{ homework.statement_text }} "></h6>
+	<h6 id="homework-details" data-homework-id="{{ homework.id }}" data-homework-diagram = "{{ homework.diagram }}" data-homework-statement="{{ homework.statement_text }} " data-homework-difficulty="{{ homework.difficulty }} "></h6>
     
 	<div id="container"></div>
 	<script>
@@ -64,7 +64,7 @@
                 newBarra(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
                 
               }
-        }
+          }
           
           if(objects[i]["className"]=="Arc"){
 
@@ -157,14 +157,6 @@
               counter[4] = counter[4] + 1
               newRotula(item["attrs"]["x"], item["attrs"]["y"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
             }
-
-            else if(String( objects[i]["attrs"]["name"] ).substring(0,5) == 'punto' && String( objects[i]["attrs"]["name"] ).substring(6,10) != "tool"){
-              item=objects[i]
-              counter[7] = counter[7] + 1
-              newPunto(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
-              var punto = [item["attrs"]["x"], item["attrs"]["y"]]
-            }
-
             else if(String( objects[i]["attrs"]["name"] ).substring(0,6) == 'biela1' && String( objects[i]["attrs"]["name"] ).substring(7,11) != "tool"){
               item=objects[i]
               x1 = item["attrs"]["x"]
@@ -172,7 +164,7 @@
 
               if(typeof(x1) != undefined && typeof(x2) != undefined && typeof(y1) != undefined && typeof(y2) != undefined){
                 counter[5] = counter[5] + 1
-                newBiela( x1, y1, x2, y2, layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+                }newBiela( x1, y1, x2, y2, layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
               }
             }
             else if(String( objects[i]["attrs"]["name"] ).substring(0,6) == 'biela2' && String( objects[i]["attrs"]["name"] ).substring(7,11) != "tool"){
@@ -185,8 +177,8 @@
               }
             }
           }
-        }
-          return {fuerzas, momentos, incognitas, punto};
+          
+          return {fuerzas, momentos, incognitas};
         }   
 
       console.log("data entrandte:");
@@ -219,68 +211,6 @@
 					strokeWidth: 0.5,
 				}));
 			}
-
-      function calcularFXY(incognitas, Fx, Fy, punto){
-       
-        var sumaX = 0
-        var sumaY = 0
-        var incX = []
-        var incY = []
-        var strX = ""
-        var strY = ""
-
-        for(var i = 0; i<Fx.length; i++){
-          sumaX += Fx[i][1]
-        }
-        for(var i = 0; i<Fy.length; i++){
-          sumaY += Fy[i][1]
-        }
-        console.log(sumaX, sumaY)
-
-        for(var i = 0; i<incognitas.length; i++){
-          if(String(incognitas[i][0]).split("_")[0] == "fijo"){
-            incX.push(incognitas[i][4])
-            incY.push(incognitas[i][5])
-          }
-
-          if(String(incognitas[i][0]).split("_")[0] == "deslizante"){
-
-            if(incognitas[i][3] == 90 || incognitas[i][3] == -90 ){
-              incX.push(incognitas[i][4])
-            }
-            else{
-              incY.push(incognitas[i][4])
-            }
-          }
-
-          if(String(incognitas[i][0]).split("_")[0] == "empotrado"){
-            incX.push(incognitas[i][4])
-            incY.push(incognitas[i][5])
-          }
-        }
-
-        console.log(incX)
-        console.log(incY)
-
-        strX += String(sumaX) 
-        for(var i = 0; i<incX.length; i++){
-          strX += "+" + incX[i]
-        }
-
-        strY += String(sumaY) 
-        for(var i = 0; i<incY.length; i++){
-          strY += "+" + incY[i]
-        }
-
-        strX += "=0"
-        strY += "=0"
-
-        console.log(strX)
-        console.log(strY)
-
-        return {strX, strY}
-
-      }
 
       function cambiarPosInc(incognitas){
 
@@ -563,7 +493,7 @@
 					shadowRectangle.moveToTop();
 					arrow.moveToTop();
           console.log(arrow.name())
-          console.log("rotation: ", arrow.rotation())
+          previous_rot = arrow.rotation();
 				});
         
 				arrow.on('dragend', (e) => {
@@ -619,6 +549,12 @@
           }
 				stage.batchDraw();
 				shadowRectangle.hide();
+        after_rot = arrow.rotation();
+        if ([0,90,180,270,360].includes(Math.abs(previous_rot)) && (![0,90,180,270,360].includes(Math.abs(after_rot)))){
+          dificultad += 1;
+        } else if (![0,90,180,270,360].includes(Math.abs(previous_rot)) && ([0,90,180,270,360].includes(Math.abs(after_rot)))){
+          dificultad -= 1;
+        } 
 				});
 				arrow.on('dragmove', (e) => {
           if(arrow.rotation() == 0){
@@ -870,6 +806,9 @@
           if (metaPressed && isSelected) {
             // if we pressed keys and node was selected
             // we need to remove it from selection:
+            if (e.target === arrow){
+              dificultad -= 2;
+            }
             tr.nodes([]);
             const nodes = e.target.destroy(); // use slice to have new copy of array
             // remove node from array
@@ -982,6 +921,9 @@
           const isSelected = tr.nodes().indexOf(e.target) >= 0;
 
           if (metaPressed && isSelected) {
+            if (e.target === deslizante){
+              dificultad -= 1;
+              }
             // if we pressed keys and node was selected
             // we need to remove it from selection:
             tr.nodes([]);
@@ -1095,6 +1037,9 @@
           const isSelected = tr.nodes().indexOf(e.target) >= 0;
 
           if (metaPressed && isSelected) {
+            if (e.target === empotrado){
+              dificultad -= 3
+              }
             // if we pressed keys and node was selected
             // we need to remove it from selection:
             tr.nodes([]);
@@ -1367,6 +1312,9 @@
           const isSelected = tr.nodes().indexOf(e.target) >= 0;
 
           if (metaPressed && isSelected) {
+            if (e.target === momento){
+              dificultad -= 2
+              }
             // if we pressed keys and node was selected
             // we need to remove it from selection:
             tr.nodes([]);
@@ -1436,50 +1384,10 @@
 
         // fuerza en momento
       }
-
-      function newPunto(x, y, layer, stage) {
-
-        var punto = new Konva.Circle({
-          x: x,
-          y: y,
-          radius: 7.5,
-          fill: 'yellow',
-          stroke: 'black',
-          strokeWidth: 2,
-          shadowColor: 'black',
-          shadowBlur: 2,
-          shadowOffset: {x : 1, y : 1},
-          shadowOpacity: 0.4,
-          draggable: true,
-          name: "punto" 
-        });
-
-        punto.on('dragstart', (e) => {
-          shadowRectangle.show();
-          shadowRectangle.moveToTop();
-          punto.moveToTop();
-          console.log(punto.x(), punto.y())
-          
-        });
-        punto.on('dragend', (e) => {
-          punto.position({
-            x: Math.round(punto.x() / blockSnapSize) * blockSnapSize + 15,
-            y: Math.round(punto.y() / blockSnapSize) * blockSnapSize + 15
-          });
-          stage.batchDraw();
-          shadowRectangle.hide();
-        });
-        punto.on('dragmove', (e) => {
-          shadowRectangle.position({
-            x: Math.round(punto.x() / blockSnapSize) * blockSnapSize,
-            y: Math.round(punto.y() / blockSnapSize) * blockSnapSize
-          });
-          stage.batchDraw();
-        });
-        layer.add(punto);
-        
-      }
       
+      dificultad = parseInt($("#homework-details").data("homeworkDifficulty"));
+      console.log("DIFICULTAD")
+      console.log(dificultad)
       function toolBar(layer, stage, counter) {
         // PRETTY
         var separadorTool = new Konva.Line({
@@ -1488,7 +1396,6 @@
           strokeWidth: 4,
           lineCap: 'round',
           lineJoin: 'round',
-          
         });
         layer.add(separadorTool)
         
@@ -1513,7 +1420,9 @@
         arrow.on('pointerdown', function () {
           counter[0] = counter[0] + 1
           newArrow(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[0], 0);
-
+          //let json = stage.toJSON();
+          //console.log(JSON.parse(json)["children"][0]["children"])
+          dificultad += 1;
         });
 
         var arrowText = new Konva.Text({
@@ -1540,6 +1449,7 @@
         fijo.on('pointerdown', function () {
           counter[1] = counter[1] + 1
           newFijo(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[1]);
+          dificultad += 2;
         });
 
         var fijoText = new Konva.Text({
@@ -1585,6 +1495,7 @@
         deslizante.on('pointerdown', function () {
           counter[2] = counter[2] + 1
           newDeslizante(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[2]);
+          dificultad += 1;
         });
         var deslizanteText = new Konva.Text({
           x: largo - 60,
@@ -1627,6 +1538,7 @@
         empotrado.on('pointerdown', function () {
           counter[3] = counter[3] + 1
           newEmpotrado(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[3]);
+          dificultad += 3;
         });
         var empotradoText = new Konva.Text({
           x: largo - 80,
@@ -1652,6 +1564,7 @@
         rotula.on('pointerdown', function () {
           counter[4] = counter[4] + 1
           newRotula(blockSnapSize * 17, blockSnapSize * 3, layer, stage, counter[4]);
+          dificultad += 3;
         });
         var rotulaText = new Konva.Text({
           x: largo - 50,
@@ -1677,6 +1590,7 @@
         biela.on('pointerdown', function () {
           counter[5] = counter[5] + 1
           newBiela(blockSnapSize * 17, blockSnapSize * 3, blockSnapSize * 17+30, blockSnapSize * 3,  layer, stage, counter[5]);
+          dificultad += 5;
         });
         var bielaText = new Konva.Text({
           x: largo - 50,
@@ -1710,6 +1624,7 @@
           counter[6] = counter[6] + 1
           
           newMomento(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[6]);
+          dificultad += 2;
         });
 
         var momentoText = new Konva.Text({
@@ -1725,7 +1640,7 @@
 
         //BARRA
         let barra = new Konva.Rect({
-          x: largo -47.5,
+          x: largo -50,
           y: 450,
           width: 25,
           height: 25,
@@ -1741,10 +1656,11 @@
         });
         barra.on('pointerdown', function () {
           newBarra(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
+          dificultad += 1;
         });
 
         var barraText = new Konva.Text({
-          x: largo - 47.5,
+          x: largo - 50,
           y: 480,
           text: 'barra',
           fontSize: 12,
@@ -1753,34 +1669,6 @@
         });
         layer.add(barraText);
         //BARRA
-        //PUNTO
-        var punto = new Konva.Circle({
-          x: largo - 35,
-          y: 510,
-          radius: 7.5,
-          fill: 'yellow',
-          stroke: 'black',
-          strokeWidth: 2,
-          name: "punto_tool"
-        });
-
-        punto.on('pointerdown', function () {
-          if(counter[7] == 0){
-            counter[7] = counter[7] + 1
-            newPunto(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
-          }
-          
-        });
-        var puntoText = new Konva.Text({
-          x: largo - 50,
-          y: 520,
-          text: 'Punto',
-          fontSize: 12,
-          fontFamily: 'Calibri',
-          fill: 'balck',
-        });
-        layer.add(puntoText);
-        //PUNTO
 
         layer.add(arrow);
         layer.add(fijo);
@@ -1790,7 +1678,6 @@
         layer.add(biela);
         layer.add(momento);
         layer.add(barra);
-        layer.add(punto);
 
       }
       
@@ -1862,8 +1749,8 @@
         shadowRectangle.hide();
         layer.add(shadowRectangle);
 
-        //counter[ARROW, FIJO, DESLIZANTE, EMPOTRADO, ROTULA, BIELA, MOMENTO, PUNTOS]
-        counter = [0, 0, 0, 0, 0, 0, 0, 0]
+        //counter[ARROW, FIJO, DESLIZANTE, EMPOTRADO, ROTULA, BIELA, MOMENTO]
+        counter = [0, 0, 0, 0, 0, 0, 0]
         
         toolBar(layer, stage, counter);
         fuerzasTotales = loadForm(data, counter);
@@ -1884,8 +1771,6 @@
         console.log(descompuestas.Fx)
         console.log("fy")
         console.log(descompuestas.Fy)
-
-        calcularFXY(incognitas, descompuestas.Fx, descompuestas.Fy, fuerzasTotales.punto)
 
         
         stage.add(layer);
@@ -1924,10 +1809,12 @@
                 		"diagram": json,
                 		"id": homework_id, 
                     "str_statement": str_statement,
-						        csrfmiddlewaretoken: "{{ csrf_token }}"
+						        csrfmiddlewaretoken: "{{ csrf_token }}",
+                    "difficulty": dificultad
               		},
               		success: function (data) {
 						        console.log("guardo")
+                    console.log(dificultad)
                 		console.log(JSON.parse(json)["children"][0]["children"]);
               		},
               		error: function (error) {
