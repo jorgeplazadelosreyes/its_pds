@@ -1519,7 +1519,7 @@
 			btn2.addEventListener('click', event => {
         let str_statement = $("#statement-text").val()
         let json = stage.toJSON();
-        console.log(statement)
+        console.log(str_statement)
 				$.ajax({
 					url: `/homework/${homework_id}/`,
               		type: "POST",
