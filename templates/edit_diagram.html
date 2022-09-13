@@ -19,7 +19,7 @@
 	</style>
 </head>
 <body>
-	<h6 id="homework-details" data-homework-id="{{ homework.id }}" data-homework-diagram = "{{ homework.diagram }}"></h6>
+	<h6 id="homework-details" data-homework-id="{{ homework.id }}" data-homework-diagram = "{{ homework.diagram }}" data-homework-statement="{{ homework.statement_text }} "></h6>
     
 	<div id="container"></div>
 	<script>
@@ -1496,7 +1496,7 @@
     <div class="container">
       <div class="row mb-3">
         <label for="exampleFormControlTextarea1" class="form-label">Enunciado:</label>
-        <textarea class="form-control" id="statement-text" rows="3"></textarea>
+        <textarea class="form-control" id="statement-text" rows="3">{{ homework.statement_text }}</textarea>
         <div class="custom-file">
           <input type="file" class="custom-file-input" id="customFile">
           <label class="custom-file-label" for="customFile"></label>
@@ -1519,7 +1519,6 @@
 			btn2.addEventListener('click', event => {
         let str_statement = $("#statement-text").val()
         let json = stage.toJSON();
-        console.log(str_statement)
 				$.ajax({
 					url: `/homework/${homework_id}/`,
               		type: "POST",
