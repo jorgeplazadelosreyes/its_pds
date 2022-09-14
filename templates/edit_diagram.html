@@ -772,8 +772,8 @@
 
         var textNode = new Konva.Text({
           text: magnitud,
-          x: x,
-          y: x,
+          x: arrow.x() + 10,
+          y: arrow.y() + 10,
           fontSize: 10,
           name: "textArrow_" + count.toString(),
         });
@@ -1443,8 +1443,8 @@
 
         var textNode = new Konva.Text({
           text: magnitud,
-          x: x,
-          y: x,
+          x: momento.x() + 10,
+          y: momento.y() + 10,
           fontSize: 10,
           name: "textMoment_" + count.toString(),
         });
