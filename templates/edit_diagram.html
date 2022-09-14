@@ -17,11 +17,45 @@
 			outline: black solid
 		}
 	</style>
+  <div class="container">
+    <div class="row mb-3">
+      <div class="text-center row align-item-center">
+        <div class="col" style="background-color: #393E46">
+          <h3 for="exampleFormControlTextarea1" class="form-label" style="margin-top:20px; color: #EEEEEE">Enunciado</h3>
+        </div>
+      </div>
+      <textarea class="form-control" id="statement-text" rows="3" style="margin-top:15px">{{ homework.statement_text }}</textarea>
+      <div class="custom-file col-6">
+        <input type="file" class="custom-file-input" id="customFile">
+        <label class="custom-file-label" for="customFile"></label>
+      </div>
+        <div class="col-auto my-1" style="margin-left:auto">
+          <label class="mr-sm-2" for="inlineFormCustomSelect">Etapa inicial</label>
+            <select class="custom-select mr-sm-2" id="initialStageSelect">
+              <option selected>{{ homework.initial_stage }} </option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+        </div>
+        <div class="col-auto my-1">
+          <label class="mr-sm-2" for="inlineFormCustomSelect">Etapa final</label>
+            <select class="custom-select mr-sm-2" id="finalStageSelect">
+              <option selected>{{ homework.final_stage }}</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+        </div>
+    </div>
+  </div>
 </head>
 <body>
 	<h6 id="homework-details" data-homework-id="{{ homework.id }}" data-homework-diagram = "{{ homework.diagram }}" data-homework-statement="{{ homework.statement_text }} " data-homework-difficulty="{{ homework.difficulty }} "></h6>
     
-	<div id="container"></div>
+	<div id="container" style="margin-left: 20px"></div>
 	<script>
   	var alto = window.innerHeight - 200;
 		var largo = window.innerWidth - 30;
@@ -2062,42 +2096,26 @@
         stage.add(layer);
         layer.draw();
   </script>
-    <div class="container">
+    <div class="container" style="margin-top: 20px">
+      <div id="selectedDetails" class="row mb-3"></div>
       <div class="row mb-3">
-
-        <label for="exampleFormControlTextarea1" class="form-label">Enunciado:</label>
-        <textarea class="form-control" id="statement-text" rows="3">{{ homework.statement_text }}</textarea>
-        <div class="custom-file">
-          <input type="file" class="custom-file-input" id="customFile">
-          <label class="custom-file-label" for="customFile"></label>
-        </div>
-        <div class="row">
-          <div class="col-auto my-1">
-            <label class="mr-sm-2" for="inlineFormCustomSelect">Etapa inicial</label>
-              <select class="custom-select mr-sm-2" id="initialStageSelect">
-                <option selected>{{ homework.initial_stage }} </option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-              </select>
-          </div>
-          <div class="col-auto my-1">
-            <label class="mr-sm-2" for="inlineFormCustomSelect">Etapa final</label>
-              <select class="custom-select mr-sm-2" id="finalStageSelect">
-                <option selected>{{ homework.final_stage }}</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-              </select>
-          </div>
-        </div>
         <div>
-          <h4>dificultad: {{ homework.difficulty }} </h4>
-          <h4>Ex: {{ homework.Fx }} </h4>
-          <h4>Ey: {{ homework.Fy }} </h4>
-          <h4>Em: {{ homework.Fm }} </h4>
+          <h4 class="badge text-wrap fs-5" style="background-color: #393E46">Dificultad: {{ homework.difficulty }} </h4> 
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div>
+          <h4 class="badge text-wrap fs-5" style="background-color: #393E46">Ex: {{ homework.Fx }} </h4>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div>
+          <h4 class="badge text-wrap fs-5" style="background-color: #393E46">Ey: {{ homework.Fy }} </h4>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div>
+          <h4 class="badge text-wrap fs-5" style="background-color: #393E46">Em: {{ homework.Fm }} </h4>
         </div>
       </div>
       <div class="row">
