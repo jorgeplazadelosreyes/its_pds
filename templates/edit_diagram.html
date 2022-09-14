@@ -17,11 +17,45 @@
 			outline: black solid
 		}
 	</style>
+  <div class="container">
+    <div class="row mb-3">
+      <div class="text-center row align-item-center">
+        <div class="col" style="background-color: #393E46">
+          <h3 for="exampleFormControlTextarea1" class="form-label" style="margin-top:20px; color: #EEEEEE">Enunciado</h3>
+        </div>
+      </div>
+      <textarea class="form-control" id="statement-text" rows="3" style="margin-top:15px">{{ homework.statement_text }}</textarea>
+      <div class="custom-file col-6">
+        <input type="file" class="custom-file-input" id="customFile">
+        <label class="custom-file-label" for="customFile"></label>
+      </div>
+        <div class="col-auto my-1" style="margin-left:auto">
+          <label class="mr-sm-2" for="inlineFormCustomSelect">Etapa inicial</label>
+            <select class="custom-select mr-sm-2" id="initialStageSelect">
+              <option selected>{{ homework.initial_stage }} </option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+        </div>
+        <div class="col-auto my-1">
+          <label class="mr-sm-2" for="inlineFormCustomSelect">Etapa final</label>
+            <select class="custom-select mr-sm-2" id="finalStageSelect">
+              <option selected>{{ homework.final_stage }}</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+        </div>
+    </div>
+  </div>
 </head>
 <body>
 	<h6 id="homework-details" data-homework-id="{{ homework.id }}" data-homework-diagram = "{{ homework.diagram }}" data-homework-statement="{{ homework.statement_text }} " data-homework-difficulty="{{ homework.difficulty }} "></h6>
     
-	<div id="container"></div>
+	<div id="container" style="margin-left: 20px"></div>
 	<script>
   	var alto = window.innerHeight - 200;
 		var largo = window.innerWidth - 30;
@@ -61,7 +95,7 @@
             if(objects[i]["attrs"]["name"]=='barra'){
                 item=objects[i]
                 
-                newBarra(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
+                newBarra(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["width"],item["attrs"]["rotation"], layer, stage)
                 
               }
           }
@@ -771,7 +805,7 @@
         /// fuerza en arrow
 
         var textNode = new Konva.Text({
-          text: "F:" + magnitud,
+          text: magnitud,
           x: arrow.x() + 10,
           y: arrow.y() + 10,
           fontSize: 13,
@@ -779,7 +813,7 @@
         });
 
         var textInfo= new Konva.Text({
-          text: "X:" + String(Math.round(arrow.x())) + " Y:" + String(Math.round(arrow.y())) + " R:" + String(Math.round(arrow.rotation())),
+          text: "X:" + String(arrow.x()) + " Y:" + String(arrow.y()) ,
           x: arrow.x() + 20,
           y: arrow.y() + 23,
           fontSize: 13,
@@ -791,12 +825,12 @@
         arrow.on('dragend', (e) => {
           textInfo.position({
             x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize - 45,
-            y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 18
+            y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 33
 
           });
           stage.batchDraw();
 
-          textInfo.text("X:" + String(Math.round(arrow.x())) + " Y:" + String(Math.round(arrow.y())) +" R:" + String(Math.round(arrow.rotation())) )
+          textInfo.text("X:" + String(arrow.x()) + " Y:" + String(arrow.y()) )
           
         });
   
@@ -813,7 +847,7 @@
 
           textNode.position({
             x: Math.round((arrow.x() ) / blockSnapSize) * blockSnapSize + 15,
-            y: Math.round((arrow.y() ) / blockSnapSize) * blockSnapSize + 5
+            y: Math.round((arrow.y() ) / blockSnapSize) * blockSnapSize + 15
           });
           
           stage.batchDraw();
@@ -827,7 +861,7 @@
   
           var areaPosition = {
             x: arrow.x() + 15,
-            y: arrow.y() + 5,
+            y: arrow.y() + 15,
           };
   
           // create textarea and style it
@@ -1368,11 +1402,11 @@
         layer.add(b2);
       }
 
-      function newBarra(x, y, layer, stage) {
+      function newBarra(x, y, width, rotation, layer, stage) {
         var barra = new Konva.Rect({
           x: x,
           y: y,
-          width: 30,
+          width: width,
           height: 30,
           fill: 'gray',
           stroke: 'black',
@@ -1383,6 +1417,7 @@
           shadowOpacity: 0.4,
           draggable: true,
           name: "barra",
+          rotation: rotation,
         });
 
         barra.on('dragstart', (e) => {
@@ -1405,9 +1440,42 @@
           });
           stage.batchDraw();
         });
-
+        var tr = new Konva.Transformer({
+					nodes: [barra],
+					centeredScaling: false,
+					resizeEnabled: false,
+					rotation: 0,
+          rotationSnaps: [0, 45, 90, 135, 180, 225, 270, 315, 360],
+          rotationSnapTolerance: 22.5,
+				});
+				layer.add(tr);
         layer.add(barra);
         
+        stage.on('click tap', function (e) {
+          if (e.target === barra) {
+            tr.nodes([barra]);
+          }
+          // if click on empty area - remove all selections
+          if (e.target === stage) {
+            tr.nodes([]);
+            return;
+          }
+          const metaPressed = e.evt.ctrlKey;
+          const isSelected = tr.nodes().indexOf(e.target) >= 0;
+
+          if (metaPressed && isSelected) {
+            // if we pressed keys and node was selected
+            // we need to remove it from selection:
+            tr.nodes([]);
+            const nodes = e.target.destroy(); // use slice to have new copy of array
+            // remove node from array
+          }
+        });
+        stage.on('dblclick', function (e) {
+          if (e.target === barra) {
+            e.target.moveDown();
+          }
+        });
       }
     
       function newMomento(x, y, rotation, layer, stage, count, magnitud="M") {
@@ -1871,6 +1939,16 @@
         //MOMENTO
 
         //BARRA
+        function setBarLenght() {
+          let width;
+          let width_answer = prompt("Ingrese el largo de la barra en unidad del grid: \n(1 metro son 30 unidades)");
+          if (width_answer == null || width_answer == "") {
+            width = 30;
+          } else {
+            width = parseInt(width_answer);
+          }
+          return width;
+        }
         let barra = new Konva.Rect({
           x: largo -50,
           y: 450,
@@ -1887,7 +1965,8 @@
           draggable: false,
         });
         barra.on('pointerdown', function () {
-          newBarra(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
+          bar_width = setBarLenght();
+          newBarra(blockSnapSize * 17, blockSnapSize * 3, bar_width, 0,layer, stage);
           dificultad += 1;
         });
 
@@ -2040,20 +2119,26 @@
         stage.add(layer);
         layer.draw();
   </script>
-    <div class="container">
+    <div class="container" style="margin-top: 20px">
+      <div id="selectedDetails" class="row mb-3"></div>
       <div class="row mb-3">
-
-        <label for="exampleFormControlTextarea1" class="form-label">Enunciado:</label>
-        <textarea class="form-control" id="statement-text" rows="3">{{ homework.statement_text }}</textarea>
-        <div class="custom-file">
-          <input type="file" class="custom-file-input" id="customFile">
-          <label class="custom-file-label" for="customFile"></label>
-        </div>
         <div>
-          <h4>dificultad: {{ homework.difficulty }} </h4>
-          <h4>Ex: {{ homework.Fx }} </h4>
-          <h4>Ey: {{ homework.Fy }} </h4>
-          <h4>Em: {{ homework.Fm }} </h4>
+          <h4 class="badge text-wrap fs-5" style="background-color: #393E46">Dificultad: {{ homework.difficulty }} </h4> 
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div>
+          <h4 class="badge text-wrap fs-5" style="background-color: #393E46">Ex: {{ homework.Fx }} </h4>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div>
+          <h4 class="badge text-wrap fs-5" style="background-color: #393E46">Ey: {{ homework.Fy }} </h4>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div>
+          <h4 class="badge text-wrap fs-5" style="background-color: #393E46">Em: {{ homework.Fm }} </h4>
         </div>
       </div>
       <div class="row">
@@ -2091,6 +2176,11 @@
 			  btn2.addEventListener('click', event => {
           let str_statement = $("#statement-text").val()
           let json = stage.toJSON();
+          let initial_state = $("#initialStageSelect").find(":selected").val()
+          let final_state = $("#finalStageSelect").find(":selected").val()
+
+          console.log(initial_state)
+          console.log(final_state)
 
           let fileData = $("#customFile")[0].files[0]
 
@@ -2103,10 +2193,11 @@
               "id": homework_id, 
               "str_statement": str_statement,
               "difficulty": dificultad,
-                    "Fx": sumas.strX,
-                    "Fy": sumas.strY,
-                    "Fm": sumas.strM,
-
+              "Fx": sumas.strX,
+              "Fy": sumas.strY,
+              "Fm": sumas.strM,
+              "initial_stage": initial_state,
+              "final_stage": final_state,
             },
 
             beforeSend: function (xhr) {
