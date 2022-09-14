@@ -298,10 +298,10 @@
         var sumaM = []
 
         for(var i = 0; i<Fx.length; i++){
-          sumaM.push( Fx[i][1] * (punto[1] - Fx[i][3]) * -1)
+          sumaM.push( Fx[i][1] * Math.round(punto[1] - Fx[i][3]) * -1)
         }
         for(var i = 0; i<Fy.length; i++){
-          sumaM.push( Fy[i][1] * (punto[0] - Fy[i][2]) * -1)
+          sumaM.push( Fy[i][1] * Math.round(punto[0] - Fy[i][2]) * -1)
         }
         for(var i = 0; i<momentos.length; i++){
           sumaM.push( momentos[i][4])
@@ -309,23 +309,23 @@
 
         for(var i = 0; i<incognitas.length; i++){
           if(String(incognitas[i][0]).split("_")[0] == "fijo"){
-            sumaM.push(incognitas[i][4] + "*" + String((punto[1] - incognitas[i][2]) * -1))
-            sumaM.push(incognitas[i][5] + "*" + String((punto[0] - incognitas[i][1]) * -1))
+            sumaM.push(incognitas[i][4] + "*" + String(Math.round(punto[1] - incognitas[i][2]) * -1))
+            sumaM.push(incognitas[i][5] + "*" + String(Math.round(punto[0] - incognitas[i][1]) * -1))
           }
 
           if(String(incognitas[i][0]).split("_")[0] == "deslizante"){
 
             if(incognitas[i][3] == 90 || incognitas[i][3] == -90 ){
-              sumaM.push(incognitas[i][4] + "*" + String((punto[1] - incognitas[i][2]) * -1))
+              sumaM.push(incognitas[i][4] + "*" + String(Math.round(punto[1] - incognitas[i][2]) * -1))
             }
             else{
-              sumaM.push(incognitas[i][4] + "*" + String((punto[0] - incognitas[i][1]) * -1))
+              sumaM.push(incognitas[i][4] + "*" + String(Math.round(punto[0] - incognitas[i][1]) * -1))
             }
           }
 
           if(String(incognitas[i][0]).split("_")[0] == "empotrado"){
-            sumaM.push(incognitas[i][4] + "*" + String((punto[1] - incognitas[i][2]) * -1))
-            sumaM.push(incognitas[i][5] + "*" + String((punto[0] - incognitas[i][1]) * -1))
+            sumaM.push(incognitas[i][4] + "*" + String(Math.round((punto[1] - incognitas[i][2])) * -1))
+            sumaM.push(incognitas[i][5] + "*" + String(Math.round((punto[0] - incognitas[i][1])) * -1))
             sumaM.push(incognitas[i][6])
           }
         }
@@ -1803,6 +1803,30 @@
           stage.batchDraw();
         });
         layer.add(punto);
+
+        var textInfo= new Konva.Text({
+          text: "x:" + String(punto.x()) + " y:" + String(punto.y()) ,
+          x: punto.x() - 40,
+          y: punto.y() + 10,
+          fontSize: 13,
+          fill: 'black',
+          
+
+        });
+
+        punto.on('dragend', (e) => {
+          textInfo.position({
+            x: Math.round(punto.x() / blockSnapSize) * blockSnapSize - 45,
+            y: Math.round(punto.y() / blockSnapSize) * blockSnapSize + 0
+
+          });
+          stage.batchDraw();
+
+          textInfo.text("X:" + String(punto.x()) + " Y:" + String(punto.y()) )
+          
+        });
+  
+        layer.add(textInfo);
         
       }
 
