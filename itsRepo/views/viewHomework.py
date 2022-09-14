@@ -9,10 +9,10 @@ class ViewHomework(View):
     def post(self, request, homework_id):
         dcl = request.POST.get("diagram")
         s_statement = request.POST.get("str_statement")
-        homework = Homework.objects.get(id=homework_id)
-        homework.diagram = str(dcl)
-        homework.statement_text = str(s_statement)
         dificultad = request.POST.get("difficulty")
+        homework = Homework.objects.get(id=homework_id)
+        homework.statement_text = str(s_statement)
+        homework.diagram = str(dcl)
         homework.difficulty = int(dificultad)
         homework.save()
         return HttpResponse("ok", status = 200)

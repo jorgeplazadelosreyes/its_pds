@@ -1545,7 +1545,7 @@
       }
 
       
-      dificultad = parseInt($("#homework-details").data("homeworkDifficulty"));
+      var dificultad = parseInt($("#homework-details").data("homeworkDifficulty"));
       console.log("DIFICULTAD")
       console.log(dificultad)
       function toolBar(layer, stage, counter) {
@@ -1989,33 +1989,78 @@
       </div>
     </div>
     <script> 
+
+      function getCookie(name) {
+    	  let cookieValue = null;
+    	  if (document.cookie && document.cookie !== '') {
+        	const cookies = document.cookie.split(';');
+        	for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+            }
+        	}
+    	  }
+    	  return cookieValue;
+	    }
+
       $(document).ready(function () {
-			let homework_id = $("#homework-details").data("homeworkId")
-			let btn2 = document.getElementById("save_btn");
-			btn2.addEventListener('click', event => {
-        let str_statement = $("#statement-text").val()
-        let json = stage.toJSON();
-				$.ajax({
-					url: `/homework/${homework_id}/`,
-              		type: "POST",
-              		data:{
-                		"diagram": json,
-                		"id": homework_id, 
-                    "str_statement": str_statement,
-						        csrfmiddlewaretoken: "{{ csrf_token }}",
-                    "difficulty": dificultad
-              		},
-              		success: function (data) {
-						        console.log("guardo")
-                    console.log(dificultad)
-                		console.log(JSON.parse(json)["children"][0]["children"]);
-              		},
-              		error: function (error) {
-                		console.log("guardaon't")
-              		}
-            	});
-          	})
-        });
+			  let homework_id = $("#homework-details").data("homeworkId")
+		  	let btn2 = document.getElementById("save_btn");
+			  btn2.addEventListener('click', event => {
+          let str_statement = $("#statement-text").val()
+          let json = stage.toJSON();
+
+          let fileData = $("#customFile")[0].files[0]
+
+          console.log(fileData)
+          $.ajax({
+            url: `/homework/${homework_id}/`,
+            type: "POST",
+             data:{
+              "diagram": json,
+              "id": homework_id, 
+              "str_statement": str_statement,
+              "difficulty": dificultad
+            },
+
+            beforeSend: function (xhr) {
+              xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+            },
+            success: function (data) {
+              console.log("guardo")
+              console.log(dificultad)
+              //console.log(JSON.parse(json)["children"][0]["children"]);
+            },
+            error: function (error) {
+              console.log("guardon't")
+            }
+          });
+          /*
+          $.ajax({
+				    url: `/statement/${homework_id}/`,
+            type: "POST",
+            data:{
+	            "file_statement": fileData,
+            },
+
+					  processData: false,
+  				  contentType: false, 
+
+					  beforeSend: function (xhr) {
+            	xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+       			},
+            success: function (data) {
+						  console.log("guardo archivo")
+            },
+            error: function (error) {
+              console.log("no guardo archivo")
+            }
+        	});
+        */
+        })
+      });
     </script>
   </body>
 </html>

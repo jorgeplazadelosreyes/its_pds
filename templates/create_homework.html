@@ -19,7 +19,7 @@
                     <thead>
                       <tr>
                         <th scope="col">Id</th>
-                        <th scope="col">Titulo</th>
+                        <th scope="col">Enunciado</th>
                         <th scope="col">Dificultad</th>
                         <th scope="col">Editar</th>
                       </tr>
@@ -28,7 +28,7 @@
                         {% for homework in homeworks %}
                         <tr>
                             <td>{{ homework.id }}</td>
-                            <td>Titulo</td>
+                            <td>{{ homework.statement_file}}</td>
                             <td>{{ homework.difficulty }}</td>
                             <td>
                                 <input id="btn" type="button" style="float: left;" onclick="location.href='{% url 'edit_diagram' homework_id=homework.id %}'" value = "Editar"/>
