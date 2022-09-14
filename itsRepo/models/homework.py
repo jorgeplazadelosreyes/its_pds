@@ -7,3 +7,6 @@ class Homework(models.Model):
     statement_text = models.TextField(null=True, blank=True, default="")
     statement_file = models.FileField(null=True)
     difficulty = models.IntegerField(null=True, default=0)
+    Fx = models.CharField(max_length=5000, null=True, blank=True)
+    Fy = models.CharField(max_length=5000, null=True, blank=True)
+    Fm = models.CharField(max_length=5000, null=True, blank=True)
