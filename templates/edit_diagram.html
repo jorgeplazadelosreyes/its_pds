@@ -61,7 +61,7 @@
             if(objects[i]["attrs"]["name"]=='barra'){
                 item=objects[i]
                 
-                newBarra(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
+                newBarra(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["width"],item["attrs"]["rotation"], layer, stage)
                 
               }
           }
@@ -1345,11 +1345,11 @@
         layer.add(b2);
       }
 
-      function newBarra(x, y, layer, stage) {
+      function newBarra(x, y, width, rotation, layer, stage) {
         var barra = new Konva.Rect({
           x: x,
           y: y,
-          width: 30,
+          width: width,
           height: 30,
           fill: 'gray',
           stroke: 'black',
@@ -1360,6 +1360,7 @@
           shadowOpacity: 0.4,
           draggable: true,
           name: "barra",
+          rotation: rotation,
         });
 
         barra.on('dragstart', (e) => {
@@ -1382,9 +1383,42 @@
           });
           stage.batchDraw();
         });
-
+        var tr = new Konva.Transformer({
+					nodes: [barra],
+					centeredScaling: false,
+					resizeEnabled: false,
+					rotation: 0,
+          rotationSnaps: [0, 45, 90, 135, 180, 225, 270, 315, 360],
+          rotationSnapTolerance: 22.5,
+				});
+				layer.add(tr);
         layer.add(barra);
         
+        stage.on('click tap', function (e) {
+          if (e.target === barra) {
+            tr.nodes([barra]);
+          }
+          // if click on empty area - remove all selections
+          if (e.target === stage) {
+            tr.nodes([]);
+            return;
+          }
+          const metaPressed = e.evt.ctrlKey;
+          const isSelected = tr.nodes().indexOf(e.target) >= 0;
+
+          if (metaPressed && isSelected) {
+            // if we pressed keys and node was selected
+            // we need to remove it from selection:
+            tr.nodes([]);
+            const nodes = e.target.destroy(); // use slice to have new copy of array
+            // remove node from array
+          }
+        });
+        stage.on('dblclick', function (e) {
+          if (e.target === barra) {
+            e.target.moveDown();
+          }
+        });
       }
     
       function newMomento(x, y, rotation, layer, stage, count, magnitud="M") {
@@ -1848,6 +1882,16 @@
         //MOMENTO
 
         //BARRA
+        function setBarLenght() {
+          let width;
+          let width_answer = prompt("Ingrese el largo de la barra en unidad del grid: \n(1 metro son 30 unidades)");
+          if (width_answer == null || width_answer == "") {
+            width = 30;
+          } else {
+            width = parseInt(width_answer);
+          }
+          return width;
+        }
         let barra = new Konva.Rect({
           x: largo -50,
           y: 450,
@@ -1864,7 +1908,8 @@
           draggable: false,
         });
         barra.on('pointerdown', function () {
-          newBarra(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
+          bar_width = setBarLenght();
+          newBarra(blockSnapSize * 17, blockSnapSize * 3, bar_width, 0,layer, stage);
           dificultad += 1;
         });
 
