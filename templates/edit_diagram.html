@@ -774,9 +774,34 @@
           text: magnitud,
           x: arrow.x() + 10,
           y: arrow.y() + 10,
-          fontSize: 10,
+          fontSize: 13,
           name: "textArrow_" + count.toString(),
         });
+
+        var textInfo= new Konva.Text({
+          text: "X:" + String(arrow.x()) + " Y:" + String(arrow.y()) ,
+          x: arrow.x() + 20,
+          y: arrow.y() + 23,
+          fontSize: 13,
+          fill: 'black',
+          
+
+        });
+
+        arrow.on('dragend', (e) => {
+          textInfo.position({
+            x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize - 45,
+            y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 33
+
+          });
+          stage.batchDraw();
+
+          textInfo.text("X:" + String(arrow.x()) + " Y:" + String(arrow.y()) )
+          
+        });
+  
+        layer.add(textNode);
+        layer.add(textInfo);
   
         layer.add(textNode);
 
@@ -1442,14 +1467,38 @@
         /// fuerza en momento
 
         var textNode = new Konva.Text({
-          text: magnitud,
-          x: momento.x() + 10,
+          text: "F:" + magnitud,
+          x: momento.x() + 20,
           y: momento.y() + 10,
-          fontSize: 10,
+          fontSize: 13,
           name: "textMoment_" + count.toString(),
+          fill: 'balck',
+        });
+
+        var textInfo= new Konva.Text({
+          text: "x:" + String(momento.x()) + " y:" + String(momento.y()) ,
+          x: momento.x() + 20,
+          y: momento.y() + 23,
+          fontSize: 13,
+          fill: 'black',
+          
+
+        });
+
+        momento.on('dragend', (e) => {
+          textInfo.position({
+            x: Math.round(momento.x() / blockSnapSize) * blockSnapSize - 45,
+            y: Math.round(momento.y() / blockSnapSize) * blockSnapSize + 33
+
+          });
+          stage.batchDraw();
+
+          textInfo.text("X:" + String(momento.x()) + " Y:" + String(momento.y()) )
+          
         });
   
         layer.add(textNode);
+        layer.add(textInfo);
 
         momento.on('dragstart', (e) => {
 					textNode.moveToTop();
