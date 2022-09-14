@@ -150,7 +150,6 @@
           if(objects[i]["className"]=="RegularPolygon"){
 
             if(String( objects[i]["attrs"]["name"] ).substring(0,4) == 'fijo' && String( objects[i]["attrs"]["name"] ).substring(5,9) != "tool"){
-              console.log(objects[i]["attrs"]["magnitud_x"], objects[i]["attrs"]["magnitud_y"])
 
               var fijoInc = []
               fijoInc.push(objects[i]["attrs"]["name"], objects[i]["attrs"]["x"], objects[i]["attrs"]["y"], objects[i]["attrs"]["rotation"], objects[i]["attrs"]["magnitud_x"], objects[i]["attrs"]["magnitud_y"])
@@ -163,7 +162,6 @@
           }
           if(objects[i]["className"]=="Group"){
             if(String( objects[i]["attrs"]["name"] ).substring(0,10) == 'deslizante' && String( objects[i]["attrs"]["name"] ).substring(11,15) != "tool"){
-              console.log(objects[i]["attrs"]["magnitud"])  
 
               var desInc =[]
               desInc.push(objects[i]["attrs"]["name"], objects[i]["attrs"]["x"], objects[i]["attrs"]["y"], objects[i]["attrs"]["rotation"], objects[i]["attrs"]["magnitud"])
@@ -174,7 +172,6 @@
               newDeslizante(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
             }
             else if(String( objects[i]["attrs"]["name"] ).substring(0,9) == 'empotrado' && String( objects[i]["attrs"]["name"] ).substring(10,14) != "tool"){
-              console.log(objects[i]["attrs"]["magnitud_x"], objects[i]["attrs"]["magnitud_y"], objects[i]["attrs"]["magnitud_m"])
               
               var empInc = []
               empInc.push(objects[i]["attrs"]["name"], objects[i]["attrs"]["x"], objects[i]["attrs"]["y"], objects[i]["attrs"]["rotation"], objects[i]["attrs"]["magnitud_x"], objects[i]["attrs"]["magnitud_y"], objects[i]["attrs"]["magnitud_m"])
@@ -223,9 +220,7 @@
           return {fuerzas, momentos, incognitas, punto};
         }   
 
-      console.log("data entrandte:");
       console.log(data["children"][0]["children"]);
-      console.log("fin");
 
       const stage = new Konva.Stage({
           container: 'container',
@@ -270,7 +265,7 @@
         for(var i = 0; i<Fy.length; i++){
           sumaY += Fy[i][1]
         }
-        console.log(sumaX, sumaY)
+
 
         for(var i = 0; i<incognitas.length; i++){
           if(String(incognitas[i][0]).split("_")[0] == "fijo"){
@@ -330,9 +325,7 @@
           }
         }
 
-        console.log(incX)
-        console.log(incY)
-        console.log("momento:", sumaM)
+
 
         strX += String(sumaX) 
         for(var i = 0; i<incX.length; i++){
@@ -353,9 +346,7 @@
         strY += "=0"
         strM += "=0"
 
-        console.log(strX)
-        console.log(strY)
-        console.log(strM)
+
 
         return {strX, strY, strM}
 
@@ -365,7 +356,7 @@
       function cambiarPosInc(incognitas){
 
         for( i=0; i<incognitas.length; i++){
-          //console.log("entrando aca1")
+
           if(incognitas[i][3] == undefined){
             incognitas[i][3] = 0
           }
@@ -642,7 +633,6 @@
 					shadowRectangle.show();
 					shadowRectangle.moveToTop();
 					arrow.moveToTop();
-          console.log(arrow.name())
           previous_rot = arrow.rotation();
 				});
         
@@ -914,8 +904,7 @@
           shadowRectangle.show();
           shadowRectangle.moveToTop();
           fijo.moveToTop();
-          console.log(fijo.name())
-          console.log("rotation: ", fijo.rotation())
+
         });
         fijo.on('dragend', (e) => {
 
@@ -1055,8 +1044,7 @@
           shadowRectangle.show();
           shadowRectangle.moveToTop();
           deslizante.moveToTop();
-          console.log(deslizante.name())
-          console.log(deslizante.rotation())
+
         });
         deslizante.on('dragend', (e) => {
 
@@ -1098,7 +1086,7 @@
           stage.batchDraw();
         });
         var tr = new Konva.Transformer({
-          nodes: [deslizante],
+          nodes: [deslizanteT, deslizanteL],
           centeredScaling: false,
           resizeEnabled: false,
           rotationSnaps: [0, 90, 180, 270],
@@ -1107,7 +1095,7 @@
         layer.add(tr);
         layer.add(deslizante);
         stage.on('click tap', function (e) {
-          if (e.target === deslizanteT) {
+          if (e.target === deslizante) {
             tr.nodes([deslizante]);
           }
           // if click on empty area - remove all selections
@@ -1127,6 +1115,7 @@
             // we need to remove it from selection:
             tr.nodes([]);
             const nodes = e.target.destroy(); // use slice to have new copy of array
+
             // remove node from array
           }
         });
@@ -1832,8 +1821,7 @@
 
       
       var dificultad = parseInt($("#homework-details").data("homeworkDifficulty"));
-      console.log("DIFICULTAD")
-      console.log(dificultad)
+
       function toolBar(layer, stage, counter) {
         // PRETTY
         var separadorTool = new Konva.Line({
@@ -2245,20 +2233,10 @@
         fuerzas    = cambiarPos(   fuerzasTotales.fuerzas )
         momentos   = cambiarPosMom(fuerzasTotales.momentos )
         incognitas = cambiarPosInc(   fuerzasTotales.incognitas)
-        console.log("fuerzas")
-        console.log(fuerzas)
-        console.log("Momentos")
-        console.log(momentos)
-        console.log("Incognitas")
-        console.log(incognitas)
+
 
         descompuestas = descomponerFuerzas(fuerzas)
-        console.log("fx")
-        console.log(descompuestas.Fx)
-        console.log("fy")
-        console.log(descompuestas.Fy)
-        console.log("punto")
-        console.log(fuerzasTotales.punto)
+
 
         sumas = {}
         
