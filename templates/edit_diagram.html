@@ -1977,6 +1977,28 @@
           <input type="file" class="custom-file-input" id="customFile">
           <label class="custom-file-label" for="customFile"></label>
         </div>
+        <div class="row">
+          <div class="col-auto my-1">
+            <label class="mr-sm-2" for="inlineFormCustomSelect">Etapa inicial</label>
+              <select class="custom-select mr-sm-2" id="initialStageSelect">
+                <option selected>{{ homework.initial_stage }} </option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+          </div>
+          <div class="col-auto my-1">
+            <label class="mr-sm-2" for="inlineFormCustomSelect">Etapa final</label>
+              <select class="custom-select mr-sm-2" id="finalStageSelect">
+                <option selected>{{ homework.final_stage }}</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+          </div>
+        </div>
         <div>
           <h4>dificultad: {{ homework.difficulty }} </h4>
           <h4>Ex: {{ homework.Fx }} </h4>
@@ -2019,6 +2041,11 @@
 			  btn2.addEventListener('click', event => {
           let str_statement = $("#statement-text").val()
           let json = stage.toJSON();
+          let initial_state = $("#initialStageSelect").find(":selected").val()
+          let final_state = $("#finalStageSelect").find(":selected").val()
+
+          console.log(initial_state)
+          console.log(final_state)
 
           let fileData = $("#customFile")[0].files[0]
 
@@ -2031,10 +2058,11 @@
               "id": homework_id, 
               "str_statement": str_statement,
               "difficulty": dificultad,
-                    "Fx": sumas.strX,
-                    "Fy": sumas.strY,
-                    "Fm": sumas.strM,
-
+              "Fx": sumas.strX,
+              "Fy": sumas.strY,
+              "Fm": sumas.strM,
+              "initial_stage": initial_state,
+              "final_stage": final_state,
             },
 
             beforeSend: function (xhr) {

@@ -13,14 +13,20 @@ class ViewHomework(View):
         Fx = request.POST.get("Fx")
         Fy = request.POST.get("Fy")
         Fm = request.POST.get("Fm")
+        initial_stage = request.POST.get("initial_stage")
+        final_stage = request.POST.get("final_stage")
         dificultad = request.POST.get("difficulty")
+
         homework = Homework.objects.get(id=homework_id)
+
         homework.statement_text = str(s_statement)
         homework.diagram = str(dcl)
         homework.difficulty = int(dificultad)
         homework.Fx = str(Fx)
         homework.Fy = str(Fy)
         homework.Fm = str(Fm)
+        homework.initial_stage = int(initial_stage)
+        homework.final_stage = int(final_stage)
         
         homework.save()
         return HttpResponse("ok", status = 200)

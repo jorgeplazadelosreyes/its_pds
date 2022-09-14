@@ -10,3 +10,5 @@ class Homework(models.Model):
     Fx = models.CharField(max_length=5000, null=True, blank=True)
     Fy = models.CharField(max_length=5000, null=True, blank=True)
     Fm = models.CharField(max_length=5000, null=True, blank=True)
+    initial_stage = models.IntegerField(null=True, default=1)
+    final_stage = models.IntegerField(null=True, default=1)
