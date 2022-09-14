@@ -981,7 +981,7 @@
           if (metaPressed && isSelected) {
             // if we pressed keys and node was selected
             // we need to remove it from selection:
-            if (e.target === arrow){
+            if (e.target === fijo){
               dificultad -= 2;
             }
             tr.nodes([]);
@@ -989,6 +989,29 @@
             // remove node from array
           }
         });
+        var textInfo= new Konva.Text({
+          text: "X:" + String(Math.round(fijo.x())) + " Y:" + String(Math.round(fijo.y())) + " R:" + String(Math.round(fijo.rotation())),
+          x: fijo.x() + 20,
+          y: fijo.y() + 23,
+          fontSize: 13,
+          fill: 'black',
+          
+
+        });
+
+        fijo.on('dragend', (e) => {
+          textInfo.position({
+            x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize - 45,
+            y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize + 18
+
+          });
+          stage.batchDraw();
+
+          textInfo.text("X:" + String(Math.round(fijo.x())) + " Y:" + String(Math.round(fijo.y())) +" R:" + String(Math.round(fijo.rotation())) )
+          
+        });
+
+        layer.add(textInfo)
       }
 
       function newDeslizante(x, y, rotation, layer, stage, count) {
