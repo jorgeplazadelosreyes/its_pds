@@ -1348,6 +1348,40 @@
         });
         
         layer.add(textInfo);
+
+        var tr = new Konva.Transformer({
+          nodes: [rotula],
+          centeredScaling: false,
+          resizeEnabled: false,
+          rotationSnaps: [0],
+          rotationSnapTolerance: 360,
+        });
+        layer.add(tr);
+
+        stage.on('click tap', function (e) {
+          if (e.target === rotula) {
+            tr.nodes([rotula]);
+          }
+          // if click on empty area - remove all selections
+          if (e.target === stage) {
+            tr.nodes([]);
+            return;
+          }
+
+          const metaPressed = e.evt.ctrlKey;
+          const isSelected = tr.nodes().indexOf(e.target) >= 0;
+
+          if (metaPressed && isSelected) {
+            if (e.target === rotula){
+              dificultad -= 2
+              }
+            // if we pressed keys and node was selected
+            // we need to remove it from selection:
+            tr.nodes([]);
+            const nodes = e.target.destroy(); // use slice to have new copy of array
+            // remove node from array
+          }
+        });
         
       }
       function newBiela(x1, y1, x2=x1+30, y2=y1, layer, stage, count) {
