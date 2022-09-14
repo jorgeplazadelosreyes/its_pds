@@ -813,7 +813,7 @@
         });
 
         var textInfo= new Konva.Text({
-          text: "X:" + String(arrow.x()) + " Y:" + String(arrow.y()) ,
+          text: "X:" + String(Math.round(arrow.x())) + " Y:" + String(Math.round(arrow.y())) + " R:" + String(Math.round(arrow.rotation())),
           x: arrow.x() + 20,
           y: arrow.y() + 23,
           fontSize: 13,
@@ -830,12 +830,13 @@
           });
           stage.batchDraw();
 
-          textInfo.text("X:" + String(arrow.x()) + " Y:" + String(arrow.y()) )
+          textInfo.text("X:" + String(Math.round(arrow.x())) + " Y:" + String(Math.round(arrow.y())) + " R:" + String(Math.round(arrow.rotation())))
           
         });
-  
-        layer.add(textNode);
+        
         layer.add(textInfo);
+        layer.add(textNode);
+        
   
         layer.add(textNode);
 
@@ -1129,6 +1130,30 @@
             // remove node from array
           }
         });
+
+        var textInfo= new Konva.Text({
+          text: "X:" + String(Math.round(deslizante.x())) + " Y:" + String(Math.round(deslizante.y())) + " R:" + String(Math.round(deslizante.rotation())),
+          x: deslizante.x() + 20,
+          y: deslizante.y() + 23,
+          fontSize: 13,
+          fill: 'black',
+          
+
+        });
+
+        deslizante.on('dragend', (e) => {
+          textInfo.position({
+            x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize - 45,
+            y: Math.round(deslizante.y() / blockSnapSize) * blockSnapSize + 33
+
+          });
+          stage.batchDraw();
+
+          textInfo.text("X:" + String(Math.round(deslizante.x())) + " Y:" + String(Math.round(deslizante.y())) + " R:" + String(Math.round(deslizante.rotation())))
+          
+        });
+        
+        layer.add(textInfo);
       }
 
       function newEmpotrado(x, y, rotation, layer, stage, count) {
@@ -1245,6 +1270,30 @@
             // remove node from array
           }
         });
+        var textInfo= new Konva.Text({
+          text: "X:" + String(Math.round(empotrado.x())) + " Y:" + String(Math.round(empotrado.y())) + " R:" + String(Math.round(empotrado.rotation())),
+          x: empotrado.x() + 20,
+          y: empotrado.y() + 23,
+          fontSize: 13,
+          fill: 'black',
+          
+
+        });
+
+        empotrado.on('dragend', (e) => {
+          textInfo.position({
+            x: Math.round(empotrado.x() / blockSnapSize) * blockSnapSize - 45,
+            y: Math.round(empotrado.y() / blockSnapSize) * blockSnapSize + 33
+
+          });
+          stage.batchDraw();
+
+          textInfo.text("X:" + String(Math.round(empotrado.x())) + " Y:" + String(Math.round(empotrado.y())) + " R:" + String(Math.round(empotrado.rotation())))
+          
+        });
+        
+        layer.add(textInfo);
+        
       }
 
       function newRotula(x, y, layer, stage, count) {
@@ -1286,6 +1335,30 @@
           stage.batchDraw();
         });
         layer.add(rotula);
+
+        var textInfo= new Konva.Text({
+          text: "X:" + String(Math.round(rotula.x())) + " Y:" + String(Math.round(rotula.y())),
+          x: rotula.x() + 20,
+          y: rotula.y() + 23,
+          fontSize: 13,
+          fill: 'black',
+          
+
+        });
+
+        rotula.on('dragend', (e) => {
+          textInfo.position({
+            x: Math.round(rotula.x() / blockSnapSize) * blockSnapSize - 45,
+            y: Math.round(rotula.y() / blockSnapSize) * blockSnapSize + 33
+
+          });
+          stage.batchDraw();
+
+          textInfo.text("X:" + String(Math.round(rotula.x())) + " Y:" + String(Math.round(rotula.y())) )
+          
+        });
+        
+        layer.add(textInfo);
         
       }
       function newBiela(x1, y1, x2=x1+30, y2=y1, layer, stage, count) {
@@ -1400,6 +1473,53 @@
         layer.add(line);
         layer.add(b1);
         layer.add(b2);
+
+        var textInfo1 = new Konva.Text({
+          text: "X:" + String(Math.round(b1.x())) + " Y:" + String(Math.round(b1.y())),
+          x: b1.x() + 20,
+          y: b1.y() + 23,
+          fontSize: 13,
+          fill: 'black',
+          
+
+        });
+
+        b1.on('dragend', (e) => {
+          textInfo1.position({
+            x: Math.round(b1.x() / blockSnapSize) * blockSnapSize - 45,
+            y: Math.round(b1.y() / blockSnapSize) * blockSnapSize + 33
+
+          });
+          stage.batchDraw();
+
+          textInfo1.text("X:" + String(Math.round(b1.x())) + " Y:" + String(Math.round(b1.y())) )
+          
+        });
+        
+        layer.add(textInfo1);
+
+        var textInfo2 = new Konva.Text({
+          text: "X:" + String(Math.round(b2.x())) + " Y:" + String(Math.round(b2.y())),
+          x: b2.x() + 20,
+          y: b2.y() + 23,
+          fontSize: 13,
+          fill: 'black',
+          
+        });
+
+        b2.on('dragend', (e) => {
+          textInfo2.position({
+            x: Math.round(b2.x() / blockSnapSize) * blockSnapSize - 45,
+            y: Math.round(b2.y() / blockSnapSize) * blockSnapSize + 33
+
+          });
+          stage.batchDraw();
+
+          textInfo2.text("X:" + String(Math.round(b2.x())) + " Y:" + String(Math.round(b2.y())) )
+          
+        });
+        
+        layer.add(textInfo2);
       }
 
       function newBarra(x, y, width, rotation, layer, stage) {
@@ -1476,6 +1596,8 @@
             e.target.moveDown();
           }
         });
+
+        
       }
     
       function newMomento(x, y, rotation, layer, stage, count, magnitud="M") {
@@ -2114,7 +2236,16 @@
         console.log("punto")
         console.log(fuerzasTotales.punto)
 
-        sumas = calcularFXYM(incognitas, descompuestas.Fx, descompuestas.Fy, momentos, fuerzasTotales.punto)
+        sumas = {}
+        
+        if(fuerzasTotales.punto){
+          sumas = calcularFXYM(incognitas, descompuestas.Fx, descompuestas.Fy, momentos, fuerzasTotales.punto)
+        }
+        else{
+          sumas.strX = 0
+          sumas.strY = 0
+          sumas.strM = 0
+        }
         
         stage.add(layer);
         layer.draw();
