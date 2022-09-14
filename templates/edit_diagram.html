@@ -219,7 +219,7 @@
 					strokeWidth: 0.5,
 				}));
 			}
-      function calcularFXY(incognitas, Fx, Fy, punto){
+      function calcularFXYM(incognitas, Fx, Fy, momentos, punto){
        
         var sumaX = 0
         var sumaY = 0
@@ -227,7 +227,9 @@
         var incY = []
         var strX = ""
         var strY = ""
+        var strM = ""
 
+        // PARA LAS FUERZAS EN EJE X E Y
         for(var i = 0; i<Fx.length; i++){
           sumaX += Fx[i][1]
         }
@@ -258,8 +260,45 @@
           }
         }
 
+        // PARA EL MOMENTO
+        var sumaM = []
+
+        for(var i = 0; i<Fx.length; i++){
+          sumaM.push( Fx[i][1] * (punto[1] - Fx[i][3]) * -1)
+        }
+        for(var i = 0; i<Fy.length; i++){
+          sumaM.push( Fy[i][1] * (punto[0] - Fy[i][2]) * -1)
+        }
+        for(var i = 0; i<momentos.length; i++){
+          sumaM.push( momentos[i][4])
+        }
+
+        for(var i = 0; i<incognitas.length; i++){
+          if(String(incognitas[i][0]).split("_")[0] == "fijo"){
+            sumaM.push(incognitas[i][4] + "*" + String((punto[1] - incognitas[i][2]) * -1))
+            sumaM.push(incognitas[i][5] + "*" + String((punto[0] - incognitas[i][1]) * -1))
+          }
+
+          if(String(incognitas[i][0]).split("_")[0] == "deslizante"){
+
+            if(incognitas[i][3] == 90 || incognitas[i][3] == -90 ){
+              sumaM.push(incognitas[i][4] + "*" + String((punto[1] - incognitas[i][2]) * -1))
+            }
+            else{
+              sumaM.push(incognitas[i][4] + "*" + String((punto[0] - incognitas[i][1]) * -1))
+            }
+          }
+
+          if(String(incognitas[i][0]).split("_")[0] == "empotrado"){
+            sumaM.push(incognitas[i][4] + "*" + String((punto[1] - incognitas[i][2]) * -1))
+            sumaM.push(incognitas[i][5] + "*" + String((punto[0] - incognitas[i][1]) * -1))
+            sumaM.push(incognitas[i][6])
+          }
+        }
+
         console.log(incX)
         console.log(incY)
+        console.log("momento:", sumaM)
 
         strX += String(sumaX) 
         for(var i = 0; i<incX.length; i++){
@@ -271,11 +310,18 @@
           strY += "+" + incY[i]
         }
 
+        
+        for(var i = 0; i<sumaM.length; i++){
+          strM += "+" + String(sumaM[i])
+        }
+
         strX += "=0"
         strY += "=0"
+        strM += "=0"
 
         console.log(strX)
         console.log(strY)
+        console.log(strM)
 
         return {strX, strY}
 
@@ -1914,8 +1960,10 @@
         console.log(descompuestas.Fx)
         console.log("fy")
         console.log(descompuestas.Fy)
+        console.log("punto")
+        console.log(fuerzasTotales.punto)
 
-        calcularFXY(incognitas, descompuestas.Fx, descompuestas.Fy, fuerzasTotales.punto)
+        sumas = calcularFXYM(incognitas, descompuestas.Fx, descompuestas.Fy, momentos, fuerzasTotales.punto)
 
         
         stage.add(layer);
