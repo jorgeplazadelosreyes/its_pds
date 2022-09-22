@@ -23,7 +23,9 @@
                         <th scope="col">Dificultad</th>
                         <th scope="col">Etapa inicial</th>
                         <th scope="col">Etapa final</th>
-                        <th scope="col">Realizar</th>
+                        <th scope="col">Realizar 1</th>
+                        <th scope="col">Realizar 2</th>
+                        <th scope="col">Realizar 3</th>
                         <th scope="col">Editar</th>
                       </tr>
                     </thead>
@@ -37,6 +39,12 @@
                             <td>{{ homework.final_stage }}</td>
                             <td>
                                 <input id="btn" type="button" style="float: left;" onclick="location.href='{% url 'diagram_forces' homework_id=homework.id %}'" value = "Realizar"/>
+                            </td>
+                            <td>
+                                <input id="btn" type="button" style="float: left;" onclick="location.href='{% url 'edit_forces' homework_id=homework.id %}'" value = "Realizar"/>
+                            </td>
+                            <td>
+                                <input id="btn" type="button" style="float: left;" onclick="location.href='{% url 'balance_equations' homework_id=homework.id %}'" value = "Realizar"/>
                             </td>
                             <td>
                                 <input id="btn" type="button" style="float: left;" onclick="location.href='{% url 'edit_diagram' homework_id=homework.id %}'" value = "Editar"/>
