@@ -608,6 +608,74 @@
       }
 
 
+      function getPointsBArra(x, y, r, width){
+
+        x = Math.round(x);
+        y = Math.round(y);
+        r = Math.round(r);
+
+        var x1;
+        var y1;
+        var x2;
+        var y2;
+        var x3;
+        var y3;
+        var x4;
+        var y4;
+
+        if(r == 0){
+          x1 = x;
+          y1 = y;
+          x2 = x + width;
+          y2 = y;
+          x3 = x + width;
+          y3 = y + 30;
+          x4 = x;
+          y4 = y + 30;
+        }
+
+        else if(r == 90){
+          x1 = x;
+          y1 = y;
+          x2 = x;
+          y2 = y + width;
+          x3 = x - 30;
+          y3 = y + width;
+          x4 = x - 30;
+          y4 = y;
+        }
+
+        else if(r == 180 || r == -180){
+          x1 = x;
+          y1 = y;
+          x2 = x - width;
+          y2 = y;
+          x3 = x - width;
+          y3 = y - 30;
+          x4 = x;
+          y4 = y - 30;
+        }
+
+        else if(r == -90){
+          x1 = x;
+          y1 = y;
+          x2 = x;
+          y2 = y - width;
+          x3 = x + 30;
+          y3 = y - width;
+          x4 = x + 30;
+          y4 = y;
+        }
+
+        console.log(x1, y1)
+        console.log(x2, y2)
+        console.log(x3, y3)
+        console.log(x4, y4)
+
+        return {x1, y1, x2, y2, x3, y3, x4, y4}
+      }
+
+
 			function newArrow(x, y, rotation = 0, layer, stage, count, magnitud = 0) {
 				var arrow = new Konva.Arrow({
 					x: x,
@@ -1567,12 +1635,37 @@
           shadowRectangle.show();
           shadowRectangle.moveToTop();
           barra.moveToTop();
+          console.log(barra.x(), barra.y(), barra.rotation(), barra.width())
+          getPointsBArra(barra.x(), barra.y(), barra.rotation(), barra.width())
         });
         barra.on('dragend', (e) => {
-          barra.position({
-            x: Math.round(barra.x() / blockSnapSize) * blockSnapSize,
-            y: Math.round(barra.y() / blockSnapSize) * blockSnapSize
-          });
+
+          if(Math.round(barra.rotation()) == 0){
+            barra.position({
+              x: Math.round(barra.x() / blockSnapSize) * blockSnapSize,
+              y: Math.round(barra.y() / blockSnapSize) * blockSnapSize
+            });
+          }
+          else if(Math.round(barra.rotation()) == 90){
+            barra.position({
+              x: Math.round(barra.x() / blockSnapSize) * blockSnapSize + 30,
+              y: Math.round(barra.y() / blockSnapSize) * blockSnapSize
+            });
+          }
+
+          else if(Math.round(barra.rotation()) == 180 || Math.round(barra.rotation()) == -180){
+            barra.position({
+              x: Math.round(barra.x() / blockSnapSize) * blockSnapSize + 30,
+              y: Math.round(barra.y() / blockSnapSize) * blockSnapSize + 30
+            });
+          }
+
+          else if(Math.round(barra.rotation()) == -90){
+            barra.position({
+              x: Math.round(barra.x() / blockSnapSize) * blockSnapSize,
+              y: Math.round(barra.y() / blockSnapSize) * blockSnapSize + 30
+            });
+          }
           stage.batchDraw();
           shadowRectangle.hide();
         });
@@ -1619,6 +1712,7 @@
             e.target.moveDown();
           }
         });
+        
 
         
       }

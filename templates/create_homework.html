@@ -23,6 +23,7 @@
                         <th scope="col">Dificultad</th>
                         <th scope="col">Etapa inicial</th>
                         <th scope="col">Etapa final</th>
+                        <th scope="col">Realizar</th>
                         <th scope="col">Editar</th>
                       </tr>
                     </thead>
@@ -34,6 +35,9 @@
                             <td>{{ homework.difficulty }}</td>
                             <td>{{ homework.initial_stage }}</td>
                             <td>{{ homework.final_stage }}</td>
+                            <td>
+                                <input id="btn" type="button" style="float: left;" onclick="location.href='{% url 'diagram_forces' homework_id=homework.id %}'" value = "Realizar"/>
+                            </td>
                             <td>
                                 <input id="btn" type="button" style="float: left;" onclick="location.href='{% url 'edit_diagram' homework_id=homework.id %}'" value = "Editar"/>
                             </td>
@@ -48,6 +52,8 @@
                     <button type="submit" class="btn text-white" style="background-color: #393E46" id="hidden-json-input" name= "json" value="{{ json }}">Crear tarea</button>                
                 </form>
             </div>
+
+            <
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>

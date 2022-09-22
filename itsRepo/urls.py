@@ -8,5 +8,5 @@ urlpatterns = [
     path("statement/<homework_id>/", views.SaveFile.as_view(), name="save_statement_file"),
     path("homework/<homework_id>/edit_forces", views.EditForces.as_view(), name="edit_forces"),  ##aplicar metodos posts
     path("homework/<homework_id>/diagram_forces", views.DiagramForces.as_view(), name="diagram_forces"),
-    path("homework/<homework_id>/balance_equations", views.BalanceEquations.as_view(), name="balance_equations")
+    path("homework/<homework_id>/balance_equations", views.BalanceEquations.as_view(), name="balance_equations"),
 ] 
