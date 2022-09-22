@@ -65,6 +65,11 @@
 
         fijos_before = {}
         barra_before = {}
+        arrow_before = {}
+        momento_before = {}
+        rotula_before = {}
+        deslizante_before = {}
+        empotrado_before = {}
         
         
         for (var i = 0; i<objects["length"]; i++){
@@ -100,7 +105,8 @@
                   }
                 }
                 //newMomento(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, num, item["attrs"]["magnitud"])
-                
+                momento_before[objects[i]["attrs"]["name"]] = [objects[i]["attrs"]["x"], objects[i]["attrs"]["y"], item["attrs"]["magnitud"]]
+
                 var newM = [];
 
                 newM.push(item["attrs"]["name"], item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], item["attrs"]["magnitud"])
@@ -122,6 +128,12 @@
                     item["attrs"]["magnitud"] = magn
                   }
                 }
+
+                if( objects[i]["attrs"]["rotation"] == undefined){
+                  objects[i]["attrs"]["rotation"] = 0
+                }
+                arrow_before[objects[i]["attrs"]["name"]] = [objects[i]["attrs"]["x"], objects[i]["attrs"]["y"], objects[i]["attrs"]["rotation"], item["attrs"]["magnitud"]]
+
                 //newArrow(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, num, item["attrs"]["magnitud"])
                 
                 var newForce = [];
@@ -154,7 +166,13 @@
               item=objects[i]
               counter[2] = counter[2] + 1
               //newDeslizante(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+              if( objects[i]["attrs"]["rotation"] == undefined){
+                objects[i]["attrs"]["rotation"] = 0
+              }
+                deslizante_before[objects[i]["attrs"]["name"]] = [objects[i]["attrs"]["x"], objects[i]["attrs"]["y"], objects[i]["attrs"]["rotation"] ]
+              
             }
+
             else if(String( objects[i]["attrs"]["name"] ).substring(0,9) == 'empotrado' && String( objects[i]["attrs"]["name"] ).substring(10,14) != "tool"){
               
               var empInc = []
@@ -164,6 +182,12 @@
               item=objects[i]
               counter[3] = counter[3] + 1
               //newEmpotrado(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1]) 
+              if( objects[i]["attrs"]["rotation"] == undefined){
+                objects[i]["attrs"]["rotation"] = 0
+              }
+                empotrado_before[objects[i]["attrs"]["name"]] = [objects[i]["attrs"]["x"], objects[i]["attrs"]["y"], objects[i]["attrs"]["rotation"] ]
+              
+            
             }
           }
           if(objects[i]["className"]=="Circle" || objects[i]["className"]=="Line"){
@@ -171,6 +195,8 @@
               item=objects[i]
               counter[4] = counter[4] + 1
               //newRotula(item["attrs"]["x"], item["attrs"]["y"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+              rotula_before[objects[i]["attrs"]["name"]] = [objects[i]["attrs"]["x"], objects[i]["attrs"]["y"]]
+
             }
             else if(String( objects[i]["attrs"]["name"] ).substring(0,5) == 'punto' && String( objects[i]["attrs"]["name"] ).substring(6,10) != "tool"){
               item=objects[i]
@@ -201,7 +227,7 @@
           }
         }
           
-          return {fuerzas, momentos, incognitas, punto, fijos_before, barra_before};
+          return {fuerzas, momentos, incognitas, punto, fijos_before, barra_before, arrow_before, momento_before, rotula_before, deslizante_before, empotrado_before};
         }   
 
       console.log(data["children"][0]["children"]);
@@ -234,17 +260,17 @@
 			}
       
 
-      function comparar(good, fijo_pos, fijos_before){
-
+      function comparar(fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before){
 
         var fijos_iguales = 0
-
-        console.log(fijo_pos)
-        console.log(fijos_before)
+        var barras_iguales = 0
+        var arrow_iguales = 0
+        var momento_iguales = 0
+        var rotula_iguales = 0
+        var deslizante_iguales = 0
+        var empotrado_iguales = 0
 
         console.log("comparing")
-
-        
 
         for (var key_pos in fijo_pos){
           for(var key_before in fijos_before){
@@ -255,11 +281,111 @@
           }
         }
 
+        for (var key_pos in barra_pos){
+          for(var key_before in barra_before){
+            if(barra_pos[key_pos].toString() == barra_before[key_before].toString()){
+              console.log(barra_pos, barra_before)
+              barras_iguales ++
+            }
+          }
+        }
+
+        for (var key_pos in arrow_pos){
+          for(var key_before in arrow_before){
+
+            if(arrow_pos[key_pos].toString() == arrow_before[key_before].toString()){
+              console.log(arrow_pos, arrow_before)
+              arrow_iguales ++
+            }
+          }
+        }
+
+        for (var key_pos in momento_pos){
+          for(var key_before in momento_before){
+            if(momento_pos[key_pos].toString() == momento_before[key_before].toString()){
+              console.log(momento_pos, momento_before)
+              momento_iguales ++
+            }
+          }
+        }
+
+        for (var key_pos in rotula_pos){
+          for(var key_before in rotula_before){
+            if(rotula_pos[key_pos].toString() == rotula_before[key_before].toString()){
+              console.log(rotula_pos, rotula_before)
+              rotula_iguales ++
+            }
+          }
+        }
+
+        for (var key_pos in deslizante_pos){
+          for(var key_before in deslizante_before){
+            if(deslizante_pos[key_pos].toString() == deslizante_before[key_before].toString()){
+              console.log(deslizante_pos, deslizante_before)
+              deslizante_iguales ++
+            }
+          }
+        }
+
+        console.log(empotrado_pos)
+        console.log(empotrado_before)
+
+        for (var key_pos in empotrado_pos){
+          for(var key_before in empotrado_before){
+            if(empotrado_pos[key_pos].toString() == empotrado_before[key_before].toString()){
+              console.log(empotrado_pos, empotrado_before)
+              empotrado_iguales ++
+            }
+          }
+        }
+
         if(Object.keys(fijos_before).length == fijos_iguales){
           console.log("fijos ok")
         }
         else{
           console.log("fijos not ok")
+        }
+
+        if(Object.keys(barra_before).length == barras_iguales){
+          console.log("barras ok")
+        }
+        else{
+          console.log("barras not ok")
+        }
+
+        if(Object.keys(arrow_before).length == arrow_iguales){
+          console.log("arrow ok")
+        }
+        else{
+          console.log("arrow not ok")
+        }
+
+        if(Object.keys(momento_before).length == momento_iguales){
+          console.log("mom ok")
+        }
+        else{
+          console.log("mom not ok")
+        }
+
+        if(Object.keys(rotula_before).length == rotula_iguales){
+          console.log("rot ok")
+        }
+        else{
+          console.log("rot not ok")
+        }
+
+        if(Object.keys(deslizante_before).length == deslizante_iguales){
+          console.log("des ok")
+        }
+        else{
+          console.log("des not ok")
+        }
+
+        if(Object.keys(empotrado_before).length == empotrado_iguales){
+          console.log("emp ok")
+        }
+        else{
+          console.log("emp not ok")
         }
 
       }
@@ -689,7 +815,9 @@
         return {x1, y1, x2, y2, x3, y3, x4, y4}
       }
 
-			function newArrow(x, y, rotation = 0, layer, stage, count, magnitud = 0) {
+
+
+			function newArrow(x, y, rotation = 0, layer, stage, count, magnitud = 0, arrow_pos) {
 				var arrow = new Konva.Arrow({
 					x: x,
 					y: y,
@@ -709,6 +837,8 @@
           rotation: rotation,
           magnitud: magnitud,
 				});
+
+        arrow_pos[arrow.name()] = [arrow.x(), arrow.y(), arrow.rotation(), magnitud]
 
 				arrow.on('dragstart', (e) => {
 					shadowRectangle.show();
@@ -902,7 +1032,7 @@
           stage.batchDraw();
 
           textInfo.text("X:" + String(Math.round(arrow.x())) + " Y:" + String(Math.round(arrow.y())) + " R:" + String(Math.round(arrow.rotation())))
-          
+          arrow_pos[arrow.name()] = [arrow.x(), arrow.y(), arrow.rotation(), magnitud]
         });
         
         layer.add(textInfo);
@@ -953,7 +1083,10 @@
             if (e.keyCode === 13) {
               textNode.text(textarea.value);
               arrow.magnitud = textarea.value;
+              magnitud = textarea.value
               document.body.removeChild(textarea);
+              arrow_pos[arrow.name()] = [arrow.x(), arrow.y(), arrow.rotation(), magnitud]
+
             }
           });
         });
@@ -983,7 +1116,6 @@
         });
 
         fijo_pos[fijo.name()] = [fijo.x(), fijo.y(), fijo.rotation()]
-        console.log(fijo_pos)
 
         fijo.on('dragstart', (e) => {
           shadowRectangle.show();
@@ -1089,7 +1221,7 @@
         layer.add(textInfo)
       }
 
-      function newDeslizante(x, y, rotation, layer, stage, count) {
+      function newDeslizante(x, y, rotation, layer, stage, count, deslizante_pos) {
         var deslizante = new Konva.Group({
           x: x,
           y: y,
@@ -1125,6 +1257,8 @@
         deslizante.add(deslizanteT);
         deslizante.add(deslizanteL);
 
+        deslizante_pos[deslizante.name()] = [deslizante.x(), deslizante.y(), deslizante.rotation()]
+
         deslizante.on('dragstart', (e) => {
           shadowRectangle.show();
           shadowRectangle.moveToTop();
@@ -1141,6 +1275,7 @@
           
           stage.batchDraw();
           shadowRectangle.hide();
+          deslizante_pos[deslizante.name()] = [deslizante.x(), deslizante.y(), deslizante.rotation()]
         });
         deslizante.on('dragmove', (e) => {
           
@@ -1217,8 +1352,8 @@
 
         deslizante.on('dragend', (e) => {
           textInfo.position({
-            x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize - 45,
-            y: Math.round(deslizante.y() / blockSnapSize) * blockSnapSize + 33
+            x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize - 15,
+            y: Math.round(deslizante.y() / blockSnapSize) * blockSnapSize + 5
 
           });
           stage.batchDraw();
@@ -1228,9 +1363,10 @@
         });
         
         layer.add(textInfo);
+        return deslizante_pos;
       }
 
-      function newEmpotrado(x, y, rotation, layer, stage, count) {
+      function newEmpotrado(x, y, rotation, layer, stage, count, empotrado_pos) {
         var empotrado= new Konva.Group({
           x: x,
           y: y,
@@ -1267,6 +1403,8 @@
         empotrado.add(empotrado1);
         empotrado.add(empotrado2);
 
+        empotrado_pos[empotrado.name()] = [empotrado.x(), empotrado.y(), empotrado.rotation()]
+
         empotrado.on('dragstart', (e) => {
           shadowRectangle.show();
           shadowRectangle.moveToTop();
@@ -1279,7 +1417,7 @@
             x: Math.round(empotrado.x() / blockSnapSize) * blockSnapSize ,
             y: Math.round(empotrado.y() / blockSnapSize) * blockSnapSize 
           });
-          
+          empotrado_pos[empotrado.name()] = [empotrado.x(), empotrado.y(), empotrado.rotation()]
           stage.batchDraw();
           shadowRectangle.hide();
         });
@@ -1367,10 +1505,11 @@
         });
         
         layer.add(textInfo);
+        return empotrado_pos
         
       }
 
-      function newRotula(x, y, layer, stage, count) {
+      function newRotula(x, y, layer, stage, count, rotula_pos) {
 
         var rotula = new Konva.Circle({
           x: x,
@@ -1387,6 +1526,8 @@
           name: "rotula_" + count.toString(),
         });
 
+        rotula_pos[rotula.name()] = [rotula.x(), rotula.y()]
+
         rotula.on('dragstart', (e) => {
           shadowRectangle.show();
           shadowRectangle.moveToTop();
@@ -1400,6 +1541,9 @@
           });
           stage.batchDraw();
           shadowRectangle.hide();
+          rotula_pos[rotula.name()] = [rotula.x(), rotula.y()]
+          console.log(rotula_pos)
+          return rotula_pos;
         });
         rotula.on('dragmove', (e) => {
           shadowRectangle.position({
@@ -1467,6 +1611,9 @@
             // remove node from array
           }
         });
+        console.log("out:")
+        console.log(rotula_pos)
+        return rotula_pos;
         
       }
 
@@ -1783,7 +1930,7 @@
         
       }
     
-      function newMomento(x, y, rotation, layer, stage, count, magnitud="M") {
+      function newMomento(x, y, rotation, layer, stage, count, magnitud = 0, momento_pos) {
         
         let momento = new Konva.Arc({
           x: x,
@@ -1803,12 +1950,14 @@
           rotation: rotation,
           magnitud: magnitud
         });
-        
+
+        momento_pos[momento.name()] = [momento.x(), momento.y(), 0]
+      
         momento.on('dragstart', (e) => {
           shadowRectangle.show();
           shadowRectangle.moveToTop();
           momento.moveToTop();
-          console.log(momento.name())
+
         });
         momento.on('dragend', (e) => {
           momento.position({
@@ -1817,6 +1966,9 @@
           });
           stage.batchDraw();
           shadowRectangle.hide();
+
+          momento_pos[momento.name()] = [momento.x(), momento.y(), magnitud]
+
         });
         momento.on('dragmove', (e) => {
           shadowRectangle.position({
@@ -1938,10 +2090,15 @@
             if (e.keyCode === 13) {
               textNode.text(textarea.value);
               momento.magnitud = textarea.value;
+              magnitud = textarea.value
+              momento_pos[momento.name()] = [momento.x(), momento.y(), magnitud]
               document.body.removeChild(textarea);
+
             }
           });
         });
+
+        return momento_pos
 
         // fuerza en momento
       }
@@ -2015,7 +2172,7 @@
       
       var dificultad = parseInt($("#homework-details").data("homeworkDifficulty"));
 
-      function toolBar(layer, stage, counter, fijo_pos, barra_pos) {
+      function toolBar(layer, stage, counter, fijo_pos, barra_pos, momento_pos, rotula_pos, deslizante_pos, empotrado_pos) {
         // PRETTY
         var separadorTool = new Konva.Line({
           points: [largo - 85, 0, largo - 85, 600],
@@ -2046,7 +2203,7 @@
         });
         arrow.on('pointerdown', function () {
           counter[0] = counter[0] + 1
-          newArrow(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[0], 0);
+          newArrow(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[0], 0, arrow_pos);
           //let json = stage.toJSON();
           //console.log(JSON.parse(json)["children"][0]["children"])
           dificultad += 1;
@@ -2121,7 +2278,7 @@
 
         deslizante.on('pointerdown', function () {
           counter[2] = counter[2] + 1
-          newDeslizante(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[2]);
+          deslizante_pos = newDeslizante(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[2], deslizante_pos);
           dificultad += 1;
         });
         var deslizanteText = new Konva.Text({
@@ -2164,7 +2321,7 @@
 
         empotrado.on('pointerdown', function () {
           counter[3] = counter[3] + 1
-          newEmpotrado(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[3]);
+          empotrado_pos = newEmpotrado(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[3], empotrado_pos);
           dificultad += 3;
         });
         var empotradoText = new Konva.Text({
@@ -2190,7 +2347,7 @@
 
         rotula.on('pointerdown', function () {
           counter[4] = counter[4] + 1
-          newRotula(blockSnapSize * 17, blockSnapSize * 3, layer, stage, counter[4]);
+          rotula_pos = newRotula(blockSnapSize * 17, blockSnapSize * 3, layer, stage, counter[4], rotula_pos);
           dificultad += 3;
         });
         var rotulaText = new Konva.Text({
@@ -2250,7 +2407,7 @@
         momento.on('pointerdown', function () {
           counter[6] = counter[6] + 1
           
-          newMomento(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[6]);
+          momento_pos = newMomento(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[6], 0, momento_pos);
           dificultad += 2;
         });
 
@@ -2347,6 +2504,8 @@
         layer.add(barra);
         layer.add(punto);
 
+        return [momento_pos, rotula_pos, deslizante_pos, empotrado_pos]
+
       }
       
       
@@ -2421,11 +2580,27 @@
         counter = [0, 0, 0, 0, 0, 0, 0, 0]
         var fijo_pos = {}
         var barra_pos = {}
+        var arrow_pos = {}
+        var momento_pos = {}
+        var rotula_pos = {}
+        var deslizante_pos = {}
+        var empotrado_pos = {}
         
-        toolBar(layer, stage, counter, fijo_pos, barra_pos);
+        pos = toolBar(layer, stage, counter, fijo_pos, barra_pos, arrow_pos, momento_pos, rotula_pos, deslizante_pos, empotrado_pos);
+
+        momento_pos = pos[0]
+        rotula_pos = pos[1]
+        deslizante_pos = pos[2]
+        empotrado_pos = pos[3]
+
         fuerzasTotales = loadForm(data, counter);
         fijos_before = fuerzasTotales.fijos_before
         barra_before = fuerzasTotales.barra_before
+        arrow_before = fuerzasTotales.arrow_before
+        momento_before = fuerzasTotales.momento_before
+        rotula_before = fuerzasTotales.rotula_before
+        deslizante_before = fuerzasTotales.deslizante_before
+        empotrado_before = fuerzasTotales.empotrado_before
 
         fuerzas    = cambiarPos(   fuerzasTotales.fuerzas )
         momentos   = cambiarPosMom(fuerzasTotales.momentos )
@@ -2503,7 +2678,8 @@
 			  
 		  	let btn2 = document.getElementById("comp_btn");
 			  btn2.addEventListener('click', event => {
-          comparar(data, fijo_pos, fijos_before, barra_before)
+          console.log(rotula_pos)
+          comparar(fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before)
         })
       });
     </script>
