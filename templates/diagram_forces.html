@@ -59,9 +59,12 @@
         
         objects=json["children"][0]["children"]
 
-        var fuerzas  = []
-        var momentos = []
-        var incognitas = []
+        incognitas = []
+        fuerzas = []
+        momentos = []
+
+        fijos_before = {}
+        barra_before = {}
         
         
         for (var i = 0; i<objects["length"]; i++){
@@ -72,7 +75,11 @@
                 item=objects[i]
                 
                 //newBarra(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["width"],item["attrs"]["rotation"], layer, stage)
-                
+                if( objects[i]["attrs"]["rotation"] == undefined){
+                  objects[i]["attrs"]["rotation"] = 0
+                }
+                barra_before[objects[i]["attrs"]["name"]] = [objects[i]["attrs"]["x"], objects[i]["attrs"]["y"], objects[i]["attrs"]["rotation"] ]
+
               }
           }
           
@@ -126,13 +133,14 @@
           if(objects[i]["className"]=="RegularPolygon"){
 
             if(String( objects[i]["attrs"]["name"] ).substring(0,4) == 'fijo' && String( objects[i]["attrs"]["name"] ).substring(5,9) != "tool"){
-
-              var fijoInc = []
-              fijoInc.push(objects[i]["attrs"]["name"], objects[i]["attrs"]["x"], objects[i]["attrs"]["y"], objects[i]["attrs"]["rotation"], objects[i]["attrs"]["magnitud_x"], objects[i]["attrs"]["magnitud_y"])
-              incognitas.push(fijoInc)  
                 
               item=objects[i]
               counter[1] = counter[1] + 1
+              if( objects[i]["attrs"]["rotation"] == undefined){
+                objects[i]["attrs"]["rotation"] = 0
+              }
+                fijos_before[objects[i]["attrs"]["name"]] = [objects[i]["attrs"]["x"], objects[i]["attrs"]["y"], objects[i]["attrs"]["rotation"] ]
+              
               //newFijo(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
             }
           }
@@ -193,7 +201,7 @@
           }
         }
           
-          return {fuerzas, momentos, incognitas, punto};
+          return {fuerzas, momentos, incognitas, punto, fijos_before, barra_before};
         }   
 
       console.log(data["children"][0]["children"]);
@@ -226,22 +234,32 @@
 			}
       
 
-      function comparar(good, fijo_pos){
+      function comparar(good, fijo_pos, fijos_before){
+
+
+        var fijos_iguales = 0
 
         console.log(fijo_pos)
+        console.log(fijos_before)
 
-        objects=good["children"][0]["children"]  
+        console.log("comparing")
+
         
-        for (var i = 0; i<objects["length"]; i++){
 
-          if(objects[i]["className"]=="RegularPolygon"){
-
-            if(String( objects[i]["attrs"]["name"] ).substring(0,4) == 'fijo' && String( objects[i]["attrs"]["name"] ).substring(5,9) != "tool"){
-
-                console.log(objects[i]["attrs"]["name"], objects[i]["attrs"]["x"], objects[i]["attrs"]["y"]  )
-                
-              }
+        for (var key_pos in fijo_pos){
+          for(var key_before in fijos_before){
+            if(fijo_pos[key_pos].toString() == fijos_before[key_before].toString()){
+              console.log(key_pos, key_before)
+              fijos_iguales ++
+            }
           }
+        }
+
+        if(Object.keys(fijos_before).length == fijos_iguales){
+          console.log("fijos ok")
+        }
+        else{
+          console.log("fijos not ok")
         }
 
       }
@@ -964,7 +982,7 @@
           magnitud_y: "Fy_" + count.toString(),
         });
 
-        fijo_pos[fijo.name()] = [fijo.x(), fijo.y()]
+        fijo_pos[fijo.name()] = [fijo.x(), fijo.y(), fijo.rotation()]
         console.log(fijo_pos)
 
         fijo.on('dragstart', (e) => {
@@ -980,8 +998,6 @@
               x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize +15,
               y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize + 15
             });
-
-            fijo_pos[fijo.name()] = [fijo.x(), fijo.y()]
 
           }
           else if(fijo.rotation() == 90){
@@ -1067,7 +1083,7 @@
           stage.batchDraw();
 
           textInfo.text("X:" + String(Math.round(fijo.x())) + " Y:" + String(Math.round(fijo.y())) +" R:" + String(Math.round(fijo.rotation())) )
-          
+          fijo_pos[fijo.name()] = [fijo.x(), fijo.y(), fijo.rotation()]
         });
 
         layer.add(textInfo)
@@ -1615,7 +1631,8 @@
         layer.add(textInfo2);
       }
 
-      function newBarra(x, y, width, rotation, layer, stage) {
+      function newBarra(x, y, width, rotation, layer, stage, barra_pos) {
+
         var barra = new Konva.Rect({
           x: x,
           y: y,
@@ -1632,6 +1649,7 @@
           name: "barra",
           rotation: rotation,
         });
+        barra_pos[barra.name()] = [barra.x(), barra.y(), barra.rotation()]
 
         barra.on('dragstart', (e) => {
           shadowRectangle.show();
@@ -1666,6 +1684,30 @@
             barra.position({
               x: Math.round(barra.x() / blockSnapSize) * blockSnapSize,
               y: Math.round(barra.y() / blockSnapSize) * blockSnapSize + 30
+            });
+          }
+          else if(Math.round(barra.rotation()) == -45){
+            barra.position({
+              x: Math.round(barra.x() / blockSnapSize) * blockSnapSize,
+              y: Math.round(barra.y() / blockSnapSize) * blockSnapSize 
+            });
+          }
+          else if(Math.round(barra.rotation()) == -135){
+            barra.position({
+              x: Math.round(barra.x() / blockSnapSize) * blockSnapSize,
+              y: Math.round(barra.y() / blockSnapSize) * blockSnapSize + 30
+            });
+          }
+          else if(Math.round(barra.rotation()) == 135){
+            barra.position({
+              x: Math.round(barra.x() / blockSnapSize) * blockSnapSize + 30,
+              y: Math.round(barra.y() / blockSnapSize) * blockSnapSize + 30
+            });
+          }
+          else if(Math.round(barra.rotation()) == 45){
+            barra.position({
+              x: Math.round(barra.x() / blockSnapSize) * blockSnapSize + 30,
+              y: Math.round(barra.y() / blockSnapSize) * blockSnapSize
             });
           }
           stage.batchDraw();
@@ -1715,7 +1757,29 @@
           }
         });
         
+        var textInfo= new Konva.Text({
+          text: "X:" + String(Math.round(barra.x())) + " Y:" + String(Math.round(barra.y())) + " R:" + String(Math.round(barra.rotation())),
+          x: barra.x() + 20,
+          y: barra.y() + 23,
+          fontSize: 13,
+          fill: 'black',
+          
 
+        });
+
+        barra.on('dragend', (e) => {
+          textInfo.position({
+            x: Math.round(barra.x() / blockSnapSize) * blockSnapSize - 15,
+            y: Math.round(barra.y() / blockSnapSize) * blockSnapSize + 35
+
+          });
+          stage.batchDraw();
+
+          textInfo.text("X:" + String(Math.round(barra.x())) + " Y:" + String(Math.round(barra.y())) +" R:" + String(Math.round(barra.rotation())) )
+          barra_pos[barra.name()] = [barra.x(), barra.y(), barra.rotation()]
+        });
+
+        layer.add(textInfo)
         
       }
     
@@ -1951,7 +2015,7 @@
       
       var dificultad = parseInt($("#homework-details").data("homeworkDifficulty"));
 
-      function toolBar(layer, stage, counter, fijo_pos) {
+      function toolBar(layer, stage, counter, fijo_pos, barra_pos) {
         // PRETTY
         var separadorTool = new Konva.Line({
           points: [largo - 85, 0, largo - 85, 600],
@@ -2227,9 +2291,10 @@
           shadowOpacity: 0.4,
           draggable: false,
         });
+
         barra.on('pointerdown', function () {
           bar_width = setBarLenght();
-          newBarra(blockSnapSize * 17, blockSnapSize * 3, bar_width, 0,layer, stage);
+          newBarra(blockSnapSize * 17, blockSnapSize * 3, bar_width, 0,layer, stage, barra_pos);
           dificultad += 1;
         });
 
@@ -2355,19 +2420,19 @@
         //counter[ARROW, FIJO, DESLIZANTE, EMPOTRADO, ROTULA, BIELA, MOMENTO, PUNTO]
         counter = [0, 0, 0, 0, 0, 0, 0, 0]
         var fijo_pos = {}
+        var barra_pos = {}
         
-        toolBar(layer, stage, counter, fijo_pos);
+        toolBar(layer, stage, counter, fijo_pos, barra_pos);
         fuerzasTotales = loadForm(data, counter);
-        
+        fijos_before = fuerzasTotales.fijos_before
+        barra_before = fuerzasTotales.barra_before
 
         fuerzas    = cambiarPos(   fuerzasTotales.fuerzas )
         momentos   = cambiarPosMom(fuerzasTotales.momentos )
         incognitas = cambiarPosInc(   fuerzasTotales.incognitas)
 
-
         descompuestas = descomponerFuerzas(fuerzas)
-
-
+        
         sumas = {}
         
         if(fuerzasTotales.punto){
@@ -2438,7 +2503,7 @@
 			  
 		  	let btn2 = document.getElementById("comp_btn");
 			  btn2.addEventListener('click', event => {
-          comparar(data, fijo_pos)
+          comparar(data, fijo_pos, fijos_before, barra_before)
         })
       });
     </script>
