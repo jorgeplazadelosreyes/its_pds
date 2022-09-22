@@ -71,7 +71,7 @@
             if(objects[i]["attrs"]["name"]=='barra'){
                 item=objects[i]
                 
-                newBarra(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["width"],item["attrs"]["rotation"], layer, stage)
+                //newBarra(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["width"],item["attrs"]["rotation"], layer, stage)
                 
               }
           }
@@ -92,7 +92,7 @@
                     item["attrs"]["magnitud"] = magn
                   }
                 }
-                newMomento(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, num, item["attrs"]["magnitud"])
+                //newMomento(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, num, item["attrs"]["magnitud"])
                 
                 var newM = [];
 
@@ -115,7 +115,7 @@
                     item["attrs"]["magnitud"] = magn
                   }
                 }
-                newArrow(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, num, item["attrs"]["magnitud"])
+                //newArrow(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, num, item["attrs"]["magnitud"])
                 
                 var newForce = [];
 
@@ -133,7 +133,7 @@
                 
               item=objects[i]
               counter[1] = counter[1] + 1
-              newFijo(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+              //newFijo(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
             }
           }
           if(objects[i]["className"]=="Group"){
@@ -145,7 +145,7 @@
               
               item=objects[i]
               counter[2] = counter[2] + 1
-              newDeslizante(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+              //newDeslizante(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
             }
             else if(String( objects[i]["attrs"]["name"] ).substring(0,9) == 'empotrado' && String( objects[i]["attrs"]["name"] ).substring(10,14) != "tool"){
               
@@ -155,19 +155,19 @@
               
               item=objects[i]
               counter[3] = counter[3] + 1
-              newEmpotrado(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1]) 
+              //newEmpotrado(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1]) 
             }
           }
           if(objects[i]["className"]=="Circle" || objects[i]["className"]=="Line"){
             if(String( objects[i]["attrs"]["name"] ).substring(0,6) == 'rotula' && String( objects[i]["attrs"]["name"] ).substring(7,11) != "tool"){
               item=objects[i]
               counter[4] = counter[4] + 1
-              newRotula(item["attrs"]["x"], item["attrs"]["y"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+              //newRotula(item["attrs"]["x"], item["attrs"]["y"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
             }
             else if(String( objects[i]["attrs"]["name"] ).substring(0,5) == 'punto' && String( objects[i]["attrs"]["name"] ).substring(6,10) != "tool"){
               item=objects[i]
               counter[7] = counter[7] + 1
-              newPunto(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
+              //newPunto(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
               var punto = [item["attrs"]["x"], item["attrs"]["y"]]
             }
             else if(String( objects[i]["attrs"]["name"] ).substring(0,6) == 'biela1' && String( objects[i]["attrs"]["name"] ).substring(7,11) != "tool"){
@@ -178,7 +178,7 @@
               if(typeof(x1) != undefined && typeof(x2) != undefined && typeof(y1) != undefined && typeof(y2) != undefined){
                 counter[5] = counter[5] + 1
                 }
-                newBiela( x1, y1, x2, y2, layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+                //newBiela( x1, y1, x2, y2, layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
               }
             
             else if(String( objects[i]["attrs"]["name"] ).substring(0,6) == 'biela2' && String( objects[i]["attrs"]["name"] ).substring(7,11) != "tool"){
@@ -187,7 +187,7 @@
               y2 = item["attrs"]["y"]
               if(typeof(x1) != undefined && typeof(x2) != undefined && typeof(y1) != undefined && typeof(y2) != undefined){
                 counter[5] = counter[5] + 1
-                newBiela( x1, y1, x2, y2, layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+                //newBiela( x1, y1, x2, y2, layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
               }
             }
           }
@@ -224,6 +224,28 @@
 					strokeWidth: 0.5,
 				}));
 			}
+      
+
+      function comparar(good, fijo_pos){
+
+        console.log(fijo_pos)
+
+        objects=good["children"][0]["children"]  
+        
+        for (var i = 0; i<objects["length"]; i++){
+
+          if(objects[i]["className"]=="RegularPolygon"){
+
+            if(String( objects[i]["attrs"]["name"] ).substring(0,4) == 'fijo' && String( objects[i]["attrs"]["name"] ).substring(5,9) != "tool"){
+
+                console.log(objects[i]["attrs"]["name"], objects[i]["attrs"]["x"], objects[i]["attrs"]["y"]  )
+                
+              }
+          }
+        }
+
+      }
+
       function calcularFXYM(incognitas, Fx, Fy, momentos, punto){
        
         var sumaX = 0
@@ -327,7 +349,6 @@
         return {strX, strY, strM}
 
       }
-
 
       function cambiarPosInc(incognitas){
 
@@ -583,7 +604,6 @@
         return {Fx, Fy}
       }
 
-
       function getPointsBArra(x, y, r, width){
 
         x = Math.round(x);
@@ -650,7 +670,6 @@
 
         return {x1, y1, x2, y2, x3, y3, x4, y4}
       }
-
 
 			function newArrow(x, y, rotation = 0, layer, stage, count, magnitud = 0) {
 				var arrow = new Konva.Arrow({
@@ -925,7 +944,7 @@
 
       }
 
-      function newFijo(x, y, rotation, layer, stage, count) {
+      function newFijo(x, y, rotation, layer, stage, count, fijo_pos) {
         let fijo = new Konva.RegularPolygon({
           x: x,
           y: y,
@@ -944,6 +963,10 @@
           magnitud_x: "Fx_" + count.toString(),
           magnitud_y: "Fy_" + count.toString(),
         });
+
+        fijo_pos[fijo.name()] = [fijo.x(), fijo.y()]
+        console.log(fijo_pos)
+
         fijo.on('dragstart', (e) => {
           shadowRectangle.show();
           shadowRectangle.moveToTop();
@@ -952,12 +975,14 @@
         });
         fijo.on('dragend', (e) => {
 
-
           if(fijo.rotation() == 0){
             fijo.position({
               x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize +15,
               y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize + 15
             });
+
+            fijo_pos[fijo.name()] = [fijo.x(), fijo.y()]
+
           }
           else if(fijo.rotation() == 90){
             fijo.position({
@@ -1428,6 +1453,7 @@
         });
         
       }
+
       function newBiela(x1, y1, x2=x1+30, y2=y1, layer, stage, count) {
 
         var b1 = new Konva.Circle({
@@ -1922,11 +1948,10 @@
         layer.add(textInfo);
         
       }
-
       
       var dificultad = parseInt($("#homework-details").data("homeworkDifficulty"));
 
-      function toolBar(layer, stage, counter) {
+      function toolBar(layer, stage, counter, fijo_pos) {
         // PRETTY
         var separadorTool = new Konva.Line({
           points: [largo - 85, 0, largo - 85, 600],
@@ -1986,7 +2011,7 @@
         });
         fijo.on('pointerdown', function () {
           counter[1] = counter[1] + 1
-          newFijo(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[1]);
+          newFijo(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[1], fijo_pos);
           dificultad += 2;
         });
 
@@ -2329,8 +2354,9 @@
 
         //counter[ARROW, FIJO, DESLIZANTE, EMPOTRADO, ROTULA, BIELA, MOMENTO, PUNTO]
         counter = [0, 0, 0, 0, 0, 0, 0, 0]
+        var fijo_pos = {}
         
-        toolBar(layer, stage, counter);
+        toolBar(layer, stage, counter, fijo_pos);
         fuerzasTotales = loadForm(data, counter);
         
 
@@ -2352,8 +2378,9 @@
           sumas.strY = 0
           sumas.strM = 0
         }
-        
+
         stage.add(layer);
+        
         layer.draw();
   </script>
     <div class="container" style="margin-top: 20px">
@@ -2380,7 +2407,7 @@
       </div>
       <div class="row">
         <div class="col-sm">
-          <input id="save_btn" type="button" style="float: left;" value = "Guardar"/>
+          <input id="comp_btn" type="button" style="float: left;" value = "comparar"/>
         </div>
         <div class="col-sm"></div>
         <div class="col-sm">
@@ -2408,69 +2435,10 @@
 	    }
 
       $(document).ready(function () {
-			  let homework_id = $("#homework-details").data("homeworkId")
-		  	let btn2 = document.getElementById("save_btn");
+			  
+		  	let btn2 = document.getElementById("comp_btn");
 			  btn2.addEventListener('click', event => {
-          let str_statement = $("#statement-text").val()
-          let json = stage.toJSON();
-          let initial_state = $("#initialStageSelect").find(":selected").val()
-          let final_state = $("#finalStageSelect").find(":selected").val()
-
-          console.log(initial_state)
-          console.log(final_state)
-
-          let fileData = $("#customFile")[0].files[0]
-
-          console.log(fileData)
-          $.ajax({
-            url: `/homework/${homework_id}/`,
-            type: "POST",
-             data:{
-              "diagram": json,
-              "id": homework_id, 
-              "str_statement": str_statement,
-              "difficulty": dificultad,
-              "Fx": sumas.strX,
-              "Fy": sumas.strY,
-              "Fm": sumas.strM,
-              "initial_stage": initial_state,
-              "final_stage": final_state,
-            },
-
-            beforeSend: function (xhr) {
-              xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-            },
-            success: function (data) {
-              console.log("guardo")
-              console.log(dificultad)
-              //console.log(JSON.parse(json)["children"][0]["children"]);
-            },
-            error: function (error) {
-              console.log("guardon't")
-            }
-          });
-          /*
-          $.ajax({
-				    url: `/statement/${homework_id}/`,
-            type: "POST",
-            data:{
-	            "file_statement": fileData,
-            },
-
-					  processData: false,
-  				  contentType: false, 
-
-					  beforeSend: function (xhr) {
-            	xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-       			},
-            success: function (data) {
-						  console.log("guardo archivo")
-            },
-            error: function (error) {
-              console.log("no guardo archivo")
-            }
-        	});
-        */
+          comparar(data, fijo_pos)
         })
       });
     </script>

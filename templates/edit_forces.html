@@ -1959,8 +1959,7 @@
         arrow.on('pointerdown', function () {
           counter[0] = counter[0] + 1
           newArrow(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[0], 0);
-          //let json = stage.toJSON();
-          //console.log(JSON.parse(json)["children"][0]["children"])
+
           dificultad += 1;
         });
 
@@ -2353,6 +2352,10 @@
           sumas.strY = 0
           sumas.strM = 0
         }
+
+        shape = stage.find('Arc')
+        console.log("momentos:")
+        console.log(shape)
         
         stage.add(layer);
         layer.draw();
