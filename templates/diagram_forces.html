@@ -71,6 +71,7 @@
         deslizante_before = {}
         empotrado_before = {}
         biela_before = {}
+        punto_before = {}
         
         
         for (var i = 0; i<objects["length"]; i++){
@@ -204,6 +205,8 @@
               counter[7] = counter[7] + 1
               //newPunto(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
               var punto = [item["attrs"]["x"], item["attrs"]["y"]]
+              punto_before[objects[i]["attrs"]["name"]] = [objects[i]["attrs"]["x"], objects[i]["attrs"]["y"]]
+
             }
             else if(String( objects[i]["attrs"]["name"] ).substring(0,6) == 'biela1' && String( objects[i]["attrs"]["name"] ).substring(7,11) != "tool"){
               item=objects[i]
@@ -231,7 +234,7 @@
           }
         }
           
-          return {fuerzas, momentos, incognitas, punto, fijos_before, barra_before, arrow_before, momento_before, rotula_before, deslizante_before, empotrado_before, biela_before};
+          return {fuerzas, momentos, incognitas, punto, fijos_before, barra_before, arrow_before, momento_before, rotula_before, deslizante_before, empotrado_before, biela_before, punto_before};
         }   
 
       console.log(data["children"][0]["children"]);
@@ -264,7 +267,7 @@
 			}
       
 
-      function comparar(fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before){
+      function comparar(fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before){
 
         var fijos_iguales = 0
         var barras_iguales = 0
@@ -274,6 +277,7 @@
         var deslizante_iguales = 0
         var empotrado_iguales = 0
         var biela_iguales = 0
+        var punto_iguales = 0
 
         console.log("comparing")
 
@@ -340,14 +344,32 @@
             }
           }
         }
+        for (var key_pos in empotrado_pos){
+          for(var key_before in empotrado_before){
+            if(biela_pos["biela1_3"].toString() == biela_before["biela1_1"].toString()){
+              biela_iguales ++
+            }
+            else if(biela_pos["biela1_3"][0].toString() == biela_before["biela1_1"][2].toString() && biela_pos["biela1_3"][1].toString() == biela_before["biela1_1"][3].toString() &&
+            biela_pos["biela1_3"][2].toString() == biela_before["biela1_1"][0].toString() && biela_pos["biela1_3"][3].toString() == biela_before["biela1_1"][1].toString()){
+              biela_iguales ++
+            }
+          }
+        }
+        console.log("punto pos:")
+        console.log(punto_pos)
+        console.log("punto bef:")
+        console.log(punto_before)
 
-        if(biela_pos["biela1_3"].toString() == biela_before["biela1_1"].toString()){
-          biela_iguales ++
+        for (var key_pos in punto_pos){
+          for(var key_before in punto_before){
+            if(punto_pos[key_pos].toString() == punto_before[key_before].toString()){
+              console.log(punto_pos, punto_before)
+              punto_iguales ++
+            }
+          }
         }
-        else if(biela_pos["biela1_3"][0].toString() == biela_before["biela1_1"][2].toString() && biela_pos["biela1_3"][1].toString() == biela_before["biela1_1"][3].toString() &&
-         biela_pos["biela1_3"][2].toString() == biela_before["biela1_1"][0].toString() && biela_pos["biela1_3"][3].toString() == biela_before["biela1_1"][1].toString()){
-          biela_iguales ++
-        }
+        console.log("piguela")
+        console.log(punto_iguales)
 
         if(Object.keys(fijos_before).length == fijos_iguales){
           console.log("fijos ok")
@@ -403,6 +425,13 @@
         }
         else{
           console.log("biela not ok")
+        }
+
+        if(punto_iguales == 1){
+          console.log("punto ok")
+        }
+        else{
+          console.log("punto not ok")
         }
 
       }
@@ -2125,7 +2154,7 @@
         // fuerza en momento
       }
 
-      function newPunto(x, y, layer, stage) {
+      function newPunto(x, y, layer, stage, punto_pos) {
 
         var punto = new Konva.Circle({
           x: x,
@@ -2142,6 +2171,8 @@
           name: "punto" 
         });
 
+        punto_pos[punto.name()] = [punto.x(), punto.y()]
+
         punto.on('dragstart', (e) => {
           shadowRectangle.show();
           shadowRectangle.moveToTop();
@@ -2156,6 +2187,7 @@
           });
           stage.batchDraw();
           shadowRectangle.hide();
+          punto_pos[punto.name()] = [punto.x(), punto.y()]
         });
         punto.on('dragmove', (e) => {
           shadowRectangle.position({
@@ -2190,11 +2222,13 @@
   
         layer.add(textInfo);
         
+        return punto_pos;
+        
       }
       
       var dificultad = parseInt($("#homework-details").data("homeworkDifficulty"));
 
-      function toolBar(layer, stage, counter, fijo_pos, barra_pos, momento_pos, rotula_pos, deslizante_pos, empotrado_pos, biela_pos) {
+      function toolBar(layer, stage, counter, fijo_pos, barra_pos, momento_pos, rotula_pos, deslizante_pos, empotrado_pos, biela_pos, punto_pos) {
         // PRETTY
         var separadorTool = new Konva.Line({
           points: [largo - 85, 0, largo - 85, 600],
@@ -2499,9 +2533,9 @@
         });
 
         punto.on('pointerdown', function () {
-          if(counter[7] == 0){
+          if(counter[7] == 1){
             counter[7] = counter[7] + 1
-            newPunto(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
+            punto_pos = newPunto(blockSnapSize * 17, blockSnapSize * 3, layer, stage, punto_pos);
           }
           
         });
@@ -2526,7 +2560,7 @@
         layer.add(barra);
         layer.add(punto);
 
-        return [momento_pos, rotula_pos, deslizante_pos, empotrado_pos, biela_pos]
+        return [momento_pos, rotula_pos, deslizante_pos, empotrado_pos, biela_pos, punto_pos]
 
       }
       
@@ -2607,14 +2641,16 @@
         var deslizante_pos = {}
         var empotrado_pos = {}
         var biela_pos = {}
+        var punto_pos = {}
         
-        pos = toolBar(layer, stage, counter, fijo_pos, barra_pos, arrow_pos, momento_pos, rotula_pos, deslizante_pos, empotrado_pos, biela_pos);
+        pos = toolBar(layer, stage, counter, fijo_pos, barra_pos, arrow_pos, momento_pos, rotula_pos, deslizante_pos, empotrado_pos, biela_pos, punto_pos);
 
         momento_pos = pos[0]
         rotula_pos = pos[1]
         deslizante_pos = pos[2]
         empotrado_pos = pos[3]
         biela_pos = pos[4]
+        punto_pos = pos[5]
 
         fuerzasTotales = loadForm(data, counter);
         fijos_before = fuerzasTotales.fijos_before
@@ -2625,6 +2661,7 @@
         deslizante_before = fuerzasTotales.deslizante_before
         empotrado_before = fuerzasTotales.empotrado_before
         biela_before = fuerzasTotales.biela_before
+        punto_before = fuerzasTotales.punto_before
 
         fuerzas    = cambiarPos(   fuerzasTotales.fuerzas )
         momentos   = cambiarPosMom(fuerzasTotales.momentos )
@@ -2703,7 +2740,7 @@
 		  	let btn2 = document.getElementById("comp_btn");
 			  btn2.addEventListener('click', event => {
           console.log(rotula_pos)
-          comparar(fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before)
+          comparar(fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before)
         })
       });
     </script>
