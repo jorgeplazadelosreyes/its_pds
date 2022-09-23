@@ -70,6 +70,7 @@
         rotula_before = {}
         deslizante_before = {}
         empotrado_before = {}
+        biela_before = {}
         
         
         for (var i = 0; i<objects["length"]; i++){
@@ -212,6 +213,8 @@
               if(typeof(x1) != undefined && typeof(x2) != undefined && typeof(y1) != undefined && typeof(y2) != undefined){
                 counter[5] = counter[5] + 1
                 }
+                biela_before[objects[i]["attrs"]["name"]] = [x1, y1, x2, y2]
+
                 //newBiela( x1, y1, x2, y2, layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
               }
             
@@ -222,12 +225,13 @@
               if(typeof(x1) != undefined && typeof(x2) != undefined && typeof(y1) != undefined && typeof(y2) != undefined){
                 counter[5] = counter[5] + 1
                 //newBiela( x1, y1, x2, y2, layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+                biela_before[objects[i]["attrs"]["name"]] = [x1, y1, x2, y2]
               }
             }
           }
         }
           
-          return {fuerzas, momentos, incognitas, punto, fijos_before, barra_before, arrow_before, momento_before, rotula_before, deslizante_before, empotrado_before};
+          return {fuerzas, momentos, incognitas, punto, fijos_before, barra_before, arrow_before, momento_before, rotula_before, deslizante_before, empotrado_before, biela_before};
         }   
 
       console.log(data["children"][0]["children"]);
@@ -260,7 +264,7 @@
 			}
       
 
-      function comparar(fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before){
+      function comparar(fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before){
 
         var fijos_iguales = 0
         var barras_iguales = 0
@@ -269,6 +273,7 @@
         var rotula_iguales = 0
         var deslizante_iguales = 0
         var empotrado_iguales = 0
+        var biela_iguales = 0
 
         console.log("comparing")
 
@@ -327,9 +332,6 @@
           }
         }
 
-        console.log(empotrado_pos)
-        console.log(empotrado_before)
-
         for (var key_pos in empotrado_pos){
           for(var key_before in empotrado_before){
             if(empotrado_pos[key_pos].toString() == empotrado_before[key_before].toString()){
@@ -337,6 +339,14 @@
               empotrado_iguales ++
             }
           }
+        }
+
+        if(biela_pos["biela1_3"].toString() == biela_before["biela1_1"].toString()){
+          biela_iguales ++
+        }
+        else if(biela_pos["biela1_3"][0].toString() == biela_before["biela1_1"][2].toString() && biela_pos["biela1_3"][1].toString() == biela_before["biela1_1"][3].toString() &&
+         biela_pos["biela1_3"][2].toString() == biela_before["biela1_1"][0].toString() && biela_pos["biela1_3"][3].toString() == biela_before["biela1_1"][1].toString()){
+          biela_iguales ++
         }
 
         if(Object.keys(fijos_before).length == fijos_iguales){
@@ -386,6 +396,13 @@
         }
         else{
           console.log("emp not ok")
+        }
+
+        if(biela_iguales == 1){
+          console.log("biela ok")
+        }
+        else{
+          console.log("biela not ok")
         }
 
       }
@@ -1617,7 +1634,7 @@
         
       }
 
-      function newBiela(x1, y1, x2=x1+30, y2=y1, layer, stage, count) {
+      function newBiela(x1, y1, x2=x1+30, y2=y1, layer, stage, count, biela_pos) {
 
         var b1 = new Konva.Circle({
           x: x1,
@@ -1649,6 +1666,8 @@
           name: "biela2_" + count.toString(),
         });
 
+        biela_pos[biela.name()] = [b1.x(), b1.y(), b2.x(), b2.y()]
+
         const line = new Konva.Line({
           points: [x1,y1,x2,y2],
           stroke: 'green',
@@ -1668,6 +1687,7 @@
           });
           stage.batchDraw();
           shadowRectangle.hide();
+          biela_pos[biela.name()] = [b1.x(), b1.y(), b2.x(), b2.y()]
         });
         b1.on('dragmove', (e) => {
           shadowRectangle.position({
@@ -1689,6 +1709,7 @@
           });
           stage.batchDraw();
           shadowRectangle.hide();
+          biela_pos[biela.name()] = [b1.x(), b1.y(), b2.x(), b2.y()]
         });
         b2.on('dragmove', (e) => {
           shadowRectangle.position({
@@ -1776,6 +1797,7 @@
         });
         
         layer.add(textInfo2);
+        return biela_pos;
       }
 
       function newBarra(x, y, width, rotation, layer, stage, barra_pos) {
@@ -2172,7 +2194,7 @@
       
       var dificultad = parseInt($("#homework-details").data("homeworkDifficulty"));
 
-      function toolBar(layer, stage, counter, fijo_pos, barra_pos, momento_pos, rotula_pos, deslizante_pos, empotrado_pos) {
+      function toolBar(layer, stage, counter, fijo_pos, barra_pos, momento_pos, rotula_pos, deslizante_pos, empotrado_pos, biela_pos) {
         // PRETTY
         var separadorTool = new Konva.Line({
           points: [largo - 85, 0, largo - 85, 600],
@@ -2373,7 +2395,7 @@
 
         biela.on('pointerdown', function () {
           counter[5] = counter[5] + 1
-          newBiela(blockSnapSize * 17, blockSnapSize * 3, blockSnapSize * 17+30, blockSnapSize * 3,  layer, stage, counter[5]);
+          biela_pos = newBiela(blockSnapSize * 17, blockSnapSize * 3, blockSnapSize * 17+30, blockSnapSize * 3,  layer, stage, counter[5], biela_pos);
           dificultad += 5;
         });
         var bielaText = new Konva.Text({
@@ -2504,10 +2526,9 @@
         layer.add(barra);
         layer.add(punto);
 
-        return [momento_pos, rotula_pos, deslizante_pos, empotrado_pos]
+        return [momento_pos, rotula_pos, deslizante_pos, empotrado_pos, biela_pos]
 
       }
-      
       
       
         let drawingLine = false;
@@ -2585,13 +2606,15 @@
         var rotula_pos = {}
         var deslizante_pos = {}
         var empotrado_pos = {}
+        var biela_pos = {}
         
-        pos = toolBar(layer, stage, counter, fijo_pos, barra_pos, arrow_pos, momento_pos, rotula_pos, deslizante_pos, empotrado_pos);
+        pos = toolBar(layer, stage, counter, fijo_pos, barra_pos, arrow_pos, momento_pos, rotula_pos, deslizante_pos, empotrado_pos, biela_pos);
 
         momento_pos = pos[0]
         rotula_pos = pos[1]
         deslizante_pos = pos[2]
         empotrado_pos = pos[3]
+        biela_pos = pos[4]
 
         fuerzasTotales = loadForm(data, counter);
         fijos_before = fuerzasTotales.fijos_before
@@ -2601,6 +2624,7 @@
         rotula_before = fuerzasTotales.rotula_before
         deslizante_before = fuerzasTotales.deslizante_before
         empotrado_before = fuerzasTotales.empotrado_before
+        biela_before = fuerzasTotales.biela_before
 
         fuerzas    = cambiarPos(   fuerzasTotales.fuerzas )
         momentos   = cambiarPosMom(fuerzasTotales.momentos )
@@ -2679,7 +2703,7 @@
 		  	let btn2 = document.getElementById("comp_btn");
 			  btn2.addEventListener('click', event => {
           console.log(rotula_pos)
-          comparar(fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before)
+          comparar(fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before)
         })
       });
     </script>
