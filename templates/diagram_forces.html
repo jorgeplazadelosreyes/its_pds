@@ -55,7 +55,53 @@
 
 			//var stage = Konva.Node.create(data, "container")
 
-      function loadForm(json, counter){
+      function loadForm(json, counter, show){
+
+        if(show == 1){
+          c = layer.find('Circle')
+
+          for (var n = 0; n < c.length; n++) {
+            c[n].destroy();
+          }
+
+          c = layer.find('Arrow')
+
+          for (var n = 0; n < c.length; n++) {
+            c[n].destroy();
+          }
+
+          c = layer.find('Group')
+
+          for (var n = 0; n < c.length; n++) {
+            c[n].destroy();
+          }
+
+          c = layer.find('Text')
+
+          for (var n = 0; n < c.length; n++) {
+            c[n].destroy();
+          }
+
+          c = layer.find('Arc')
+
+          for (var n = 0; n < c.length; n++) {
+            c[n].destroy();
+          }
+
+          c = layer.find('Rect')
+
+          for (var n = 0; n < c.length; n++) {
+            c[n].destroy();
+          }
+
+          c = layer.find('RegularPolygon')
+
+          for (var n = 0; n < c.length; n++) {
+            c[n].destroy();
+          }
+
+        }
+  
         
         objects=json["children"][0]["children"]
 
@@ -72,6 +118,8 @@
         empotrado_before = {}
         biela_before = {}
         punto_before = {}
+
+        
         
         
         for (var i = 0; i<objects["length"]; i++){
@@ -80,8 +128,12 @@
           if(objects[i]["className"]=="Rect"){
             if(objects[i]["attrs"]["name"]=='barra'){
                 item=objects[i]
+
+                if(show == 1){
+                  newBarra(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["width"],item["attrs"]["rotation"], layer, stage)
+                }
                 
-                //newBarra(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["width"],item["attrs"]["rotation"], layer, stage)
+                
                 if( objects[i]["attrs"]["rotation"] == undefined){
                   objects[i]["attrs"]["rotation"] = 0
                 }
@@ -106,7 +158,9 @@
                     item["attrs"]["magnitud"] = magn
                   }
                 }
-                //newMomento(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, num, item["attrs"]["magnitud"])
+                if(show == 1){
+                  newMomento(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, num, item["attrs"]["magnitud"])
+                }
                 momento_before[objects[i]["attrs"]["name"]] = [objects[i]["attrs"]["x"], objects[i]["attrs"]["y"], item["attrs"]["magnitud"]]
 
                 var newM = [];
@@ -135,9 +189,9 @@
                   objects[i]["attrs"]["rotation"] = 0
                 }
                 arrow_before[objects[i]["attrs"]["name"]] = [objects[i]["attrs"]["x"], objects[i]["attrs"]["y"], objects[i]["attrs"]["rotation"], item["attrs"]["magnitud"]]
-
-                //newArrow(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, num, item["attrs"]["magnitud"])
-                
+                if(show == 1){
+                  newArrow(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, num, item["attrs"]["magnitud"])
+                }
                 var newForce = [];
 
                 newForce.push(item["attrs"]["name"], item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], item["attrs"]["magnitud"])
@@ -154,8 +208,9 @@
                 objects[i]["attrs"]["rotation"] = 0
               }
                 fijos_before[objects[i]["attrs"]["name"]] = [objects[i]["attrs"]["x"], objects[i]["attrs"]["y"], objects[i]["attrs"]["rotation"] ]
-              
-              //newFijo(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+              if(show == 1){
+                newFijo(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+              }
             }
           }
           if(objects[i]["className"]=="Group"){
@@ -167,7 +222,10 @@
               
               item=objects[i]
               counter[2] = counter[2] + 1
-              //newDeslizante(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+
+              if(show == 1){
+                newDeslizante(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+              }
               if( objects[i]["attrs"]["rotation"] == undefined){
                 objects[i]["attrs"]["rotation"] = 0
               }
@@ -183,7 +241,10 @@
               
               item=objects[i]
               counter[3] = counter[3] + 1
-              //newEmpotrado(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1]) 
+
+              if(show == 1){
+                newEmpotrado(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1]) 
+              }
               if( objects[i]["attrs"]["rotation"] == undefined){
                 objects[i]["attrs"]["rotation"] = 0
               }
@@ -196,7 +257,10 @@
             if(String( objects[i]["attrs"]["name"] ).substring(0,6) == 'rotula' && String( objects[i]["attrs"]["name"] ).substring(7,11) != "tool"){
               item=objects[i]
               counter[4] = counter[4] + 1
-              //newRotula(item["attrs"]["x"], item["attrs"]["y"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+
+              if(show == 1){
+                newRotula(item["attrs"]["x"], item["attrs"]["y"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+              }
               rotula_before[objects[i]["attrs"]["name"]] = [objects[i]["attrs"]["x"], objects[i]["attrs"]["y"]]
 
             }
@@ -218,7 +282,9 @@
                 }
                 biela_before[objects[i]["attrs"]["name"]] = [x1, y1, x2, y2]
 
-                //newBiela( x1, y1, x2, y2, layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+                if(show == 1){
+                  newBiela( x1, y1, x2, y2, layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+                }
               }
             
             else if(String( objects[i]["attrs"]["name"] ).substring(0,6) == 'biela2' && String( objects[i]["attrs"]["name"] ).substring(7,11) != "tool"){
@@ -227,7 +293,10 @@
               y2 = item["attrs"]["y"]
               if(typeof(x1) != undefined && typeof(x2) != undefined && typeof(y1) != undefined && typeof(y2) != undefined){
                 counter[5] = counter[5] + 1
-                //newBiela( x1, y1, x2, y2, layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+
+                if(show == 1){
+                  newBiela( x1, y1, x2, y2, layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+                }
                 biela_before[objects[i]["attrs"]["name"]] = [x1, y1, x2, y2]
               }
             }
@@ -279,7 +348,7 @@
         var biela_iguales = 0
         var punto_iguales = 0
 
-        console.log("comparing")
+        var dif = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 
         for (var key_pos in fijo_pos){
           for(var key_before in fijos_before){
@@ -369,66 +438,92 @@
 
         if(Object.keys(fijos_before).length == fijos_iguales){
           console.log("fijos ok")
+          dif[0] = 0
         }
         else{
           console.log("fijos not ok")
+          dif[0] = 1
         }
 
         if(Object.keys(barra_before).length == barras_iguales){
           console.log("barras ok")
+          dif[1] = 0
         }
         else{
           console.log("barras not ok")
+          dif[1] = 1
         }
 
         if(Object.keys(arrow_before).length == arrow_iguales){
           console.log("arrow ok")
+          dif[2] = 0
         }
         else{
           console.log("arrow not ok")
+          dif[2] = 1
         }
 
         if(Object.keys(momento_before).length == momento_iguales){
           console.log("mom ok")
+          dif[3] = 0
         }
         else{
           console.log("mom not ok")
+          dif[3] = 1
         }
 
         if(Object.keys(rotula_before).length == rotula_iguales){
           console.log("rot ok")
+          dif[4] = 0
         }
         else{
           console.log("rot not ok")
+          dif[4] = 1
         }
 
         if(Object.keys(deslizante_before).length == deslizante_iguales){
           console.log("des ok")
+          dif[5] = 0
         }
         else{
           console.log("des not ok")
+          dif[5] = 1
         }
 
         if(Object.keys(empotrado_before).length == empotrado_iguales){
           console.log("emp ok")
+          dif[6] = 0
         }
         else{
           console.log("emp not ok")
+          dif[6] = 1
         }
 
-        if(biela_iguales == 1){
+        if(biela_iguales == Object.keys(biela_before).length){
           console.log("biela ok")
+          dif[7] = 0
         }
         else{
           console.log("biela not ok")
+          dif[7] = 1
         }
 
         if(punto_iguales == 1){
           console.log("punto ok")
+          dif[8] = 0
         }
         else{
           console.log("punto not ok")
+          dif[8] = 1
         }
+
+        for(i = 0; i<9; i++){
+          if(dif[i] == 1){
+            return false
+          }
+        }
+
+        return true
 
       }
 
@@ -880,8 +975,9 @@
           magnitud: magnitud,
 				});
 
-        arrow_pos[arrow.name()] = [arrow.x(), arrow.y(), arrow.rotation(), magnitud]
-
+        if(arrow_pos){
+          arrow_pos[arrow.name()] = [arrow.x(), arrow.y(), arrow.rotation(), magnitud]
+        }
 				arrow.on('dragstart', (e) => {
 					shadowRectangle.show();
 					shadowRectangle.moveToTop();
@@ -1074,7 +1170,9 @@
           stage.batchDraw();
 
           textInfo.text("X:" + String(Math.round(arrow.x())) + " Y:" + String(Math.round(arrow.y())) + " R:" + String(Math.round(arrow.rotation())))
-          arrow_pos[arrow.name()] = [arrow.x(), arrow.y(), arrow.rotation(), magnitud]
+          if(arrow_pos){
+            arrow_pos[arrow.name()] = [arrow.x(), arrow.y(), arrow.rotation(), magnitud]
+          }
         });
         
         layer.add(textInfo);
@@ -1127,7 +1225,9 @@
               arrow.magnitud = textarea.value;
               magnitud = textarea.value
               document.body.removeChild(textarea);
-              arrow_pos[arrow.name()] = [arrow.x(), arrow.y(), arrow.rotation(), magnitud]
+              if(arrow_pos){
+                arrow_pos[arrow.name()] = [arrow.x(), arrow.y(), arrow.rotation(), magnitud]
+              }
 
             }
           });
@@ -1157,8 +1257,9 @@
           magnitud_y: "Fy_" + count.toString(),
         });
 
-        fijo_pos[fijo.name()] = [fijo.x(), fijo.y(), fijo.rotation()]
-
+        if (fijo_pos){
+          fijo_pos[fijo.name()] = [fijo.x(), fijo.y(), fijo.rotation()]
+        }
         fijo.on('dragstart', (e) => {
           shadowRectangle.show();
           shadowRectangle.moveToTop();
@@ -1257,7 +1358,9 @@
           stage.batchDraw();
 
           textInfo.text("X:" + String(Math.round(fijo.x())) + " Y:" + String(Math.round(fijo.y())) +" R:" + String(Math.round(fijo.rotation())) )
-          fijo_pos[fijo.name()] = [fijo.x(), fijo.y(), fijo.rotation()]
+          if (fijo_pos){
+            fijo_pos[fijo.name()] = [fijo.x(), fijo.y(), fijo.rotation()]
+          }
         });
 
         layer.add(textInfo)
@@ -1299,8 +1402,9 @@
         deslizante.add(deslizanteT);
         deslizante.add(deslizanteL);
 
-        deslizante_pos[deslizante.name()] = [deslizante.x(), deslizante.y(), deslizante.rotation()]
-
+        if(deslizante_pos){
+          deslizante_pos[deslizante.name()] = [deslizante.x(), deslizante.y(), deslizante.rotation()]
+        }
         deslizante.on('dragstart', (e) => {
           shadowRectangle.show();
           shadowRectangle.moveToTop();
@@ -1317,7 +1421,9 @@
           
           stage.batchDraw();
           shadowRectangle.hide();
-          deslizante_pos[deslizante.name()] = [deslizante.x(), deslizante.y(), deslizante.rotation()]
+          if(deslizante_pos){
+            deslizante_pos[deslizante.name()] = [deslizante.x(), deslizante.y(), deslizante.rotation()]
+          }
         });
         deslizante.on('dragmove', (e) => {
           
@@ -1445,7 +1551,9 @@
         empotrado.add(empotrado1);
         empotrado.add(empotrado2);
 
-        empotrado_pos[empotrado.name()] = [empotrado.x(), empotrado.y(), empotrado.rotation()]
+        if(empotrado_pos){
+          empotrado_pos[empotrado.name()] = [empotrado.x(), empotrado.y(), empotrado.rotation()]
+        }
 
         empotrado.on('dragstart', (e) => {
           shadowRectangle.show();
@@ -1459,7 +1567,9 @@
             x: Math.round(empotrado.x() / blockSnapSize) * blockSnapSize ,
             y: Math.round(empotrado.y() / blockSnapSize) * blockSnapSize 
           });
-          empotrado_pos[empotrado.name()] = [empotrado.x(), empotrado.y(), empotrado.rotation()]
+          if(empotrado_pos){
+            empotrado_pos[empotrado.name()] = [empotrado.x(), empotrado.y(), empotrado.rotation()]
+          }
           stage.batchDraw();
           shadowRectangle.hide();
         });
@@ -1568,7 +1678,9 @@
           name: "rotula_" + count.toString(),
         });
 
-        rotula_pos[rotula.name()] = [rotula.x(), rotula.y()]
+        if(rotula_pos){
+          rotula_pos[rotula.name()] = [rotula.x(), rotula.y()]
+        }
 
         rotula.on('dragstart', (e) => {
           shadowRectangle.show();
@@ -1583,8 +1695,10 @@
           });
           stage.batchDraw();
           shadowRectangle.hide();
-          rotula_pos[rotula.name()] = [rotula.x(), rotula.y()]
-          console.log(rotula_pos)
+          if(rotula_pos){
+            rotula_pos[rotula.name()] = [rotula.x(), rotula.y()]
+          }
+          
           return rotula_pos;
         });
         rotula.on('dragmove', (e) => {
@@ -1691,8 +1805,9 @@
           name: "biela2_" + count.toString(),
         });
 
-        biela_pos[biela.name()] = [b1.x(), b1.y(), b2.x(), b2.y()]
-
+        if(biela_pos){
+          biela_pos[biela.name()] = [b1.x(), b1.y(), b2.x(), b2.y()]
+        }
         const line = new Konva.Line({
           points: [x1,y1,x2,y2],
           stroke: 'green',
@@ -1712,7 +1827,9 @@
           });
           stage.batchDraw();
           shadowRectangle.hide();
-          biela_pos[biela.name()] = [b1.x(), b1.y(), b2.x(), b2.y()]
+          if(biela_pos){
+            biela_pos[biela.name()] = [b1.x(), b1.y(), b2.x(), b2.y()]
+          }
         });
         b1.on('dragmove', (e) => {
           shadowRectangle.position({
@@ -1734,7 +1851,9 @@
           });
           stage.batchDraw();
           shadowRectangle.hide();
-          biela_pos[biela.name()] = [b1.x(), b1.y(), b2.x(), b2.y()]
+          if(biela_pos){
+            biela_pos[biela.name()] = [b1.x(), b1.y(), b2.x(), b2.y()]
+          }
         });
         b2.on('dragmove', (e) => {
           shadowRectangle.position({
@@ -1843,7 +1962,9 @@
           name: "barra",
           rotation: rotation,
         });
-        barra_pos[barra.name()] = [barra.x(), barra.y(), barra.rotation()]
+        if(barra_pos){
+          barra_pos[barra.name()] = [barra.x(), barra.y(), barra.rotation()]
+        }
 
         barra.on('dragstart', (e) => {
           shadowRectangle.show();
@@ -1970,7 +2091,9 @@
           stage.batchDraw();
 
           textInfo.text("X:" + String(Math.round(barra.x())) + " Y:" + String(Math.round(barra.y())) +" R:" + String(Math.round(barra.rotation())) )
-          barra_pos[barra.name()] = [barra.x(), barra.y(), barra.rotation()]
+          if(barra_pos){
+            barra_pos[barra.name()] = [barra.x(), barra.y(), barra.rotation()]
+          }
         });
 
         layer.add(textInfo)
@@ -1998,7 +2121,9 @@
           magnitud: magnitud
         });
 
-        momento_pos[momento.name()] = [momento.x(), momento.y(), 0]
+        if(momento_pos){
+          momento_pos[momento.name()] = [momento.x(), momento.y(), 0]
+        }
       
         momento.on('dragstart', (e) => {
           shadowRectangle.show();
@@ -2014,7 +2139,9 @@
           stage.batchDraw();
           shadowRectangle.hide();
 
-          momento_pos[momento.name()] = [momento.x(), momento.y(), magnitud]
+          if(momento_pos){
+            momento_pos[momento.name()] = [momento.x(), momento.y(), magnitud]
+          }
 
         });
         momento.on('dragmove', (e) => {
@@ -2138,7 +2265,9 @@
               textNode.text(textarea.value);
               momento.magnitud = textarea.value;
               magnitud = textarea.value
-              momento_pos[momento.name()] = [momento.x(), momento.y(), magnitud]
+              if(momento_pos){
+                momento_pos[momento.name()] = [momento.x(), momento.y(), 0]
+              }
               document.body.removeChild(textarea);
 
             }
@@ -2166,8 +2295,8 @@
           draggable: true,
           name: "punto" 
         });
-        console.log(punto.name(), punto.x(), punto.y())
-        punto_pos[punto.name()] = [punto.x(), punto.y()]
+        if(punto_pos){
+          punto_pos[punto.name()] = [punto.x(), punto.y()]}
 
         punto.on('dragstart', (e) => {
           shadowRectangle.show();
@@ -2183,7 +2312,8 @@
           });
           stage.batchDraw();
           shadowRectangle.hide();
-          punto_pos[punto.name()] = [punto.x(), punto.y()]
+          if(punto_pos){
+            punto_pos[punto.name()] = [punto.x(), punto.y()]}
         });
         punto.on('dragmove', (e) => {
           shadowRectangle.position({
@@ -2638,6 +2768,8 @@
         var empotrado_pos = {}
         var biela_pos = {}
         var punto_pos = {}
+
+        var etapa_buena = false
         
         pos = toolBar(layer, stage, counter, fijo_pos, barra_pos, arrow_pos, momento_pos, rotula_pos, deslizante_pos, empotrado_pos, biela_pos, punto_pos);
 
@@ -2648,7 +2780,7 @@
         biela_pos = pos[4]
         punto_pos = pos[5]
 
-        fuerzasTotales = loadForm(data, counter);
+        fuerzasTotales = loadForm(data, counter, 0);
         fijos_before = fuerzasTotales.fijos_before
         barra_before = fuerzasTotales.barra_before
         arrow_before = fuerzasTotales.arrow_before
@@ -2682,34 +2814,28 @@
   </script>
     <div class="container" style="margin-top: 20px">
       <div id="selectedDetails" class="row mb-3"></div>
-      <div class="row mb-3">
-        <div>
-          <h4 class="badge text-wrap fs-5" style="background-color: #393E46">Dificultad: {{ homework.difficulty }} </h4> 
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div>
-          <h4 class="badge text-wrap fs-5" style="background-color: #393E46">Ex: {{ homework.Fx }} </h4>
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div>
-          <h4 class="badge text-wrap fs-5" style="background-color: #393E46">Ey: {{ homework.Fy }} </h4>
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div>
-          <h4 class="badge text-wrap fs-5" style="background-color: #393E46">Em: {{ homework.Fm }} </h4>
-        </div>
-      </div>
+      
       <div class="row">
         <div class="col-sm">
           <input id="comp_btn" type="button" style="float: left;" value = "comparar"/>
         </div>
         <div class="col-sm"></div>
         <div class="col-sm">
+          <input id="show_btn" type="button" style="float: right;" value = "Mostrar respuesta"/>
+        </div>
+        <div class="col-sm"></div>
+        <div class="col-sm">
+          <button onClick="window.location.reload();">Ocultar respuesta</button>
+        </div>
+        <div class="col-sm"></div>
+        <div class="col-sm">
+          <input id="hint_btn" type="button" style="float: right;" value = "Hint"/>
+        </div>
+        <div class="col-sm"></div>
+        <div class="col-sm">
           <input id="next_btn" type="button" style="float: right;" onclick="location.href='{% url 'home_admin' %}'" value = "Salir"/>
         </div>
+        
       </div>
 
 
@@ -2736,9 +2862,19 @@
 		  	let btn2 = document.getElementById("comp_btn");
 			  btn2.addEventListener('click', event => {
           console.log(rotula_pos)
-          comparar(fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before)
+          etapa_buena = comparar(fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before)
+          console.log(etapa_buena)
         })
       });
+
+      $(document).ready(function () {
+			  
+		  	let btnShow = document.getElementById("show_btn");
+			  btnShow.addEventListener('click', event => {
+          loadForm(data, counter, 1)
+        })
+      });
+
     </script>
   </body>
 </html>
