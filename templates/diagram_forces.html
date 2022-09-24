@@ -358,7 +358,7 @@
 			}
       
 
-      function comparar(fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before){
+      function comparar(hi, fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before){
 
         var fijos_iguales = 0
         var barras_iguales = 0
@@ -372,6 +372,8 @@
 
         var dif = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 
+        var hints = []
+
         for (var key_pos in fijo_pos){
           for(var key_before in fijos_before){
             if(fijo_pos[key_pos].toString() == fijos_before[key_before].toString()){
@@ -381,6 +383,13 @@
           }
         }
 
+        if(Object.keys(fijo_pos).length > Object.keys(fijos_before).length){
+          hints.push("has puesto mas apoyos fijos de las que son necesarios.")
+        }
+        else if (Object.keys(fijo_pos).length < Object.keys(fijos_before).length){
+          hints.push("te faltan apoyos fijos en el diagrama.")
+        }
+        
         for (var key_pos in barra_pos){
           for(var key_before in barra_before){
             if(barra_pos[key_pos].toString() == barra_before[key_before].toString()){
@@ -388,6 +397,13 @@
               barras_iguales ++
             }
           }
+        }
+
+        if(Object.keys(fijo_pos).length > Object.keys(fijos_before).length){
+          hints.push("has puesto mas barras de las que son necesarios.")
+        }
+        else if (Object.keys(fijo_pos).length < Object.keys(fijos_before).length){
+          hints.push("te faltan barras en el diagrama.")
         }
 
         for (var key_pos in arrow_pos){
@@ -400,6 +416,13 @@
           }
         }
 
+        if(Object.keys(arrow_pos).length > Object.keys(arrow_before).length){
+          hints.push("has puesto mas fuerzas (arrows) de las que son necesarias.")
+        }
+        else if (Object.keys(arrow_pos).length < Object.keys(arrow_before).length){
+          hints.push("te faltan fuerzas (arrows) en el diagrama.")
+        }
+
         for (var key_pos in momento_pos){
           for(var key_before in momento_before){
             if(momento_pos[key_pos].toString() == momento_before[key_before].toString()){
@@ -407,6 +430,13 @@
               momento_iguales ++
             }
           }
+        }
+
+        if(Object.keys(fijo_pos).length > Object.keys(fijos_before).length){
+          hints.push("has puesto mas momentos de las que son necesarios.")
+        }
+        else if (Object.keys(fijo_pos).length < Object.keys(fijos_before).length){
+          hints.push("te faltan momentos en el diagrama.")
         }
 
         for (var key_pos in rotula_pos){
@@ -418,6 +448,13 @@
           }
         }
 
+        if(Object.keys(fijo_pos).length > Object.keys(fijos_before).length){
+          hints.push("has puesto mas rotulas de las que son necesarios.")
+        }
+        else if (Object.keys(fijo_pos).length < Object.keys(fijos_before).length){
+          hints.push("te faltan momentos en el diagrama.")
+        }
+
         for (var key_pos in deslizante_pos){
           for(var key_before in deslizante_before){
             if(deslizante_pos[key_pos].toString() == deslizante_before[key_before].toString()){
@@ -425,6 +462,13 @@
               deslizante_iguales ++
             }
           }
+        }
+
+        if(Object.keys(fijo_pos).length > Object.keys(fijos_before).length){
+          hints.push("has puesto mas apoyos deslizantes de las que son necesarios.")
+        }
+        else if (Object.keys(fijo_pos).length < Object.keys(fijos_before).length){
+          hints.push("te faltan apoyos deslizantes en el diagrama.")
         }
 
         for (var key_pos in empotrado_pos){
@@ -436,15 +480,18 @@
           }
         }
 
-        console.log(biela_pos, biela_before)
+        if(Object.keys(fijo_pos).length > Object.keys(fijos_before).length){
+          hints.push("has puesto mas apoyos empotrados de las que son necesarios.")
+        }
+        else if (Object.keys(fijo_pos).length < Object.keys(fijos_before).length){
+          hints.push("te faltan apoyos empotrados en el diagrama.")
+        }
 
         for (var key_pos in biela_pos){
           for(var key_before in biela_before){
 
             bi = 0
-            console.log(biela_pos[key_pos])
             for(var elemento in biela_pos[key_pos]){
-              console.log(biela_pos[key_pos][elemento], biela_before[key_before])
               
               if(biela_before[key_before].includes(biela_pos[key_pos][elemento])){
                 bi ++
@@ -452,10 +499,16 @@
             }
             if(bi == 4){
               biela_iguales ++
-              console.log("biela iguales:", biela_iguales)
             }
             
           }
+        }
+
+        if(Object.keys(fijo_pos).length > Object.keys(fijos_before).length){
+          hints.push("has puesto mas bielas de las que son necesarios.")
+        }
+        else if (Object.keys(fijo_pos).length < Object.keys(fijos_before).length){
+          hints.push("te faltan bielas en el diagrama.")
         }
 
         for (var key_pos in punto_pos){
@@ -547,12 +600,25 @@
           console.log("punto not ok")
           dif[8] = 1
         }
+        console.log("hints")
+        console.log(hints)
+
+        console.log("hi:", hi)
+        if(hi){
+         
+          for(var h = 1; h<hints.length; h++){
+            if (h<4){
+              document.getElementById("hint"+h.toString()).innerHTML = hints[h-1];
+            }
+          }
+        }
 
         for(i = 0; i<9; i++){
           if(dif[i] == 1){
             return false
           }
         }
+        
 
         return true
 
@@ -2839,12 +2905,30 @@
           sumas.strM = 0
         }
 
+        
+
         stage.add(layer);
         
         layer.draw();
   </script>
     <div class="container" style="margin-top: 20px">
       <div id="selectedDetails" class="row mb-3"></div>
+
+      <div class="row mb-3">
+        <div>
+          <h4 id="hint1" class="badge text-wrap fs-5" style="background-color: #393E46">1. </h4>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div>
+          <h4 id="hint2" class="badge text-wrap fs-5" style="background-color: #393E46">2. </h4>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div>
+          <h4 id="hint3" class="badge text-wrap fs-5" style="background-color: #393E46">3. </h4>
+        </div>
+      </div>
       
       <div class="row">
         <div class="col-sm">
@@ -2872,7 +2956,7 @@
 
     </div>
     <script> 
-
+      
       function getCookie(name) {
     	  let cookieValue = null;
     	  if (document.cookie && document.cookie !== '') {
@@ -2893,7 +2977,7 @@
 		  	let btn2 = document.getElementById("comp_btn");
 			  btn2.addEventListener('click', event => {
           console.log(rotula_pos)
-          etapa_buena = comparar(fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before)
+          etapa_buena = comparar(false, fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before)
           console.log(etapa_buena)
         })
       });
@@ -2903,6 +2987,16 @@
 		  	let btnShow = document.getElementById("show_btn");
 			  btnShow.addEventListener('click', event => {
           loadForm(data, counter, 1)
+        })
+      });
+
+      $(document).ready(function () {
+			  
+		  	let btn2 = document.getElementById("hint_btn");
+			  btn2.addEventListener('click', event => {
+
+          comparar(true, fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before)
+          
         })
       });
 
