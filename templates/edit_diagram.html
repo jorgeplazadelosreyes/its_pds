@@ -86,6 +86,8 @@
         var fuerzas  = []
         var momentos = []
         var incognitas = []
+
+        dic_bielas = {}
         
         
         for (var i = 0; i<objects["length"]; i++){
@@ -199,22 +201,50 @@
               x1 = item["attrs"]["x"]
               y1 = item["attrs"]["y"]
 
-              if(typeof(x1) != undefined && typeof(x2) != undefined && typeof(y1) != undefined && typeof(y2) != undefined){
-                counter[5] = counter[5] + 1
-                }
+              console.log(String(objects[i]["attrs"]["name"]))
+
+              //counter[5] = counter[5] + 1
+              if(dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]]){
+
+                dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]].push(x1)
+                dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]].push(y1)
+
+                x2 = dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]][0]
+                y2 = dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]][1]
+
                 newBiela( x1, y1, x2, y2, layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
               }
+              else{
+                dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]] = [x1, y1]
+              }
+              
+            }
             
             else if(String( objects[i]["attrs"]["name"] ).substring(0,6) == 'biela2' && String( objects[i]["attrs"]["name"] ).substring(7,11) != "tool"){
               item=objects[i]
               x2 = item["attrs"]["x"]
               y2 = item["attrs"]["y"]
-              if(typeof(x1) != undefined && typeof(x2) != undefined && typeof(y1) != undefined && typeof(y2) != undefined){
-                counter[5] = counter[5] + 1
+
+              console.log(String(objects[i]["attrs"]["name"]))
+
+              if(dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]]){
+                dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]].push(x2)
+                dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]].push(y2)
+
+                x1 = dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]][0]
+                y1 = dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]][1]
+
                 newBiela( x1, y1, x2, y2, layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
               }
+              else{
+                dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]] = [x2, y2]
+              }
+              
+            
             }
           }
+
+          
         }
 
         if(counter[7] == 0){
@@ -222,6 +252,13 @@
           counter[7] = counter[7] + 1
           newPunto(465, 195, layer, stage)
           punto = [465, 195]
+        }
+
+        console.log("estas son las bielas:")
+        console.log(dic_bielas)
+
+        for(key in dic_bielas){
+          console.log(key, dic_bielas[key])
         }
           
           return {fuerzas, momentos, incognitas, punto};
@@ -1523,6 +1560,7 @@
           shadowRectangle.show();
           shadowRectangle.moveToTop();
           b2.moveToTop();
+          console.log(b2.name())
         });
         b2.on('dragend', (e) => {
           b2.position({
