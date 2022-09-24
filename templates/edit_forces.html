@@ -667,173 +667,42 @@
 					shadowBlur: 2,
 					shadowOffset: {x : 1, y : 1},
 					shadowOpacity: 0.4,
-					draggable: true,
+					draggable: false,
 					rotation: 0,
           name: "arrow_" + count.toString(),
           rotation: rotation,
           magnitud: magnitud,
 				});
-
-				arrow.on('dragstart', (e) => {
-					shadowRectangle.show();
-					shadowRectangle.moveToTop();
-					arrow.moveToTop();
-          previous_rot = arrow.rotation();
-				});
         
-				arrow.on('dragend', (e) => {
-          
-
-          if(arrow.rotation() == 0){
-            arrow.position({
-              x: Math.round((arrow.x() ) / blockSnapSize) * blockSnapSize + 15 ,
-              y: Math.round((arrow.y() ) / blockSnapSize) * blockSnapSize 
-            });
-          }
-          else if(Math.round(arrow.rotation()) == 45){
-            arrow.position({
-              x: Math.round((arrow.x() + 15) / blockSnapSize) * blockSnapSize ,
-              y: Math.round((arrow.y() + 15) / blockSnapSize) * blockSnapSize 
-            });
-          }
-          else if(Math.round(arrow.rotation()) == 90){
-            arrow.position({
-              x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 30,
-              y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 15
-            });
-          }
-          else if(Math.round(arrow.rotation()) == 135){
-            arrow.position({
-              x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 0,
-              y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 0
-            });
-          }
-          else if(Math.round(arrow.rotation()) == -180 || Math.round(arrow.rotation()) == 180){
-            arrow.position({
-              x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize - 15,
-              y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 0
-            });
-          }
-          else if(Math.round(arrow.rotation()) == -135){
-            arrow.position({
-              x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize - 35,
-              y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize - 5
-            });
-          }
-          else if(Math.round(arrow.rotation()) == -90){
-            arrow.position({
-              x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 30,
-              y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize - 15
-            });
-          }
-          else if(Math.round(arrow.rotation()) == -45){
-            arrow.position({
-              x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize + 0,
-              y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 0
-            });
-          }
-				stage.batchDraw();
-				shadowRectangle.hide();
-        after_rot = arrow.rotation();
-        if ([0,90,180,270,360].includes(Math.abs(previous_rot)) && (![0,90,180,270,360].includes(Math.abs(after_rot)))){
-          dificultad += 1;
-        } else if (![0,90,180,270,360].includes(Math.abs(previous_rot)) && ([0,90,180,270,360].includes(Math.abs(after_rot)))){
-          dificultad -= 1;
-        } 
-				});
-				arrow.on('dragmove', (e) => {
-          if(arrow.rotation() == 0){
-            shadowRectangle.position({
-              x: Math.round((arrow.x() + 60) / blockSnapSize) * blockSnapSize,
-              y: Math.round((arrow.y() ) / blockSnapSize) * blockSnapSize
-            });
-          }
-
-          else if(Math.round(arrow.rotation()) == 90){
-            shadowRectangle.position({
-              x: Math.round((arrow.x() + 0) / blockSnapSize) * blockSnapSize,
-              y: Math.round((arrow.y() + 60) / blockSnapSize) * blockSnapSize
-            });
-          }
-          else if(Math.round(arrow.rotation()) == 135){
-            shadowRectangle.position({
-              x: Math.round((arrow.x() - 60) / blockSnapSize) * blockSnapSize,
-              y: Math.round((arrow.y() + 30) / blockSnapSize) * blockSnapSize
-            });
-          }
-          else if(Math.round(arrow.rotation()) == -180 || Math.round(arrow.rotation()) == 180){
-            shadowRectangle.position({
-              x: Math.round((arrow.x() - 90) / blockSnapSize) * blockSnapSize,
-              y: Math.round((arrow.y() + 0) / blockSnapSize) * blockSnapSize
-            });
-          }
-          else if(Math.round(arrow.rotation()) == -135){
-            shadowRectangle.position({
-              x: Math.round((arrow.x() - 90) / blockSnapSize) * blockSnapSize,
-              y: Math.round((arrow.y() - 60) / blockSnapSize) * blockSnapSize
-            });
-          }
-          else if(Math.round(arrow.rotation()) == -90){
-            shadowRectangle.position({
-              x: Math.round((arrow.x() - 0) / blockSnapSize) * blockSnapSize,
-              y: Math.round((arrow.y() - 90) / blockSnapSize) * blockSnapSize
-            });
-          }
-          else if(Math.round(arrow.rotation()) == -45){
-            shadowRectangle.position({
-              x: Math.round((arrow.x() + 30) / blockSnapSize) * blockSnapSize,
-              y: Math.round((arrow.y() - 60) / blockSnapSize) * blockSnapSize
-            });
-          }
-
-
-          else {
-            shadowRectangle.position({
-              x: Math.round((arrow.x() + 45) / blockSnapSize) * blockSnapSize,
-              y: Math.round((arrow.y() + 45) / blockSnapSize) * blockSnapSize
-            });
-          }
-				
-				stage.batchDraw();
-				});
-
-				var tr = new Konva.Transformer({
-					nodes: [arrow],
-					centeredScaling: false,
-					resizeEnabled: false,
-					rotation: 0,
-          rotationSnaps: [0, 45, 90, 135, 180, 225, 270, 315, 360],
-          rotationSnapTolerance: 22.5,
-				});
-				layer.add(tr);
-
         layer.add(arrow);
         stage.on('click tap', function (e) {
           if (e.target === arrow) {
-            tr.nodes([arrow]);
-          }
-          // if click on empty area - remove all selections
-          if (e.target === stage) {
-            tr.nodes([]);
-            return;
-          }
-
-          const metaPressed = e.evt.ctrlKey;
-          const isSelected = tr.nodes().indexOf(e.target) >= 0;
-
-          if (metaPressed && isSelected) {
-            if (e.target === arrow){
-              if ([0,90,180,270,360].includes(Math.abs(arrow.rotation()))){
-                dificultad -= 1;
-              } else{
-                dificultad -= 2;
-              }
+            textNode.hide()
+            textInfo.hide()
+            //console.log(Math.round(e.target.attrs.rotation))
+            arrow_split = setDclArrows()
+            //QUIZAS ACA HACER CONDICIONES PARA PILLAR HINT
+            if (arrow_split == 2 && Math.round(e.target.attrs.rotation) == 45){
+              newDclArrow(e.target.attrs.x - 20, e.target.attrs.y + 60, 0, layer, stage, count, String(e.target.attrs.magnitud)+"cos("+String(Math.round(e.target.attrs.rotation))+")")
+              newDclArrow(e.target.attrs.x + 60, e.target.attrs.y - 20, 90, layer, stage, count, String(e.target.attrs.magnitud * -1)+"sen("+String(Math.round(e.target.attrs.rotation))+")")
+            } else if (arrow_split == 2 && Math.round(e.target.attrs.rotation) == 135){
+              newDclArrow(e.target.attrs.x + 20 , e.target.attrs.y + 60, 180, layer, stage, count, String(e.target.attrs.magnitud)+"cos("+String(Math.round(e.target.attrs.rotation))+")")
+              newDclArrow(e.target.attrs.x - 60, e.target.attrs.y - 20, 90, layer, stage, count, String(e.target.attrs.magnitud * -1)+"sen("+String(Math.round(e.target.attrs.rotation))+")")
+            } else if (arrow_split == 2 && Math.round(e.target.attrs.rotation) == -45){
+              newDclArrow(e.target.attrs.x - 20 , e.target.attrs.y - 60, 0, layer, stage, count, String(e.target.attrs.magnitud)+"cos("+String(Math.round(e.target.attrs.rotation))+")")
+              newDclArrow(e.target.attrs.x + 60, e.target.attrs.y + 20, -90, layer, stage, count,String(e.target.attrs.magnitud * -1)+"sen("+String(Math.round(e.target.attrs.rotation))+")")
+            } else if (arrow_split == 2 && Math.round(e.target.attrs.rotation) == -135){
+              newDclArrow(e.target.attrs.x + 20 , e.target.attrs.y - 60, 180, layer, stage, count,String(e.target.attrs.magnitud)+"cos("+String(Math.round(e.target.attrs.rotation))+")")
+              newDclArrow(e.target.attrs.x - 60, e.target.attrs.y + 20, -90, layer, stage, count, String(e.target.attrs.magnitud * -1)+"sen("+String(Math.round(e.target.attrs.rotation))+")")
+            } else if (arrow_split == 1 && Math.round(e.target.attrs.rotation) == 0){
+              newDclArrow(e.target.attrs.x, e.target.attrs.y, 0, layer, stage, count, e.target.attrs.magnitud)
+            } else if (arrow_split == 1 && Math.round(e.target.attrs.rotation) == -180){
+              newDclArrow(e.target.attrs.x, e.target.attrs.y, 180, layer, stage, count, e.target.attrs.magnitud * -1)
+            } else if (arrow_split == 1 && Math.round(e.target.attrs.rotation) == 90){
+              newDclArrow(e.target.attrs.x, e.target.attrs.y, 90, layer, stage, count, e.target.attrs.magnitud * -1)
+            } else if (arrow_split == 1 && Math.round(e.target.attrs.rotation) == -90){
+              newDclArrow(e.target.attrs.x, e.target.attrs.y, -90, layer, stage, count, e.target.attrs.magnitud)
             }
-            // if we pressed keys and node was selected
-            // we need to remove it from selection:
-            tr.nodes([]);
-            const nodes = e.target.destroy(); // use slice to have new copy of array
-            // remove node from array
           }
         });
 
@@ -853,80 +722,40 @@
           y: arrow.y() + 23,
           fontSize: 13,
           fill: 'black',
-          
-
-        });
-
-        arrow.on('dragend', (e) => {
-          textInfo.position({
-            x: Math.round(arrow.x() / blockSnapSize) * blockSnapSize - 45,
-            y: Math.round(arrow.y() / blockSnapSize) * blockSnapSize + 33
-
-          });
-          stage.batchDraw();
-
-          textInfo.text("X:" + String(Math.round(arrow.x())) + " Y:" + String(Math.round(arrow.y())) + " R:" + String(Math.round(arrow.rotation())))
-          
         });
         
         layer.add(textInfo);
         layer.add(textNode);
-        
-  
-        layer.add(textNode);
-
-        arrow.on('dragstart', (e) => {
-					textNode.moveToTop();
+      }
+      function newDclArrow(x, y, rotation = 0, layer, stage, count, magnitud = 0) {
+				var arrow = new Konva.Arrow({
+					x: x,
+					y: y,
+					points: [0, 0, 75, 0],
+					pointerLength: 2,
+					pointerWidth: 2,
+					fill: 'black',
+					stroke: 'red',
+					strokeWidth: 4,
+					draggable: false,
+          name: "arrow_" + count.toString(),
+          rotation: rotation,
+          magnitud: magnitud,
 				});
         
-				arrow.on('dragend', (e) => {
-
-          textNode.position({
-            x: Math.round((arrow.x() ) / blockSnapSize) * blockSnapSize + 15,
-            y: Math.round((arrow.y() ) / blockSnapSize) * blockSnapSize + 15
-          });
-          
-          stage.batchDraw();
-          
-				});
-  
-        textNode.on('dblclick dbltap', () => {
-         
-          var textPosition = textNode.getAbsolutePosition();
-          var stageBox = stage.container().getBoundingClientRect();
-  
-          var areaPosition = {
-            x: arrow.x() + 15,
-            y: arrow.y() + 15,
-          };
-  
-          // create textarea and style it
-          var textarea = document.createElement('textarea');
-          document.body.appendChild(textarea);
-  
-          textarea.value = textNode.text();
-          textarea.style.position = 'absolute';
-          textarea.style.top = areaPosition.y + 'px';
-          textarea.style.left = areaPosition.x + 'px';
-          textarea.style.width = textNode.width();
-  
-          textarea.focus();
-  
-          textarea.addEventListener('keydown', function (e) {
-            // hide on enter
-            if (e.keyCode === 13) {
-              textNode.text(textarea.value);
-              arrow.magnitud = textarea.value;
-              document.body.removeChild(textarea);
-            }
-          });
+        layer.add(arrow);
+        /// fuerza en arrow
+        var textNode = new Konva.Text({
+          text: magnitud,
+          x: arrow.x() + 10,
+          y: arrow.y() + 10,
+          fontSize: 13,
+          name: "textArrow_" + count.toString(),
         });
-
-        // fuerza en arrow
-
+        layer.add(textNode);
       }
 
-      function newFijo(x, y, rotation, layer, stage, count) {
+      function newFijo(x, y, rotation = 0, layer, stage, count) {
         let fijo = new Konva.RegularPolygon({
           x: x,
           y: y,
@@ -939,89 +768,31 @@
           shadowBlur: 2,
           shadowOffset: {x : 1, y : 1},
           shadowOpacity: 0.4,
-          draggable: true,
+          draggable: false,
           name: "fijo_" + count.toString(),
           rotation: rotation,
           magnitud_x: "Fx_" + count.toString(),
           magnitud_y: "Fy_" + count.toString(),
         });
-        fijo.on('dragstart', (e) => {
-          shadowRectangle.show();
-          shadowRectangle.moveToTop();
-          fijo.moveToTop();
 
-        });
-        fijo.on('dragend', (e) => {
-
-
-          if(fijo.rotation() == 0){
-            fijo.position({
-              x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize +15,
-              y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize + 15
-            });
-          }
-          else if(fijo.rotation() == 90){
-            fijo.position({
-              x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize +15,
-              y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize + 15
-            });
-          }
-          else if(fijo.rotation() == 180){
-            fijo.position({
-              x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize +15,
-              y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize + 15
-            });
-          }
-          else if(Math.round(fijo.rotation()) == -90){
-            fijo.position({
-              x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize +15,
-              y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize + 15
-            });
-          }
-          stage.batchDraw();
-          shadowRectangle.hide();
-        });
-        fijo.on('dragmove', (e) => {
-          
-          shadowRectangle.position({
-            x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize,
-            y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize
-          });
-          
-          stage.batchDraw();
-        });
-
-        var tr = new Konva.Transformer({
-          nodes: [fijo],
-          centeredScaling: false,
-          resizeEnabled: false,
-          rotationSnaps: [0, 90, 180, 270],
-          rotationSnapTolerance: 45,
-        });
-        layer.add(tr);
         layer.add(fijo);
         stage.on('click tap', function (e) {
           if (e.target === fijo) {
-            tr.nodes([fijo]);
-          }
-          // if click on empty area - remove all selections
-          if (e.target === stage) {
-            tr.nodes([]);
-            return;
-          }
-
-          const metaPressed = e.evt.ctrlKey;
-          const isSelected = tr.nodes().indexOf(e.target) >= 0;
-
-          if (metaPressed && isSelected) {
-            // if we pressed keys and node was selected
-            // we need to remove it from selection:
-            if (e.target === fijo){
-              dificultad -= 2;
+            textInfo.hide()
+            arrow_split = setDclArrows()
+            if (arrow_split == 2 && Math.round(e.target.attrs.rotation) == 0){
+              newDclArrow(e.target.attrs.x - 85, e.target.attrs.y, 0, layer, stage, count, e.target.attrs.magnitud_x)
+              newDclArrow(e.target.attrs.x, e.target.attrs.y + 85, -90, layer, stage, count, e.target.attrs.magnitud_y)
+            } else if (arrow_split == 2 && Math.round(e.target.attrs.rotation) == 90){
+              newDclArrow(e.target.attrs.x - 85, e.target.attrs.y, 0, layer, stage, count, e.target.attrs.magnitud_x)
+              newDclArrow(e.target.attrs.x, e.target.attrs.y - 85, 90, layer, stage, count, e.target.attrs.magnitud_y)
+            } else if (arrow_split == 2 && Math.round(e.target.attrs.rotation) == 180){
+              newDclArrow(e.target.attrs.x + 85, e.target.attrs.y, 180, layer, stage, count, e.target.attrs.magnitud_x)
+              newDclArrow(e.target.attrs.x, e.target.attrs.y - 85, 90, layer, stage, count, e.target.attrs.magnitud_y)
+            } else if (arrow_split == 2 && Math.round(e.target.attrs.rotation) == -90){
+              newDclArrow(e.target.attrs.x + 85, e.target.attrs.y, 180, layer, stage, count, e.target.attrs.magnitud_x)
+              newDclArrow(e.target.attrs.x, e.target.attrs.y + 85, -90, layer, stage, count, e.target.attrs.magnitud_y)
             }
-            tr.nodes([]);
-            const nodes = e.target.destroy(); // use slice to have new copy of array
-            // remove node from array
           }
         });
         var textInfo= new Konva.Text({
@@ -1030,35 +801,20 @@
           y: fijo.y() + 23,
           fontSize: 13,
           fill: 'black',
-          
-
-        });
-
-        fijo.on('dragend', (e) => {
-          textInfo.position({
-            x: Math.round(fijo.x() / blockSnapSize) * blockSnapSize - 45,
-            y: Math.round(fijo.y() / blockSnapSize) * blockSnapSize + 18
-
-          });
-          stage.batchDraw();
-
-          textInfo.text("X:" + String(Math.round(fijo.x())) + " Y:" + String(Math.round(fijo.y())) +" R:" + String(Math.round(fijo.rotation())) )
-          
         });
 
         layer.add(textInfo)
       }
 
-      function newDeslizante(x, y, rotation, layer, stage, count) {
+      function newDeslizante(x, y, rotation = 0, layer, stage, count) {
         var deslizante = new Konva.Group({
           x: x,
           y: y,
-
           shadowColor: 'black',
           shadowBlur: 2,
           shadowOffset: {x : 1, y : 1},
           shadowOpacity: 0.4,
-          draggable: true,
+          draggable: false,
           name: "deslizante_" + count.toString(),
           rotation: rotation,
           magnitud: "D_" + count.toString(),
@@ -1085,85 +841,23 @@
         deslizante.add(deslizanteT);
         deslizante.add(deslizanteL);
 
-        deslizante.on('dragstart', (e) => {
-          shadowRectangle.show();
-          shadowRectangle.moveToTop();
-          deslizante.moveToTop();
-
-        });
-        deslizante.on('dragend', (e) => {
-
-          
-          deslizante.position({
-            x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize ,
-            y: Math.round(deslizante.y() / blockSnapSize) * blockSnapSize 
-          });
-          
-          stage.batchDraw();
-          shadowRectangle.hide();
-        });
-        deslizante.on('dragmove', (e) => {
-          
-          if(Math.round(deslizante.rotation()) == 0){
-            shadowRectangle.position({
-              x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize,
-              y: Math.round((deslizante.y() -30) / blockSnapSize) * blockSnapSize
-            });
-          }
-          else if(Math.round(deslizante.rotation()) == 90){
-            shadowRectangle.position({
-              x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize,
-              y: Math.round((deslizante.y()) / blockSnapSize) * blockSnapSize
-            });
-          }
-          else if(Math.round(deslizante.rotation()) == 180){
-            shadowRectangle.position({
-              x: Math.round((deslizante.x() - 30) / blockSnapSize) * blockSnapSize,
-              y: Math.round((deslizante.y()) / blockSnapSize) * blockSnapSize
-            });
-          }
-          else if(Math.round(deslizante.rotation()) == -90){
-            shadowRectangle.position({
-              x: Math.round((deslizante.x() - 30) / blockSnapSize) * blockSnapSize,
-              y: Math.round((deslizante.y() - 30) / blockSnapSize) * blockSnapSize
-            });
-          }
-          stage.batchDraw();
-        });
-        var tr = new Konva.Transformer({
-          nodes: [deslizanteT, deslizanteL],
-          centeredScaling: false,
-          resizeEnabled: false,
-          rotationSnaps: [0, 90, 180, 270],
-          rotationSnapTolerance: 45,
-        });
-        layer.add(tr);
         layer.add(deslizante);
         stage.on('click tap', function (e) {
-          if (e.target === deslizante) {
-            tr.nodes([deslizante]);
+          if (e.target === deslizanteT) {
+            textInfo.hide()
+            arrow_split = setDclArrows()
+            console.log(e.target)
+            if (arrow_split == 1 && Math.round(e.target.parent.attrs.rotation) == 0){
+              newDclArrow(e.target.parent.attrs.x + 15, e.target.parent.attrs.y + 65, -90, layer, stage, count, e.target.parent.attrs.magnitud)
+            } else if (arrow_split == 1 && Math.round(e.target.parent.attrs.rotation) == 90){
+              newDclArrow(e.target.parent.attrs.x - 65, e.target.parent.attrs.y + 15, 0, layer, stage, count, e.target.parent.attrs.magnitud)
+            } else if (arrow_split == 1 && Math.round(e.target.parent.attrs.rotation) == 180){
+              newDclArrow(e.target.parent.attrs.x - 15, e.target.parent.attrs.y - 65, 90, layer, stage, count, e.target.parent.attrs.magnitud)
+            } else if (arrow_split == 1 && Math.round(e.target.parent.attrs.rotation) == -90){
+              newDclArrow(e.target.parent.attrs.x + 65, e.target.parent.attrs.y - 15, 180, layer, stage, count, e.target.parent.attrs.magnitud)
+            }
           }
-          // if click on empty area - remove all selections
-          if (e.target === stage) {
-            tr.nodes([]);
-            return;
-          }
-
-          const metaPressed = e.evt.ctrlKey;
-          const isSelected = tr.nodes().indexOf(e.target) >= 0;
-
-          if (metaPressed && isSelected) {
-            if (e.target === deslizante){
-              dificultad -= 1;
-              }
-            // if we pressed keys and node was selected
-            // we need to remove it from selection:
-            tr.nodes([]);
-            const nodes = e.target.destroy(); // use slice to have new copy of array
-
-            // remove node from array
-          }
-        });
+        })
 
         var textInfo= new Konva.Text({
           text: "X:" + String(Math.round(deslizante.x())) + " Y:" + String(Math.round(deslizante.y())) + " R:" + String(Math.round(deslizante.rotation())),
@@ -1171,35 +865,19 @@
           y: deslizante.y() + 23,
           fontSize: 13,
           fill: 'black',
-          
-
         });
-
-        deslizante.on('dragend', (e) => {
-          textInfo.position({
-            x: Math.round(deslizante.x() / blockSnapSize) * blockSnapSize - 45,
-            y: Math.round(deslizante.y() / blockSnapSize) * blockSnapSize + 33
-
-          });
-          stage.batchDraw();
-
-          textInfo.text("X:" + String(Math.round(deslizante.x())) + " Y:" + String(Math.round(deslizante.y())) + " R:" + String(Math.round(deslizante.rotation())))
-          
-        });
-        
         layer.add(textInfo);
       }
 
-      function newEmpotrado(x, y, rotation, layer, stage, count) {
+      function newEmpotrado(x, y, rotation = 0, layer, stage, count) {
         var empotrado= new Konva.Group({
           x: x,
           y: y,
-
           shadowColor: 'black',
           shadowBlur: 2,
           shadowOffset: {x : 1, y : 1},
           shadowOpacity: 0.4,
-          draggable: true,
+          draggable: false,
           name: "empotrado_" + count.toString(),
           rotation: rotation,
           magnitud_x: "Ex_" + count.toString(),
@@ -1213,7 +891,6 @@
           strokeWidth: 4,
           lineCap: 'round',
           lineJoin: 'round',
-          
         });
 
         var empotrado2 = new Konva.Line({
@@ -1222,86 +899,33 @@
           strokeWidth: 4,
           lineCap: 'round',
           lineJoin: 'round',
-          
         });
         empotrado.add(empotrado1);
         empotrado.add(empotrado2);
-
-        empotrado.on('dragstart', (e) => {
-          shadowRectangle.show();
-          shadowRectangle.moveToTop();
-          empotrado.moveToTop();
-          console.log(empotrado.name())
-        });
-        empotrado.on('dragend', (e) => {
-          
-          empotrado.position({
-            x: Math.round(empotrado.x() / blockSnapSize) * blockSnapSize ,
-            y: Math.round(empotrado.y() / blockSnapSize) * blockSnapSize 
-          });
-          
-          stage.batchDraw();
-          shadowRectangle.hide();
-        });
-        empotrado.on('dragmove', (e) => {
-          if(Math.round(empotrado.rotation()) == 0){
-            shadowRectangle.position({
-              x: Math.round((empotrado.x()) / blockSnapSize) * blockSnapSize,
-              y: Math.round((empotrado.y() - 30) / blockSnapSize) * blockSnapSize
-            });
-          }
-          else if(Math.round(empotrado.rotation()) == 90){
-            shadowRectangle.position({
-              x: Math.round((empotrado.x()) / blockSnapSize) * blockSnapSize,
-              y: Math.round((empotrado.y()) / blockSnapSize) * blockSnapSize
-            });
-          }
-          else if(Math.round(empotrado.rotation()) == 180){
-            shadowRectangle.position({
-              x: Math.round((empotrado.x() - 30) / blockSnapSize) * blockSnapSize,
-              y: Math.round((empotrado.y()) / blockSnapSize) * blockSnapSize
-            });
-          }
-          else if(Math.round(empotrado.rotation()) == -90){
-            shadowRectangle.position({
-              x: Math.round((empotrado.x() - 30) / blockSnapSize) * blockSnapSize,
-              y: Math.round((empotrado.y() - 30) / blockSnapSize) * blockSnapSize
-            });
-          }
-          stage.batchDraw();
-        });
-        var tr = new Konva.Transformer({
-          nodes: [empotrado],
-          centeredScaling: false,
-          resizeEnabled: false,
-          rotationSnaps: [0, 90, 180, 270],
-          rotationSnapTolerance: 45,
         
-        });
-        layer.add(tr);
         layer.add(empotrado);
         stage.on('click tap', function (e) {
           if (e.target === empotrado1 || e.target === empotrado2) {
-            tr.nodes([empotrado]);
-          }
-          // if click on empty area - remove all selections
-          if (e.target === stage) {
-            tr.nodes([]);
-            return;
-          }
-
-          const metaPressed = e.evt.ctrlKey;
-          const isSelected = tr.nodes().indexOf(e.target) >= 0;
-
-          if (metaPressed && isSelected) {
-            if (e.target === empotrado){
-              dificultad -= 3
-              }
-            // if we pressed keys and node was selected
-            // we need to remove it from selection:
-            tr.nodes([]);
-            const nodes = e.target.destroy(); // use slice to have new copy of array
-            // remove node from array
+            textInfo.hide()
+            arrow_split = setDclArrows()
+            console.log(e.target.parent.attrs.rotation)
+            if (arrow_split == 3 && Math.round(e.target.parent.attrs.rotation) == 0){
+              newDclArrow(e.target.parent.attrs.x -65, e.target.parent.attrs.y - 15, 0, layer, stage, count, e.target.parent.attrs.magnitud_x)
+              newDclArrow(e.target.parent.attrs.x + 15, e.target.parent.attrs.y + 65, -90, layer, stage, count, e.target.parent.attrs.magnitud_y)
+              newDclMomento(e.target.parent.attrs.x + 30, e.target.parent.attrs.y - 30, 0, layer, stage, count, e.target.parent.attrs.magnitud_m)
+            } else if (arrow_split == 3 && Math.round(e.target.parent.attrs.rotation) == 90){
+              newDclArrow(e.target.parent.attrs.x - 65, e.target.parent.attrs.y + 15, 0, layer, stage, count, e.target.parent.attrs.magnitud_x)
+              newDclArrow(e.target.parent.attrs.x + 15, e.target.parent.attrs.y - 65, 90, layer, stage, count, e.target.parent.attrs.magnitud_y)
+              newDclMomento(e.target.parent.attrs.x + 30, e.target.parent.attrs.y + 30, 0, layer, stage, count, e.target.parent.attrs.magnitud_m)
+            } else if (arrow_split == 3 && Math.round(e.target.parent.attrs.rotation) == 180){
+              newDclArrow(e.target.parent.attrs.x + 65, e.target.parent.attrs.y + 15, 180, layer, stage, count, e.target.parent.attrs.magnitud_x)
+              newDclArrow(e.target.parent.attrs.x -15, e.target.parent.attrs.y - 65, 90, layer, stage, count, e.target.parent.attrs.magnitud_y)
+              newDclMomento(e.target.parent.attrs.x - 30, e.target.parent.attrs.y + 30, 0, layer, stage, count, e.target.parent.attrs.magnitud_m)
+            } else if (arrow_split == 3 && Math.round(e.target.parent.attrs.rotation) == -90){
+              newDclArrow(e.target.parent.attrs.x + 65, e.target.parent.attrs.y - 15, 180, layer, stage, count, e.target.parent.attrs.magnitud_x)
+              newDclArrow(e.target.parent.attrs.x - 15, e.target.parent.attrs.y + 65, -90, layer, stage, count, e.target.parent.attrs.magnitud_y)
+              newDclMomento(e.target.parent.attrs.x - 30, e.target.parent.attrs.y -30, 0, layer, stage, count, e.target.parent.attrs.magnitud_m)
+            }
           }
         });
         var textInfo= new Konva.Text({
@@ -1310,24 +934,18 @@
           y: empotrado.y() + 23,
           fontSize: 13,
           fill: 'black',
-          
-
         });
 
         empotrado.on('dragend', (e) => {
           textInfo.position({
             x: Math.round(empotrado.x() / blockSnapSize) * blockSnapSize - 45,
             y: Math.round(empotrado.y() / blockSnapSize) * blockSnapSize + 33
-
           });
           stage.batchDraw();
-
           textInfo.text("X:" + String(Math.round(empotrado.x())) + " Y:" + String(Math.round(empotrado.y())) + " R:" + String(Math.round(empotrado.rotation())))
-          
         });
         
         layer.add(textInfo);
-        
       }
 
       function newRotula(x, y, layer, stage, count) {
@@ -1603,95 +1221,18 @@
           shadowBlur: 2,
           shadowOffset: {x : 1, y : 1},
           shadowOpacity: 0.4,
-          draggable: true,
+          draggable: false,
           name: "barra",
           rotation: rotation,
         });
 
-        barra.on('dragstart', (e) => {
-          shadowRectangle.show();
-          shadowRectangle.moveToTop();
-          barra.moveToTop();
-          console.log(barra.x(), barra.y(), barra.rotation(), barra.width())
-          getPointsBArra(barra.x(), barra.y(), barra.rotation(), barra.width())
-        });
-        barra.on('dragend', (e) => {
-
-          if(Math.round(barra.rotation()) == 0){
-            barra.position({
-              x: Math.round(barra.x() / blockSnapSize) * blockSnapSize,
-              y: Math.round(barra.y() / blockSnapSize) * blockSnapSize
-            });
-          }
-          else if(Math.round(barra.rotation()) == 90){
-            barra.position({
-              x: Math.round(barra.x() / blockSnapSize) * blockSnapSize + 30,
-              y: Math.round(barra.y() / blockSnapSize) * blockSnapSize
-            });
-          }
-
-          else if(Math.round(barra.rotation()) == 180 || Math.round(barra.rotation()) == -180){
-            barra.position({
-              x: Math.round(barra.x() / blockSnapSize) * blockSnapSize + 30,
-              y: Math.round(barra.y() / blockSnapSize) * blockSnapSize + 30
-            });
-          }
-
-          else if(Math.round(barra.rotation()) == -90){
-            barra.position({
-              x: Math.round(barra.x() / blockSnapSize) * blockSnapSize,
-              y: Math.round(barra.y() / blockSnapSize) * blockSnapSize + 30
-            });
-          }
-          stage.batchDraw();
-          shadowRectangle.hide();
-        });
-        barra.on('dragmove', (e) => {
-          shadowRectangle.position({
-            x: Math.round(barra.x() / blockSnapSize) * blockSnapSize,
-            y: Math.round(barra.y() / blockSnapSize) * blockSnapSize
-          });
-          stage.batchDraw();
-        });
-        var tr = new Konva.Transformer({
-					nodes: [barra],
-					centeredScaling: false,
-					resizeEnabled: false,
-					rotation: 0,
-          rotationSnaps: [0, 45, 90, 135, 180, 225, 270, 315, 360],
-          rotationSnapTolerance: 22.5,
-				});
-				layer.add(tr);
         layer.add(barra);
         
         stage.on('click tap', function (e) {
           if (e.target === barra) {
-            tr.nodes([barra]);
-          }
-          // if click on empty area - remove all selections
-          if (e.target === stage) {
-            tr.nodes([]);
-            return;
-          }
-          const metaPressed = e.evt.ctrlKey;
-          const isSelected = tr.nodes().indexOf(e.target) >= 0;
 
-          if (metaPressed && isSelected) {
-            // if we pressed keys and node was selected
-            // we need to remove it from selection:
-            tr.nodes([]);
-            const nodes = e.target.destroy(); // use slice to have new copy of array
-            // remove node from array
           }
-        });
-        stage.on('dblclick', function (e) {
-          if (e.target === barra) {
-            e.target.moveDown();
-          }
-        });
-        
-
-        
+        });   
       }
     
       function newMomento(x, y, rotation, layer, stage, count, magnitud="M") {
@@ -1709,65 +1250,21 @@
           shadowBlur: 2,
           shadowOffset: {x : 1, y : 1},
           shadowOpacity: 0.4,
-          draggable: true,
+          draggable: false,
           name: "momento_" + count.toString(),
           rotation: rotation,
           magnitud: magnitud
         });
         
-        momento.on('dragstart', (e) => {
-          shadowRectangle.show();
-          shadowRectangle.moveToTop();
-          momento.moveToTop();
-          console.log(momento.name())
-        });
-        momento.on('dragend', (e) => {
-          momento.position({
-            x: Math.round(momento.x() / blockSnapSize) * blockSnapSize + 15,
-            y: Math.round(momento.y() / blockSnapSize) * blockSnapSize +7.5
-          });
-          stage.batchDraw();
-          shadowRectangle.hide();
-        });
-        momento.on('dragmove', (e) => {
-          shadowRectangle.position({
-            x: Math.round(momento.x() / blockSnapSize) * blockSnapSize,
-            y: Math.round(momento.y() / blockSnapSize) * blockSnapSize
-          });
-          stage.batchDraw();
-        });
-
-        var tr = new Konva.Transformer({
-          nodes: [momento],
-          centeredScaling: false,
-          resizeEnabled: false,
-          rotationSnaps: [0],
-          rotationSnapTolerance: 360,
-        });
-        layer.add(tr);
         layer.add(momento);
         stage.on('click tap', function (e) {
           if (e.target === momento) {
-            tr.nodes([momento]);
-          }
-          // if click on empty area - remove all selections
-          if (e.target === stage) {
-            tr.nodes([]);
-            return;
-          }
-
-          const metaPressed = e.evt.ctrlKey;
-          const isSelected = tr.nodes().indexOf(e.target) >= 0;
-
-          if (metaPressed && isSelected) {
-            if (e.target === momento){
-              dificultad -= 2
-              }
-            // if we pressed keys and node was selected
-            // we need to remove it from selection:
-            tr.nodes([]);
-            const nodes = e.target.destroy(); // use slice to have new copy of array
-            // remove node from array
+            textInfo.hide()
+            arrow_split = setDclArrows()
+            console.log(e.target)
+            if (arrow_split == 1){
+              newDclMomento(e.target.attrs.x, e.target.attrs.y, 0, layer, stage, count, e.target.attrs.magnitud)
+            }
           }
         });
 
@@ -1788,73 +1285,49 @@
           y: momento.y() + 23,
           fontSize: 13,
           fill: 'black',
-          
-
         });
 
         momento.on('dragend', (e) => {
           textInfo.position({
             x: Math.round(momento.x() / blockSnapSize) * blockSnapSize - 45,
             y: Math.round(momento.y() / blockSnapSize) * blockSnapSize + 33
-
           });
           stage.batchDraw();
-
           textInfo.text("X:" + String(momento.x()) + " Y:" + String(momento.y()) )
-          
         });
-  
         layer.add(textNode);
         layer.add(textInfo);
-
-        momento.on('dragstart', (e) => {
-					textNode.moveToTop();
-				});
+      }
+      
+      function newDclMomento(x, y, rotation, layer, stage, count, magnitud="M") {
         
-				momento.on('dragend', (e) => {
-
-          textNode.position({
-            x: Math.round((momento.x() ) / blockSnapSize) * blockSnapSize + 15,
-            y: Math.round((momento.y() ) / blockSnapSize) * blockSnapSize + 15
-          });
-          
-          stage.batchDraw();
-          
-				});
-  
-        textNode.on('dblclick dbltap', () => {
-         
-          var textPosition = textNode.getAbsolutePosition();
-          var stageBox = stage.container().getBoundingClientRect();
-  
-          var areaPosition = {
-            x: momento.x() + 15,
-            y: momento.y() + 15,
-          };
-  
-          // create textarea and style it
-          var textarea = document.createElement('textarea');
-          document.body.appendChild(textarea);
-  
-          textarea.value = textNode.text();
-          textarea.style.position = 'absolute';
-          textarea.style.top = areaPosition.y + 'px';
-          textarea.style.left = areaPosition.x + 'px';
-          textarea.style.width = textNode.width();
-  
-          textarea.focus();
-  
-          textarea.addEventListener('keydown', function (e) {
-            // hide on enter
-            if (e.keyCode === 13) {
-              textNode.text(textarea.value);
-              momento.magnitud = textarea.value;
-              document.body.removeChild(textarea);
-            }
-          });
+        let momento = new Konva.Arc({
+          x: x,
+          y: y,
+          innerRadius: 6,
+          outerRadius: 12,
+          angle: 180,
+          fill: 'red',
+          stroke: 'black',
+          strokeWidth: 2,
+          draggable: false,
+          name: "momento_" + count.toString(),
+          rotation: rotation,
+          magnitud: magnitud
         });
+        
+        layer.add(momento);
 
-        // fuerza en momento
+        /// fuerza en momento
+        var textNode = new Konva.Text({
+          text: "F:" + magnitud,
+          x: momento.x() + 20,
+          y: momento.y() + 10,
+          fontSize: 13,
+          name: "textMoment_" + count.toString(),
+          fill: 'balck',
+        });
+        layer.add(textNode);
       }
 
       function newPunto(x, y, layer, stage) {
@@ -1870,32 +1343,10 @@
           shadowBlur: 2,
           shadowOffset: {x : 1, y : 1},
           shadowOpacity: 0.4,
-          draggable: true,
+          draggable: false,
           name: "punto" 
         });
 
-        punto.on('dragstart', (e) => {
-          shadowRectangle.show();
-          shadowRectangle.moveToTop();
-          punto.moveToTop();
-          console.log(punto.x(), punto.y())
-          
-        });
-        punto.on('dragend', (e) => {
-          punto.position({
-            x: Math.round(punto.x() / blockSnapSize) * blockSnapSize + 15,
-            y: Math.round(punto.y() / blockSnapSize) * blockSnapSize + 15
-          });
-          stage.batchDraw();
-          shadowRectangle.hide();
-        });
-        punto.on('dragmove', (e) => {
-          shadowRectangle.position({
-            x: Math.round(punto.x() / blockSnapSize) * blockSnapSize,
-            y: Math.round(punto.y() / blockSnapSize) * blockSnapSize
-          });
-          stage.batchDraw();
-        });
         layer.add(punto);
 
         var textInfo= new Konva.Text({
@@ -1904,362 +1355,12 @@
           y: punto.y() + 10,
           fontSize: 13,
           fill: 'black',
-          
-
         });
-
-        punto.on('dragend', (e) => {
-          textInfo.position({
-            x: Math.round(punto.x() / blockSnapSize) * blockSnapSize - 45,
-            y: Math.round(punto.y() / blockSnapSize) * blockSnapSize + 0
-
-          });
-          stage.batchDraw();
-
-          textInfo.text("X:" + String(punto.x()) + " Y:" + String(punto.y()) )
-          
-        });
-  
-        layer.add(textInfo);
-        
+        layer.add(textInfo); 
       }
 
       
       var dificultad = parseInt($("#homework-details").data("homeworkDifficulty"));
-
-      function toolBar(layer, stage, counter) {
-        // PRETTY
-        var separadorTool = new Konva.Line({
-          points: [largo - 85, 0, largo - 85, 600],
-          stroke: 'red',
-          strokeWidth: 4,
-          lineCap: 'round',
-          lineJoin: 'round',
-        });
-        layer.add(separadorTool)
-        
-        // ARROW
-        let arrow = new Konva.Arrow({
-          x: largo - 37.5,
-          y: 35,
-          points: [0, 0, 20, 10],
-          pointerLength: 2,
-          pointerWidth: 2,
-          rotation: 62,
-          fill: 'black',
-          stroke: 'black',
-          strokeWidth: 4,
-          shadowColor: 'black',
-          shadowBlur: 2,
-          shadowOffset: {x : 1, y : 1},
-          shadowOpacity: 0.4,
-          draggable: false,
-          name: "arrow_tool",
-        });
-        arrow.on('pointerdown', function () {
-          counter[0] = counter[0] + 1
-          newArrow(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[0], 0);
-
-          dificultad += 1;
-        });
-
-        var arrowText = new Konva.Text({
-          x: largo - 52,
-          y: 65,
-          text: 'Fuerza',
-          fontSize: 12,
-          fontFamily: 'Calibri',
-          fill: 'balck',
-        });
-        layer.add(arrowText);
-        // ARROW
-        // FIJO
-        var fijo = new Konva.RegularPolygon({
-          x: largo - 35,
-          y: 110,
-          sides: 3,
-          radius: 15,
-          fill: 'gray',
-          stroke: 'black',
-          strokeWidth: 2,
-          name: "fijo_tool"
-        });
-        fijo.on('pointerdown', function () {
-          counter[1] = counter[1] + 1
-          newFijo(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[1]);
-          dificultad += 2;
-        });
-
-        var fijoText = new Konva.Text({
-          x: largo - 43,
-          y: 125,
-          text: 'Fijo',
-          fontSize: 12,
-          fontFamily: 'Calibri',
-          fill: 'balck',
-        });
-        layer.add(fijoText);
-        // FIJO
-        // DESLIZANTE
-        var deslizante = new Konva.Group({
-          x: largo - 50,
-          y: 180,
-          name: "deslizante_tool"
-        });
-
-        var deslizanteT = new Konva.RegularPolygon({
-          x: 15,
-          y: -10,
-          sides: 3,
-          radius: 15,
-          fill: 'gray',
-          stroke: 'black',
-          strokeWidth: 2,
-          name: "deslizante_tool"
-        });
-
-        var deslizanteL = new Konva.Line({
-          points: [0, 0, 30, 0],
-          stroke: 'red',
-          strokeWidth: 4,
-          lineCap: 'round',
-          lineJoin: 'round',
-          
-        });
-
-        deslizante.add(deslizanteT);
-        deslizante.add(deslizanteL);
-
-        deslizante.on('pointerdown', function () {
-          counter[2] = counter[2] + 1
-          newDeslizante(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[2]);
-          dificultad += 1;
-        });
-        var deslizanteText = new Konva.Text({
-          x: largo - 60,
-          y: 185,
-          text: 'Deslizante',
-          fontSize: 12,
-          fontFamily: 'Calibri',
-          fill: 'balck',
-        });
-        layer.add(deslizanteText);
-        // DESLIZANTE
-        // EMPOTRADO
-        var empotrado = new Konva.Group({
-          x: largo - 50,
-          y: 240,
-          name: "empotrado_tool"
-        });
-
-        var empotrado1 = new Konva.Line({
-          points: [15, 0, 15, -25],
-          stroke: 'red',
-          strokeWidth: 4,
-          lineCap: 'round',
-          lineJoin: 'round',
-          
-        });
-
-        var empotrado2 = new Konva.Line({
-          points: [0, 0, 30, 0],
-          stroke: 'red',
-          strokeWidth: 4,
-          lineCap: 'round',
-          lineJoin: 'round',
-          
-        });
-
-        empotrado.add(empotrado1);
-        empotrado.add(empotrado2);
-
-        empotrado.on('pointerdown', function () {
-          counter[3] = counter[3] + 1
-          newEmpotrado(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[3]);
-          dificultad += 3;
-        });
-        var empotradoText = new Konva.Text({
-          x: largo - 80,
-          y: 245,
-          text: 'Empotramiento',
-          fontSize: 12,
-          fontFamily: 'Calibri',
-          fill: 'balck',
-        });
-        layer.add(empotradoText);
-        // EMPOTRADO
-        // ROTULA
-        var rotula = new Konva.Circle({
-          x: largo - 35,
-          y: 285,
-          radius: 7.5,
-          fill: 'red',
-          stroke: 'black',
-          strokeWidth: 2,
-          name: "rotula_tool"
-        });
-
-        rotula.on('pointerdown', function () {
-          counter[4] = counter[4] + 1
-          newRotula(blockSnapSize * 17, blockSnapSize * 3, layer, stage, counter[4]);
-          dificultad += 3;
-        });
-        var rotulaText = new Konva.Text({
-          x: largo - 50,
-          y: 305,
-          text: 'Rotula',
-          fontSize: 12,
-          fontFamily: 'Calibri',
-          fill: 'balck',
-        });
-        layer.add(rotulaText);
-        // ROTULA
-        // BIELA
-        var biela = new Konva.Circle({
-          x: largo - 35,
-          y: 345,
-          radius: 7.5,
-          fill: 'green',
-          stroke: 'black',
-          strokeWidth: 2,
-          name: "biela_tool"
-        });
-
-        biela.on('pointerdown', function () {
-          counter[5] = counter[5] + 1
-          newBiela(blockSnapSize * 17, blockSnapSize * 3, blockSnapSize * 17+30, blockSnapSize * 3,  layer, stage, counter[5]);
-          dificultad += 5;
-        });
-        var bielaText = new Konva.Text({
-          x: largo - 50,
-          y: 365,
-          text: 'Biela',
-          fontSize: 12,
-          fontFamily: 'Calibri',
-          fill: 'balck',
-        });
-        layer.add(bielaText);
-        // BIELA
-
-        //MOMENTO
-        let momento = new Konva.Arc({
-          x: largo - 37.5,
-          y: 400,
-          innerRadius: 10,
-          outerRadius: 20,
-          angle: 180,
-          fill: 'yellow',
-          stroke: 'black',
-          strokeWidth: 4,
-          shadowColor: 'black',
-          shadowBlur: 2,
-          shadowOffset: {x : 1, y : 1},
-          shadowOpacity: 0.4,
-          draggable: false,
-          name: "momento_tool",
-        });
-        momento.on('pointerdown', function () {
-          counter[6] = counter[6] + 1
-          
-          newMomento(blockSnapSize * 17, blockSnapSize * 3, rotation = 0, layer, stage, counter[6]);
-          dificultad += 2;
-        });
-
-        var momentoText = new Konva.Text({
-          x: largo - 57,
-          y: 425,
-          text: 'momento',
-          fontSize: 12,
-          fontFamily: 'Calibri',
-          fill: 'balck',
-        });
-        layer.add(momentoText);
-        //MOMENTO
-
-        //BARRA
-        function setBarLenght() {
-          let width;
-          let width_answer = prompt("Ingrese el largo de la barra en unidad del grid: \n(1 metro son 30 unidades)");
-          if (width_answer == null || width_answer == "") {
-            width = 30;
-          } else {
-            width = parseInt(width_answer);
-          }
-          return width;
-        }
-        let barra = new Konva.Rect({
-          x: largo -50,
-          y: 450,
-          width: 25,
-          height: 25,
-          
-          fill: 'gray',
-          stroke: 'black',
-          strokeWidth: 3,
-          shadowColor: 'black',
-          shadowBlur: 2,
-          shadowOffset: {x : 1, y : 1},
-          shadowOpacity: 0.4,
-          draggable: false,
-        });
-        barra.on('pointerdown', function () {
-          bar_width = setBarLenght();
-          newBarra(blockSnapSize * 17, blockSnapSize * 3, bar_width, 0,layer, stage);
-          dificultad += 1;
-        });
-
-        var barraText = new Konva.Text({
-          x: largo - 50,
-          y: 480,
-          text: 'barra',
-          fontSize: 12,
-          fontFamily: 'Calibri',
-          fill: 'balck',
-        });
-        layer.add(barraText);
-        //BARRA
-        //PUNTO
-        var punto = new Konva.Circle({
-          x: largo - 35,
-          y: 510,
-          radius: 7.5,
-          fill: 'yellow',
-          stroke: 'black',
-          strokeWidth: 2,
-          name: "punto_tool"
-        });
-
-        punto.on('pointerdown', function () {
-          if(counter[7] == 0){
-            counter[7] = counter[7] + 1
-            newPunto(blockSnapSize * 17, blockSnapSize * 3, layer, stage);
-          }
-          
-        });
-        var puntoText = new Konva.Text({
-          x: largo - 50,
-          y: 520,
-          text: 'Punto',
-          fontSize: 12,
-          fontFamily: 'Calibri',
-          fill: 'balck',
-        });
-        layer.add(puntoText);
-        //PUNTO
-
-        layer.add(arrow);
-        layer.add(fijo);
-        layer.add(deslizante);
-        layer.add(empotrado);
-        layer.add(rotula);
-        layer.add(biela);
-        layer.add(momento);
-        layer.add(barra);
-        layer.add(punto);
-
-      }
-      
-      
       
         let drawingLine = false;
         let line;
@@ -2324,13 +1425,25 @@
           
         });
 
+        function setDclArrows() {
+          let num_of_arrows = 0;
+          let num_of_arrows_answer = prompt("Ingrese el numero de fuerzas involucradas a este elemento \n(1, 2 o 3)");
+          if (num_of_arrows_answer == 1) {
+            num_of_arrows = 1
+          } else if (num_of_arrows_answer == 2){
+            num_of_arrows = 2
+          } else if (num_of_arrows_answer == 3){
+            num_of_arrows = 3
+          } 
+          return num_of_arrows;
+        }
+
         shadowRectangle.hide();
         layer.add(shadowRectangle);
 
         //counter[ARROW, FIJO, DESLIZANTE, EMPOTRADO, ROTULA, BIELA, MOMENTO, PUNTO]
         counter = [0, 0, 0, 0, 0, 0, 0, 0]
         
-        toolBar(layer, stage, counter);
         fuerzasTotales = loadForm(data, counter);
         
 
@@ -2367,28 +1480,13 @@
           <h4 class="badge text-wrap fs-5" style="background-color: #393E46">Dificultad: {{ homework.difficulty }} </h4> 
         </div>
       </div>
-      <div class="row mb-3">
-        <div>
-          <h4 class="badge text-wrap fs-5" style="background-color: #393E46">Ex: {{ homework.Fx }} </h4>
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div>
-          <h4 class="badge text-wrap fs-5" style="background-color: #393E46">Ey: {{ homework.Fy }} </h4>
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div>
-          <h4 class="badge text-wrap fs-5" style="background-color: #393E46">Em: {{ homework.Fm }} </h4>
-        </div>
-      </div>
       <div class="row">
         <div class="col-sm">
           <input id="save_btn" type="button" style="float: left;" value = "Guardar"/>
         </div>
         <div class="col-sm"></div>
         <div class="col-sm">
-          <input id="next_btn" type="button" style="float: right;" onclick="location.href='{% url 'home_admin' %}'" value = "Salir"/>
+          <input id="next_btn" type="button" style="float: right;" onclick="location.href='{% url 'home_admin' %}'" value = "Siguiente Etapa"/>
         </div>
       </div>
 
