@@ -216,6 +216,13 @@
             }
           }
         }
+
+        if(counter[7] == 0){
+          item=objects[i]
+          counter[7] = counter[7] + 1
+          newPunto(465, 195, layer, stage)
+          punto = [465, 195]
+        }
           
           return {fuerzas, momentos, incognitas, punto};
         }   

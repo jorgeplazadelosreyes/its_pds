@@ -203,7 +203,7 @@
             else if(String( objects[i]["attrs"]["name"] ).substring(0,5) == 'punto' && String( objects[i]["attrs"]["name"] ).substring(6,10) != "tool"){
               item=objects[i]
               counter[7] = counter[7] + 1
-              //newPunto(item["attrs"]["x"], item["attrs"]["y"], layer, stage)
+              newPunto(465, 195, layer, stage, punto_pos)
               var punto = [item["attrs"]["x"], item["attrs"]["y"]]
               punto_before[objects[i]["attrs"]["name"]] = [objects[i]["attrs"]["x"], objects[i]["attrs"]["y"]]
 
@@ -355,10 +355,6 @@
             }
           }
         }
-        console.log("punto pos:")
-        console.log(punto_pos)
-        console.log("punto bef:")
-        console.log(punto_before)
 
         for (var key_pos in punto_pos){
           for(var key_before in punto_before){
@@ -2170,7 +2166,7 @@
           draggable: true,
           name: "punto" 
         });
-
+        console.log(punto.name(), punto.x(), punto.y())
         punto_pos[punto.name()] = [punto.x(), punto.y()]
 
         punto.on('dragstart', (e) => {
