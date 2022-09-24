@@ -201,8 +201,6 @@
               x1 = item["attrs"]["x"]
               y1 = item["attrs"]["y"]
 
-              console.log(String(objects[i]["attrs"]["name"]))
-
               if(dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]]){
 
                 dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]].push(x1)
@@ -225,8 +223,6 @@
               item=objects[i]
               x2 = item["attrs"]["x"]
               y2 = item["attrs"]["y"]
-
-              console.log(String(objects[i]["attrs"]["name"]))
 
               if(dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]]){
                 dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]].push(x2)
@@ -255,13 +251,6 @@
           counter[7] = counter[7] + 1
           newPunto(465, 195, layer, stage)
           punto = [465, 195]
-        }
-
-        console.log("estas son las bielas:")
-        console.log(dic_bielas)
-
-        for(key in dic_bielas){
-          console.log(key, dic_bielas[key])
         }
           
           return {fuerzas, momentos, incognitas, punto};

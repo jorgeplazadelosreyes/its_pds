@@ -109,6 +109,8 @@
         fuerzas = []
         momentos = []
 
+        dic_bielas = {}
+
         fijos_before = {}
         barra_before = {}
         arrow_before = {}
@@ -118,9 +120,6 @@
         empotrado_before = {}
         biela_before = {}
         punto_before = {}
-
-        
-        
         
         for (var i = 0; i<objects["length"]; i++){
           
@@ -277,28 +276,51 @@
               x1 = item["attrs"]["x"]
               y1 = item["attrs"]["y"]
 
-              if(typeof(x1) != undefined && typeof(x2) != undefined && typeof(y1) != undefined && typeof(y2) != undefined){
+              if(dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]]){
+                dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]].push(x1)
+                dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]].push(y1)
+
+                x2 = dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]][0]
+                y2 = dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]][1]
+
                 counter[5] = counter[5] + 1
-                }
+
                 biela_before[objects[i]["attrs"]["name"]] = [x1, y1, x2, y2]
 
                 if(show == 1){
                   newBiela( x1, y1, x2, y2, layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
                 }
+              }
+              else{
+                dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]] = [x1, y1]
+              }
+                 
               }
             
             else if(String( objects[i]["attrs"]["name"] ).substring(0,6) == 'biela2' && String( objects[i]["attrs"]["name"] ).substring(7,11) != "tool"){
               item=objects[i]
               x2 = item["attrs"]["x"]
               y2 = item["attrs"]["y"]
-              if(typeof(x1) != undefined && typeof(x2) != undefined && typeof(y1) != undefined && typeof(y2) != undefined){
+              
+              if(dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]]){
+                dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]].push(x2)
+                dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]].push(y2)
+
+                x1 = dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]][0]
+                y1 = dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]][1]
+
                 counter[5] = counter[5] + 1
+
+                biela_before[objects[i]["attrs"]["name"]] = [x1, y1, x2, y2]
 
                 if(show == 1){
                   newBiela( x1, y1, x2, y2, layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
                 }
-                biela_before[objects[i]["attrs"]["name"]] = [x1, y1, x2, y2]
               }
+              else{
+                dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]] = [x2, y2]
+              }
+            
             }
           }
         }
@@ -413,15 +435,26 @@
             }
           }
         }
-        for (var key_pos in empotrado_pos){
-          for(var key_before in empotrado_before){
-            if(biela_pos["biela1_3"].toString() == biela_before["biela1_1"].toString()){
-              biela_iguales ++
+
+        console.log(biela_pos, biela_before)
+
+        for (var key_pos in biela_pos){
+          for(var key_before in biela_before){
+
+            bi = 0
+            console.log(biela_pos[key_pos])
+            for(var elemento in biela_pos[key_pos]){
+              console.log(biela_pos[key_pos][elemento], biela_before[key_before])
+              
+              if(biela_before[key_before].includes(biela_pos[key_pos][elemento])){
+                bi ++
+              } 
             }
-            else if(biela_pos["biela1_3"][0].toString() == biela_before["biela1_1"][2].toString() && biela_pos["biela1_3"][1].toString() == biela_before["biela1_1"][3].toString() &&
-            biela_pos["biela1_3"][2].toString() == biela_before["biela1_1"][0].toString() && biela_pos["biela1_3"][3].toString() == biela_before["biela1_1"][1].toString()){
+            if(bi == 4){
               biela_iguales ++
+              console.log("biela iguales:", biela_iguales)
             }
+            
           }
         }
 
@@ -433,8 +466,6 @@
             }
           }
         }
-        console.log("piguela")
-        console.log(punto_iguales)
 
         if(Object.keys(fijos_before).length == fijos_iguales){
           console.log("fijos ok")
@@ -1806,7 +1837,7 @@
         });
 
         if(biela_pos){
-          biela_pos[biela.name()] = [b1.x(), b1.y(), b2.x(), b2.y()]
+          biela_pos[b1.name()] = [b1.x(), b1.y(), b2.x(), b2.y()]
         }
         const line = new Konva.Line({
           points: [x1,y1,x2,y2],
@@ -1828,7 +1859,7 @@
           stage.batchDraw();
           shadowRectangle.hide();
           if(biela_pos){
-            biela_pos[biela.name()] = [b1.x(), b1.y(), b2.x(), b2.y()]
+            biela_pos[b1.name()] = [b1.x(), b1.y(), b2.x(), b2.y()]
           }
         });
         b1.on('dragmove', (e) => {
@@ -1852,7 +1883,7 @@
           stage.batchDraw();
           shadowRectangle.hide();
           if(biela_pos){
-            biela_pos[biela.name()] = [b1.x(), b1.y(), b2.x(), b2.y()]
+            biela_pos[b1.name()] = [b1.x(), b1.y(), b2.x(), b2.y()]
           }
         });
         b2.on('dragmove', (e) => {
