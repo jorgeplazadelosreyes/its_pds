@@ -70,6 +70,7 @@
         var momentos = []
         var incognitas = []
         
+        dic_bielas = {}
         
         for (var i = 0; i<objects["length"]; i++){
           
@@ -192,19 +193,40 @@
               x1 = item["attrs"]["x"]
               y1 = item["attrs"]["y"]
 
-              if(typeof(x1) != undefined && typeof(x2) != undefined && typeof(y1) != undefined && typeof(y2) != undefined){
+              if(dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]]){
+
+                dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]].push(x1)
+                dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]].push(y1)
+
+                x2 = dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]][0]
+                y2 = dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]][1]
+
                 counter[5] = counter[5] + 1
-                }
+
                 newBiela( x1, y1, x2, y2, layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
               }
+              else{
+                dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]] = [x1, y1]
+              }
+            }
             
             else if(String( objects[i]["attrs"]["name"] ).substring(0,6) == 'biela2' && String( objects[i]["attrs"]["name"] ).substring(7,11) != "tool"){
               item=objects[i]
               x2 = item["attrs"]["x"]
               y2 = item["attrs"]["y"]
-              if(typeof(x1) != undefined && typeof(x2) != undefined && typeof(y1) != undefined && typeof(y2) != undefined){
+              if(dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]]){
+                dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]].push(x2)
+                dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]].push(y2)
+
+                x1 = dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]][0]
+                y1 = dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]][1]
+
                 counter[5] = counter[5] + 1
+
                 newBiela( x1, y1, x2, y2, layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
+              }
+              else{
+                dic_bielas[String(objects[i]["attrs"]["name"]).split("_")[1]] = [x2, y2]
               }
             }
           }
@@ -1014,7 +1036,7 @@
           shadowBlur: 2,
           shadowOffset: {x : 1, y : 1},
           shadowOpacity: 0.4,
-          draggable: true,
+          draggable: false,
           name: "rotula_" + count.toString(),
         });
 
@@ -1113,7 +1135,7 @@
           shadowBlur: 2,
           shadowOffset: {x1 : 1, y1 : 1},
           shadowOpacity: 0.4,
-          draggable: true,
+          draggable: false,
           name: "biela1_" + count.toString(),
         });
 
@@ -1128,7 +1150,7 @@
           shadowBlur: 2,
           shadowOffset: {x2 : 1, y2 : 1},
           shadowOpacity: 0.4,
-          draggable: true,
+          draggable: false,
           name: "biela2_" + count.toString(),
         });
 
@@ -1568,8 +1590,8 @@
         <div class="col-sm">
           <input id="save_btn" type="button" style="float: left;" value = "Guardar"/>
         </div>
-        <div class="col-sm">
-          <input id="next_btn" type="button" style="float: right;" onclick="checkTracking(element_tracking,user_tracking)" value = "Siguiente Etapa"/>
+        <div class="col-sm" style="text-align:center">
+          <input id="next_btn" type="button" onclick="checkTracking(element_tracking,user_tracking)" value = "Siguiente Etapa"/>
         </div>
         <div class="col-sm">
           <input id="next_btn" type="button" style="float: right;" onclick="location.href='{% url 'home_admin' %}'" value = "Saltar Etapa"/>
