@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+</head>
+<body>
+    <div>
+        <div class="container">
+            <div class="row" style="background-color: #393E46">
+                <div class="col"></div>
+                <div class="col text-center">
+                    <h1 style="color: #EEEEEE">ITS Estática</h1>
+                </div>
+            </div>
+            <div class="row">
+            <div style="max-height: 500px;overflow: auto;">
+                <h3 style="margin-top:30px">Tareas</h3>
+                <table class="table" >
+                    <thead>
+                      <tr>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Fecha de inicio</th>
+                        <th scope="col">Puntaje general</th>
+                        <th scope="col">Puntaje ángulos</th>
+                        <th scope="col">Puntaje fuerzas</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td>{{ student.first_name }} {{ student.last_name }} </td>
+                            <td>{{ student.email}}</td>
+                            <td>{{ student.date_created }}</td>
+                            <td>{{ student.elo_score }}</td>
+                            <td>{{ student.angles_score }}</td>
+                            <td>{{ student.forces_score }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>                  
+            </div>
+            </div>

@@ -1,7 +1,6 @@
 from django.http import HttpResponse
 from itsRepo.models import Homework
 from django.views import View
-from itsRepo.models import Homework
 from django.shortcuts import render, redirect
 
 
