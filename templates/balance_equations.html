@@ -29,7 +29,7 @@
   </div>
 </head>
 <body>
-	<h6 id="homework-details" data-homework-id="{{ homework.id }}" data-homework-diagram = "{{ homework.diagram }}" data-homework-statement="{{ homework.statement_text }} " data-homework-difficulty="{{ homework.difficulty }} "></h6>
+	<h6 id="homework-details" data-homework-diagram2="{{ homework.diagram2 }}" data-homework-id="{{ homework.id }}" data-homework-diagram = "{{ homework.diagram }}" data-homework-statement="{{ homework.statement_text }} " data-homework-difficulty="{{ homework.difficulty }} "></h6>
     
 	<div id="container" style="margin-left: 20px"></div>
 	<script>
@@ -51,7 +51,7 @@
 			dash: [20, 2]
 		});
       
-			data = $("#homework-details").data("homeworkDiagram")
+    data = $("#homework-details").data("homeworkDiagram2")
 
 			//var stage = Konva.Node.create(data, "container")
 

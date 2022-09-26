@@ -32,7 +32,7 @@
   </div>
 </head>
 <body>
-	<h6 id="homework-details" data-homework-id="{{ homework.id }}" data-homework-diagram = "{{ homework.diagram }}" data-homework-statement="{{ homework.statement_text }} " data-homework-difficulty="{{ homework.difficulty }} "></h6>
+	<h6 id="homework-details" data-homework-diagram2="{{ homework.diagram2 }}" data-homework-id="{{ homework.id }}" data-homework-diagram = "{{ homework.diagram }}" data-homework-statement="{{ homework.statement_text }} " data-homework-difficulty="{{ homework.difficulty }} "></h6>
     
 	<div id="container" style="margin-left: 20px"></div>
 	<script>
@@ -1537,9 +1537,33 @@
             alert_message = "Felicidades, tu DCL esta completo"
             //return alert_message
             alert(alert_message) 
-            id = $("#homework-details").data("homeworkId")
-            new_json = stage.toJSON();
-            location.href = "balance_equations?new_json=" + new_json
+            
+            let json = stage.toJSON();
+            console.log(json)
+
+            let homework_id = $("#homework-details").data("homeworkId")
+
+            $.ajax({
+              url: `/homework/${homework_id}/edit_forces`,
+              type: "POST",
+              data:{
+                "diagram2": json,
+
+              },
+
+              beforeSend: function (xhr) {
+                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+              },
+              success: function (data) {
+                console.log("guardo")
+                console.log(json)
+              },
+              error: function (error) {
+                console.log("guardon't")
+              }
+            });
+
+            location.href = "balance_equations" 
           } else{
             //return alert_message
             alert(alert_message) 
