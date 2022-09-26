@@ -14,5 +14,6 @@ urlpatterns = [
     path("students", views.ViewStudents.as_view(), name = "view_students"),
     path("student", views.StudentHome.as_view(), name = "student_home"),
     path("do_homework/<homework_id>", views.NextHomework.as_view(), name = "next_homework"),
-    path("logout", views.LogoutUser.as_view(), name = "logout")
+    path("logout", views.LogoutUser.as_view(), name = "logout"),
+    path("homework/<homework_id>/delete", views.DeleteHomework.as_view(), name = "delete_homework")
 ] 

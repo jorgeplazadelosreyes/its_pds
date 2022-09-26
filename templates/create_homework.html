@@ -34,6 +34,7 @@
                         <th scope="col">Realizar 2</th>
                         <th scope="col">Realizar 3</th>
                         <th scope="col">Editar</th>
+                        <th scope="col">Eliminar</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -55,6 +56,12 @@
                             </td>
                             <td>
                                 <input id="btn" type="button" style="float: left;" onclick="location.href='{% url 'edit_diagram' homework_id=homework.id %}'" value = "Editar"/>
+                            </td>
+                            <td>
+                                <form action="{% url 'delete_homework' homework_id=homework.id %}" method='POST'>
+                                    {% csrf_token %}
+                                    <input id="btn" type="submit" style="float: left;" value = "Eliminar"/>
+                                </form>
                             </td>
                         </tr>
                         {% endfor %}

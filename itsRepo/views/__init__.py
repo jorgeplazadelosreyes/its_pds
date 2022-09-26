@@ -13,3 +13,4 @@ from .userHome import UserHome
 from .logout import LogoutUser
 from .studentHome import StudentHome
 from .nextHomework import NextHomework
+from .deleteHomework import DeleteHomework

@@ -30,8 +30,6 @@ class StudentHome(View):
             stage = 'edit_forces'
         if next_homework.initial_stage == 4:
             stage = 'balance_equations'
-        
-        print(stage)
         context = {
             "score": score,
             "next_homework": next_homework,
