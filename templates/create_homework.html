@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head ><!-- Required meta tags -->
+<head >
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
@@ -15,6 +15,8 @@
                 </div>
                 <div class="col">
                     <input class="btn btn-link .text-nowrap" id="students_btn" type="button" onclick="location.href='{% url 'view_students' %}'" style="float: right; color: #EEEEEE" value = "Ver alumnos"/>
+                    <input class="btn btn-link .text-nowrap" id="students_btn" type="button" onclick="location.href='{% url 'student_home' %}'" style="float: right; color: #EEEEEE" value = "Vista alumno"/>
+                    <input class="btn btn-link .text-nowrap" id="students_btn" type="button" onclick="location.href='{% url 'logout' %}'" style="float: right; color: #EEEEEE" value = "Logout"/>
                 </div>
             </div>
             <div class="row">

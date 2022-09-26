@@ -10,3 +10,6 @@ from .viewStudents import ViewStudents
 from .loginPage import LoginPage
 from .registerPage import RegisterPage
 from .userHome import UserHome
+from .logout import LogoutUser
+from .studentHome import StudentHome
+from .nextHomework import NextHomework

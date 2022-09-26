@@ -11,7 +11,6 @@ dataJSON = """{"attrs":{"width":1890,"height":2000},"className":"Stage","childre
 
 class CreateHomework(View):
 
-    #@admin_only
     def get(self, request):
         homeworks = Homework.objects.all()
         context = {

@@ -8,7 +8,11 @@
 </head>
 <body>
 
-    <span class="hello-msg">Hello, {{request.user}}</span>
+    <span class="hello-msg">Hola!, {{request.user.first_name}} {{request.user.last_name}}</span>
+    <div>
+        <input class="btn" id="next_homework_btn" type="button" onclick="location.href='{% url 'view_students' %}'" value = "Siguiente tarea"/>
+    </div>
+    <span class="hello-msg">{{ score }}</span>
     
 </body>
 </html>

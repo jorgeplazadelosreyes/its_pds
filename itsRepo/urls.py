@@ -11,5 +11,8 @@ urlpatterns = [
     path("homework/<homework_id>/edit_forces", views.EditForces.as_view(), name="edit_forces"), 
     path("homework/<homework_id>/diagram_forces", views.DiagramForces.as_view(), name="diagram_forces"),
     path("homework/<homework_id>/balance_equations", views.BalanceEquations.as_view(), name="balance_equations"),
-    path("students", views.ViewStudents.as_view(), name = "view_students")
+    path("students", views.ViewStudents.as_view(), name = "view_students"),
+    path("student", views.StudentHome.as_view(), name = "student_home"),
+    path("do_homework/<homework_id>", views.NextHomework.as_view(), name = "next_homework"),
+    path("logout", views.LogoutUser.as_view(), name = "logout")
 ] 
