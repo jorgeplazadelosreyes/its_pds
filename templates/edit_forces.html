@@ -32,7 +32,13 @@
   </div>
 </head>
 <body>
-	<h6 id="homework-details" data-homework-id="{{ homework.id }}" data-homework-diagram = "{{ homework.diagram }}" data-homework-statement="{{ homework.statement_text }} " data-homework-difficulty="{{ homework.difficulty }} "></h6>
+  <h6 id="homework-details" 
+    data-homework-id="{{ homework.id }}"
+    data-homework-diagram = "{{ homework.diagram }}" 
+    data-homework-statement="{{ homework.statement_text }}" 
+    data-homework-difficulty="{{ homework.difficulty }}" 
+    data-homework-final = "{{ homework.final_stage }}">
+  </h6>
     
 	<div id="container" style="margin-left: 20px"></div>
 	<script>
@@ -1536,8 +1542,13 @@
           if (alert_message == "HINT \n"){ 
             alert_message = "Felicidades, tu DCL esta completo"
             //return alert_message
-            alert(alert_message) 
-            location.href='{% url 'home_admin' %}'
+            alert(alert_message)
+            let final_stage = $("#homework-details").data("homeworkFinal")
+            if (final_stage == 2){ 
+              location.href='{% url 'student_home' %}'
+            } else {
+              location.href='balance_equations'
+            }
           } else{
             //return alert_message
             alert(alert_message) 
@@ -1590,13 +1601,20 @@
         <div class="col-sm">
           <input id="save_btn" type="button" style="float: left;" value = "Guardar"/>
         </div>
+        {% if homework.final_stage == 2 %}
         <div class="col-sm" style="text-align:center">
-          <input id="next_btn" type="button" onclick="checkTracking(element_tracking,user_tracking)" value = "Siguiente Etapa"/>
+          <input id="next_btn" type="button" onclick="checkTracking(element_tracking,user_tracking)" value = "Terminar"/>
+        </div>
+        {% else %}
+        <div class="col-sm" style="text-align:center">
+          <input id="next_btn" type="button" onclick="checkTracking(element_tracking,user_tracking)" value = "Siguiente etapa"/>
         </div>
         <div class="col-sm">
-          <input id="next_btn" type="button" style="float: right;" onclick="location.href='{% url 'home_admin' %}'" value = "Saltar Etapa"/>
+          <input id="next_btn" type="button" style="float: right;" onclick="location.href='{% url 'balance_equations' homework_id=homework.id  %}'" value = "Saltar Etapa"/>
 
         </div>
+        {% endif %}
+
       </div>
 
 

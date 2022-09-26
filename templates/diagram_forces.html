@@ -29,7 +29,13 @@
   </div>
 </head>
 <body>
-	<h6 id="homework-details" data-homework-id="{{ homework.id }}" data-homework-diagram = "{{ homework.diagram }}" data-homework-statement="{{ homework.statement_text }} " data-homework-difficulty="{{ homework.difficulty }} "></h6>
+	<h6 id="homework-details" 
+    data-homework-id="{{ homework.id }}"
+    data-homework-diagram = "{{ homework.diagram }}" 
+    data-homework-statement="{{ homework.statement_text }}" 
+    data-homework-difficulty="{{ homework.difficulty }}" 
+    data-homework-final = "{{ homework.final_stage }}">
+  </h6>
     
 	<div id="container" style="margin-left: 20px"></div>
 	<script>
@@ -655,8 +661,13 @@
           if (alert_message == ""){ 
             alert_message = "Felicidades, tu DCL esta completo"
             //return alert_message
-            alert(alert_message) 
-            location.href='{% url 'home_admin' %}'
+            alert(alert_message)
+            let final_stage = $("#homework-details").data("homeworkFinal")
+            if (final_stage == 1){
+              location.href='{% url 'student_home' %}'
+            } else {
+              location.href='edit_forces'
+            }
           } else{
             //return alert_message
             alert(alert_message) 
@@ -2978,10 +2989,19 @@
 
 
         <div class="col-sm"></div>
-        <div class="col-sm">
-          <input id="next_btn" type="button" onclick="comparar(true, fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before)" value = "Siguiente Etapa"/>
-        </div>
-        
+        {% if homework.final_stage == 1 %}
+          <div class="col-sm">
+            <input id="next_btn" type="button" 
+            onclick="comparar(true, fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before)"
+            value = "Terminar"/>
+          </div>
+        {% else %}
+          <div class="col-sm">
+            <input id="next_btn" type="button" 
+            onclick="comparar(true, fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before)"
+            value = "Siguiente Etapa"/>
+          </div>
+        {% endif %}
       </div>
 
 
