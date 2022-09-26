@@ -10,7 +10,6 @@
 </head>
 
 <body>
-
     <div>
         <div class="container">
             <div class="row" style="background-color: #393E46">
@@ -35,7 +34,7 @@
                             <span class="pts">{{ score }}</span>
                         </td>
                         <td>
-                            <button id="next_homework_btn" type="button" onclick="location.href='{% url 'view_students' %}'" class="btn btn-primary">Siguiente tarea</button>
+                            <button id="next_homework_btn" type="button" onclick="location.href='{% url stage homework_id=next_homework.id %}'" class="btn btn-primary">Siguiente tarea</button>
                         </td>
                     </tbody>
                 </table>                  

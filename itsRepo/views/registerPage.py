@@ -22,8 +22,6 @@ class RegisterPage(View):
 			if form.is_valid():
 				user = form.save()
 				username = form.cleaned_data.get('username')
-				#group = Group.objects.get(name='student')
-				#user.groups.add(group)
 				Student.objects.create(
 					user = user,
 					username = user.username,
