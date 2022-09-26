@@ -356,7 +356,7 @@
 					strokeWidth: 0.5,
 				}));
 			}
-      
+
 
       function comparar(hi, fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before){
 
@@ -384,12 +384,12 @@
         }
 
         if(Object.keys(fijo_pos).length > Object.keys(fijos_before).length){
-          hints.push("has puesto mas apoyos fijos de las que son necesarios.")
+          hints.push("has puesto mas apoyos fijos de las que son necesarios.\n")
           console.log("fijos not ok")
           dif[0] = 1
         }
         else if (Object.keys(fijo_pos).length < Object.keys(fijos_before).length){
-          hints.push("te faltan apoyos fijos en el diagrama.")
+          hints.push("te faltan apoyos fijos en el diagrama.\n")
           console.log("fijos not ok")
           dif[0] = 1
         }
@@ -399,7 +399,7 @@
         }
         else{
           console.log("fijos not ok")
-          hints.push("los apoyos fijos no estan en la posicion/rotacion correspondientes")
+          hints.push("los apoyos fijos no estan en la posicion/rotacion correspondientes.\n")
           dif[0] = 1
         }
         
@@ -412,19 +412,14 @@
           }
         }
 
-        console.log("barras")
-        console.log(barra_pos)
-        console.log(barra_before)
-        console.log(barras_iguales)
-
 
         if(Object.keys(barra_pos).length > Object.keys(barra_before).length){
-          hints.push("has puesto mas barras de las que son necesarios.")
+          hints.push("has puesto mas barras de las que son necesarios.\n")
           console.log("barras not ok")
           dif[1] = 1
         }
         else if (Object.keys(barra_pos).length < Object.keys(barra_before).length){
-          hints.push("te faltan barras en el diagrama.")
+          hints.push("te faltan barras en el diagrama.\n")
           console.log("barras not ok")
           dif[1] = 1
         }
@@ -435,7 +430,7 @@
         else{
           console.log("barras not ok")
           dif[1] = 1
-          hints.push("las barras no estan en la posicion/rotacion correspondientes")
+          hints.push("las barras no estan en la posicion/rotacion correspondientes.\n")
           
         }
 
@@ -451,12 +446,12 @@
 
        
         if(Object.keys(arrow_pos).length > Object.keys(arrow_before).length){
-          hints.push("has puesto mas fuerzas (arrows) de las que son necesarias.")
+          hints.push("has puesto mas fuerzas (arrows) de las que son necesarias.\n")
           console.log("arrow not ok")
           dif[2] = 1
         }
         else if (Object.keys(arrow_pos).length < Object.keys(arrow_before).length){
-          hints.push("te faltan fuerzas (arrows) en el diagrama.")
+          hints.push("te faltan fuerzas (arrows) en el diagrama.\n")
           console.log("arrow not ok")
           dif[2] = 1
         }
@@ -467,7 +462,7 @@
         else{
           console.log("arrow not ok")
           dif[2] = 1
-          hints.push("las fuerzas (arrows) no estan en la posicion/rotacion correspondientes o su magnitud es incorrecta")
+          hints.push("las fuerzas (arrows) no estan en la posicion/rotacion correspondientes o su magnitud es incorrecta.\n")
         }
 
         for (var key_pos in momento_pos){
@@ -482,12 +477,12 @@
         
 
         if(Object.keys(momento_pos).length > Object.keys(momento_before).length){
-          hints.push("has puesto mas momentos de las que son necesarios.")
+          hints.push("has puesto mas momentos de las que son necesarios.\n")
           console.log("mom not ok")
           dif[3] = 1
         }
         else if (Object.keys(momento_pos).length < Object.keys(momento_before).length){
-          hints.push("te faltan momentos en el diagrama.")
+          hints.push("te faltan momentos en el diagrama.\n")
           console.log("mom not ok")
           dif[3] = 1
         }
@@ -498,7 +493,7 @@
         else{
           console.log("mom not ok")
           dif[3] = 1
-          hints.push("los momentos no estan en la posicion correspondiente o su magnitud es incorrecta")
+          hints.push("los momentos no estan en la posicion correspondiente o su magnitud es incorrecta.\n")
         }
 
         for (var key_pos in rotula_pos){
@@ -511,12 +506,12 @@
         }
 
         if(Object.keys(rotula_pos).length > Object.keys(rotula_before).length){
-          hints.push("has puesto mas rotulas de las que son necesarios.")
+          hints.push("has puesto mas rotulas de las que son necesarios.\n")
           console.log("rot not ok")
           dif[4] = 1
         }
         else if (Object.keys(rotula_pos).length < Object.keys(rotula_before).length){
-          hints.push("te faltan rotulas en el diagrama.")
+          hints.push("te faltan rotulas en el diagrama.\n")
           console.log("rot not ok")
           dif[4] = 1
         }
@@ -527,7 +522,7 @@
         else{
           console.log("rot not ok")
           dif[4] = 1
-          hints.push("las rotulas no estan en la posicion correspondiente")
+          hints.push("las rotulas no estan en la posicion correspondiente.\n")
         }
 
         for (var key_pos in deslizante_pos){
@@ -540,12 +535,12 @@
         }
 
         if(Object.keys(deslizante_pos).length > Object.keys(deslizante_before).length){
-          hints.push("has puesto mas apoyos deslizantes de las que son necesarios.")
+          hints.push("has puesto mas apoyos deslizantes de las que son necesarios.\n")
           console.log("des not ok")
           dif[5] = 1
         }
         else if (Object.keys(deslizante_pos).length < Object.keys(deslizante_before).length){
-          hints.push("te faltan apoyos deslizantes en el diagrama.")
+          hints.push("te faltan apoyos deslizantes en el diagrama.\n")
           console.log("des not ok")
           dif[5] = 1
         }
@@ -556,7 +551,7 @@
         else{
           console.log("des not ok")
           dif[5] = 1
-          hints.push("los apoyos deslizantes no estan en la posicion/rotacion correspondiente")
+          hints.push("los apoyos deslizantes no estan en la posicion/rotacion correspondiente.\n")
         }
 
         for (var key_pos in empotrado_pos){
@@ -569,12 +564,12 @@
         }
 
         if(Object.keys(empotrado_pos).length > Object.keys(empotrado_before).length){
-          hints.push("has puesto mas apoyos empotrados de las que son necesarios.")
+          hints.push("has puesto mas apoyos empotrados de las que son necesarios.\n")
           console.log("emp not ok")
           dif[6] = 1
         }
         else if (Object.keys(empotrado_pos).length < Object.keys(empotrado_before).length){
-          hints.push("te faltan apoyos empotrados en el diagrama.")
+          hints.push("te faltan apoyos empotrados en el diagrama.\n")
           console.log("emp not ok")
           dif[6] = 1
         }
@@ -585,7 +580,7 @@
         else{
           console.log("emp not ok")
           dif[6] = 1
-          hints.push("los apoyos empotrados no estan en la posicion/rotacion correspondiente")
+          hints.push("los apoyos empotrados no estan en la posicion/rotacion correspondiente.\n")
         }
 
         for (var key_pos in biela_pos){
@@ -606,12 +601,12 @@
         }
 
         if(Object.keys(biela_pos).length > Object.keys(biela_before).length){
-          hints.push("has puesto mas bielas de las que son necesarios.")
+          hints.push("has puesto mas bielas de las que son necesarios.\n")
           console.log("biela not ok")
           dif[7] = 1
         }
         else if (Object.keys(biela_pos).length < Object.keys(biela_before).length){
-          hints.push("te faltan bielas en el diagrama.")
+          hints.push("te faltan bielas en el diagrama.\n")
           console.log("biela not ok")
           dif[7] = 1
         }
@@ -622,7 +617,7 @@
         else{
           console.log("biela not ok")
           dif[7] = 1
-          hints.push("las bielas no estan en la posicion correspondiente")
+          hints.push("las bielas no estan en la posicion correspondiente.\n")
         }
 
         for (var key_pos in punto_pos){
@@ -640,7 +635,7 @@
         }
         else{
           console.log("punto not ok")
-          hints.push("el punto para calcular momentos no esta en la posicion correspondiente")
+          hints.push("el punto para calcular momentos no esta en la posicion correspondiente.\n")
           dif[8] = 1
         }
         console.log("hints")
@@ -648,11 +643,23 @@
 
         console.log("hi:", hi)
         if(hi){
-         
-          for(var h = 1; h<hints.length; h++){
-            if (h<4){
-              document.getElementById("hint"+h.toString()).innerHTML = hints[h-1];
-            }
+          console.log("len")
+          //console.log(hints.lentgh())
+
+          alert_message = ""
+          for(var i in hints){
+
+            alert_message += hints[i]
+            
+          }
+          if (alert_message == ""){ 
+            alert_message = "Felicidades, tu DCL esta completo"
+            //return alert_message
+            alert(alert_message) 
+            location.href='{% url 'home_admin' %}'
+          } else{
+            //return alert_message
+            alert(alert_message) 
           }
         }
 
@@ -2958,22 +2965,6 @@
   </script>
     <div class="container" style="margin-top: 20px">
       <div id="selectedDetails" class="row mb-3"></div>
-
-      <div class="row mb-3">
-        <div>
-          <h4 id="hint1" class="badge text-wrap fs-5" style="background-color: #393E46">1. </h4>
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div>
-          <h4 id="hint2" class="badge text-wrap fs-5" style="background-color: #393E46">2. </h4>
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div>
-          <h4 id="hint3" class="badge text-wrap fs-5" style="background-color: #393E46">3. </h4>
-        </div>
-      </div>
       
       <div class="row">
         <div class="col-sm">
@@ -2984,16 +2975,11 @@
           <input id="show_btn" type="button" style="float: right;" value = "Mostrar respuesta"/>
         </div>
         <div class="col-sm"></div>
-        <div class="col-sm">
-          <button onClick="window.location.reload();">Ocultar respuesta</button>
-        </div>
+
+
         <div class="col-sm"></div>
         <div class="col-sm">
-          <input id="hint_btn" type="button" style="float: right;" value = "Hint"/>
-        </div>
-        <div class="col-sm"></div>
-        <div class="col-sm">
-          <input id="next_btn" type="button" style="float: right;" onclick="location.href='{% url 'home_admin' %}'" value = "Salir"/>
+          <input id="next_btn" type="button" onclick="comparar(true, fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before)" value = "Siguiente Etapa"/>
         </div>
         
       </div>
@@ -3035,15 +3021,7 @@
         })
       });
 
-      $(document).ready(function () {
-			  
-		  	let btn2 = document.getElementById("hint_btn");
-			  btn2.addEventListener('click', event => {
 
-          comparar(true, fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before)
-          
-        })
-      });
 
     </script>
   </body>
