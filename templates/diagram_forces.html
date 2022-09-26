@@ -369,6 +369,21 @@
 				}));
 			}
 
+      function getCookie(name) {
+    	  let cookieValue = null;
+    	  if (document.cookie && document.cookie !== '') {
+        	const cookies = document.cookie.split(';');
+        	for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+            }
+        	}
+    	  }
+    	  return cookieValue;
+	    }
+
 
       function comparar(hi, fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before){
 
@@ -661,13 +676,29 @@
             alert_message += hints[i]
             
           }
+
+          let homework_id = $("#homework-details").data("homeworkId")
           if (alert_message == ""){ 
             alert_message = "Felicidades, tu DCL esta completo"
-            //return alert_message
             alert(alert_message)
             let final_stage = $("#homework-details").data("homeworkFinal")
             if (final_stage == 1){
-              location.href='{% url 'student_home' %}'
+              $.ajax({
+                url: `/homework/${homework_id}/score`,
+                type: "POST",
+
+                beforeSend: function (xhr) {
+                  xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                },
+                success: function (data) {
+                  console.log("success")
+                  location.href = '{% url 'student_home' %}'
+                },
+                error: function (error) {
+                  console.log("error")
+                }
+              });
+
             } else {
               location.href='edit_forces'
             }
@@ -2997,8 +3028,8 @@
         {% if homework.final_stage == 1 %}
           <div class="col-sm">
             <input id="next_btn" type="button" 
-            onclick="comparar(true, fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before)"
-            value = "Terminar"/>
+              onclick="comparar(true, fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before)"
+              value = "Terminar"/>
           </div>
         {% else %}
           <div class="col-sm">

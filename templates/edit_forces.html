@@ -1593,7 +1593,21 @@
             });
             let final_stage = $("#homework-details").data("homeworkFinal")
             if (final_stage == 2){ 
-              location.href='{% url 'student_home' %}'
+              $.ajax({
+                url: `/homework/${homework_id}/score`,
+                type: "POST",
+
+                beforeSend: function (xhr) {
+                  xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                },
+                success: function (data) {
+                  console.log("success")
+                  location.href = '{% url 'student_home' %}'
+                },
+                error: function (error) {
+                  console.log("error")
+                }
+              });
             } else {
               location.href='balance_equations'
             }
