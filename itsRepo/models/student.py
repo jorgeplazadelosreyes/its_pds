@@ -12,6 +12,7 @@ class Student(models.Model):
     elo_score = models.IntegerField(null=True, default=0)
     angles_score = models.IntegerField(null=True, default=0)
     supports_score = models.IntegerField(null=True, default=0)
+    role = models.IntegerField(null=True, default=0)
     
     def __str__(self):
         return f'{self.first_name} {self.last_name}'

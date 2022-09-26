@@ -10,6 +10,8 @@ class CreateHomework(View):
 
     def get(self, request):
         homeworks = Homework.objects.all()
+        if request.user.student.role == 0:
+            return redirect("student_home")
         context = {
             "json": dataJSON,
             "homeworks": homeworks

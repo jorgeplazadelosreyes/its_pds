@@ -24,20 +24,18 @@
                         <th scope="col">Email</th>
                         <th scope="col">Fecha de inicio</th>
                         <th scope="col">Puntaje general</th>
-                        <th scope="col">Puntaje ángulos</th>
-                        <th scope="col">Puntaje fuerzas</th>
                       </tr>
                     </thead>
                     <tbody>
                         {% for student in students %}
+                        {% if student.role == 0 %}
                         <tr>
                             <td>{{ student.first_name }} {{ student.last_name }} </td>
                             <td>{{ student.email}}</td>
                             <td>{{ student.date_created }}</td>
                             <td>{{ student.elo_score }}</td>
-                            <td>{{ student.angles_score }}</td>
-                            <td>{{ student.supports_score }}</td>
                         </tr>
+                        {% endif %}
                         {% endfor %}
                     </tbody>
                 </table>                  
