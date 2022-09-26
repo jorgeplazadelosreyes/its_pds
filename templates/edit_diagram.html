@@ -1754,7 +1754,7 @@
         
       }
     
-      function newMomento(x, y, rotation, layer, stage, count, magnitud="M") {
+      function newMomento(x, y, rotation, layer, stage, count, magnitud=0) {
         
         let momento = new Konva.Arc({
           x: x,
@@ -1834,7 +1834,7 @@
         /// fuerza en momento
 
         var textNode = new Konva.Text({
-          text: "F:" + magnitud,
+          text: magnitud,
           x: momento.x() + 20,
           y: momento.y() + 10,
           fontSize: 13,
