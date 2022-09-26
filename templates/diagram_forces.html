@@ -66,7 +66,7 @@
 			data = $("#homework-details").data("homeworkDiagram")
 
 			//var stage = Konva.Node.create(data, "container")
-
+      flag_show_answer = 0
       function loadForm(json, counter, show){
 
         if(show == 1){
@@ -369,24 +369,18 @@
 				}));
 			}
 
-      function getCookie(name) {
-    	  let cookieValue = null;
-    	  if (document.cookie && document.cookie !== '') {
-        	const cookies = document.cookie.split(';');
-        	for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-              break;
-            }
-        	}
-    	  }
-    	  return cookieValue;
-	    }
 
-
-      function comparar(hi, fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before){
-
+      function comparar(flag,hi, fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before){
+        console.log("Flag:", flag)
+        if (flag == 1){
+          alert("Has saltado esta etapa con exito")
+          let final_stage = $("#homework-details").data("homeworkFinal")
+          if (final_stage == 1){
+            location.href='{% url 'student_home' %}'
+          } else {
+            location.href='edit_forces'
+          }
+        }
         var fijos_iguales = 0
         var barras_iguales = 0
         var arrow_iguales = 0
@@ -3013,7 +3007,7 @@
       
       <div class="row">
         <div class="col-sm">
-          <input id="comp_btn" type="button" style="float: left;" value = "comparar"/>
+          <input id="comp_btn" type="button" style="float: left;" value = "Comparar"/>
         </div>
         <div class="col-sm"></div>
         <div class="col-sm">
@@ -3028,13 +3022,13 @@
         {% if homework.final_stage == 1 %}
           <div class="col-sm">
             <input id="next_btn" type="button" 
-              onclick="comparar(true, fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before)"
-              value = "Terminar"/>
+            onclick="comparar(flag_show_answer,true, fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before)"
+            value = "Terminar"/>
           </div>
         {% else %}
           <div class="col-sm">
             <input id="next_btn" type="button" 
-            onclick="comparar(true, fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before)"
+            onclick="comparar(flag_show_answer,true, fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before)"
             value = "Siguiente Etapa"/>
           </div>
         {% endif %}
@@ -3064,7 +3058,7 @@
 		  	let btn2 = document.getElementById("comp_btn");
 			  btn2.addEventListener('click', event => {
           console.log(rotula_pos)
-          etapa_buena = comparar(false, fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before)
+          etapa_buena = comparar(flag_show_answer, true, fijo_pos, fijos_before, arrow_pos, arrow_before, barra_pos, barra_before, momento_pos, momento_before, rotula_pos, rotula_before, deslizante_pos, deslizante_before, empotrado_pos, empotrado_before, biela_pos, biela_before, punto_pos, punto_before)
           console.log(etapa_buena)
         })
       });
@@ -3073,6 +3067,8 @@
 			  
 		  	let btnShow = document.getElementById("show_btn");
 			  btnShow.addEventListener('click', event => {
+          flag_show_answer = 1
+          console.log
           loadForm(data, counter, 1)
         })
       });
