@@ -68,6 +68,11 @@
       element_tracking = [0,0,0,0,0,0]
       user_tracking = [0,0,0,0,0,0]
       strikes = 0
+      var answer_arrows = []
+      var answer_fijo = []
+      var answer_deslizante = []
+      var answer_empotrado = []
+      var answer_momento = []
       function loadForm(json, counter){
         
         objects=json["children"][0]["children"]
@@ -107,6 +112,7 @@
                     item["attrs"]["magnitud"] = magn
                   }
                 }
+                answer_momento.push(item["attrs"])
                 newMomento(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, num, item["attrs"]["magnitud"])
                 
                 var newM = [];
@@ -136,6 +142,7 @@
                 } else if ([-135,-45,45,135].includes(Math.round(item["attrs"]["rotation"]))){
                   element_tracking[1] = element_tracking[1] + 2
                 }
+                answer_arrows.push(item["attrs"])
                 newArrow(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, num, item["attrs"]["magnitud"])
                 
                 var newForce = [];
@@ -155,6 +162,8 @@
               item=objects[i]
               counter[1] = counter[1] + 1
               element_tracking[2] = element_tracking[2] + 2
+              answer_fijo.push(item["attrs"])
+              console.log(item["attrs"]["rotation"])
               newFijo(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
             }
           }
@@ -168,6 +177,7 @@
               item=objects[i]
               counter[2] = counter[2] + 1
               element_tracking[3] = element_tracking[3] + 1
+              answer_deslizante.push(item["attrs"])
               newDeslizante(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1])
             }
             else if(String( objects[i]["attrs"]["name"] ).substring(0,9) == 'empotrado' && String( objects[i]["attrs"]["name"] ).substring(10,14) != "tool"){
@@ -179,6 +189,7 @@
               item=objects[i]
               counter[3] = counter[3] + 1
               element_tracking[4] = element_tracking[4] + 3
+              answer_empotrado.push(item["attrs"])
               newEmpotrado(item["attrs"]["x"], item["attrs"]["y"], item["attrs"]["rotation"], layer, stage, String(objects[i]["attrs"]["name"]).split("_")[1]) 
             }
           }
@@ -1525,9 +1536,6 @@
         }
 
         function checkTracking(element_track, user_track) {
-          console.log("ENTRE")
-          console.log(element_track)
-          console.log(user_track)
           alert_message = "HINT \n"
           for(var i = 0; i<6; i++){
             if (element_track[i] != user_track[i]){
@@ -1594,7 +1602,92 @@
             alert(alert_message) 
           }
         }
-        
+
+        function clickAllShapes(flechas, fijos, deslizantes, empotrados, momentos){
+          for(var i = 0; i<flechas.length; i++){
+            if (Math.round(flechas[i]["rotation"]) == 45){
+              newDclArrow(flechas[i]["x"] - 20, flechas[i]["y"] + 60, 0, layer, stage, String(flechas[i]["name"]).split("_")[1], String(flechas[i]["magnitud"])+"cos("+String(Math.round(flechas[i]["rotation"]))+")")
+              newDclArrow(flechas[i]["x"] + 60, flechas[i]["y"] - 20, 90, layer, stage, String(flechas[i]["name"]).split("_")[1], String(flechas[i]["magnitud"] * -1)+"sen("+String(Math.round(flechas[i]["rotation"]))+")")
+            } else if (Math.round(flechas[i]["rotation"]) == 135){
+              newDclArrow(flechas[i]["x"] + 20 , flechas[i]["y"] + 60, 180, layer, stage, String(flechas[i]["name"]).split("_")[1], String(flechas[i]["magnitud"])+"cos("+String(Math.round(flechas[i]["rotation"]))+")")
+              newDclArrow(flechas[i]["x"] - 60, flechas[i]["y"] - 20, 90, layer, stage, String(flechas[i]["name"]).split("_")[1], String(flechas[i]["magnitud"] * -1)+"sen("+String(Math.round(flechas[i]["rotation"]))+")")
+            } else if (Math.round(flechas[i]["rotation"]) == -45){
+              newDclArrow(flechas[i]["x"] - 20 , flechas[i]["y"] - 60, 0, layer, stage, String(flechas[i]["name"]).split("_")[1], String(flechas[i]["magnitud"])+"cos("+String(Math.round(flechas[i]["rotation"]))+")")
+              newDclArrow(flechas[i]["x"] + 60, flechas[i]["y"] + 20, -90, layer, stage, String(flechas[i]["name"]).split("_")[1],String(flechas[i]["magnitud"] * -1)+"sen("+String(Math.round(flechas[i]["rotation"]))+")")
+            } else if (Math.round(flechas[i]["rotation"]) == -135){
+              newDclArrow(flechas[i]["x"] + 20 , flechas[i]["y"] - 60, 180, layer, stage, String(flechas[i]["name"]).split("_")[1],String(flechas[i]["magnitud"])+"cos("+String(Math.round(flechas[i]["rotation"]))+")")
+              newDclArrow(flechas[i]["x"] - 60, flechas[i]["y"] + 20, -90, layer, stage, String(flechas[i]["name"]).split("_")[1], String(flechas[i]["magnitud"] * -1)+"sen("+String(Math.round(flechas[i]["rotation"]))+")")
+            } else if (Math.round(flechas[i]["rotation"]) == 0){
+              newDclArrow(flechas[i]["x"], flechas[i]["y"], 0, layer, stage, String(flechas[i]["name"]).split("_")[1], flechas[i]["magnitud"])
+            } else if (Math.round(flechas[i]["rotation"]) == -180){
+              newDclArrow(flechas[i]["x"], flechas[i]["y"], 180, layer, stage, String(flechas[i]["name"]).split("_")[1], flechas[i]["magnitud"] * -1)
+            } else if (Math.round(flechas[i]["rotation"]) == 90){
+              newDclArrow(flechas[i]["x"], flechas[i]["y"], 90, layer, stage, String(flechas[i]["name"]).split("_")[1], flechas[i]["magnitud"] * -1)
+            } else if (Math.round(flechas[i]["rotation"]) == -90){
+              newDclArrow(flechas[i]["x"], flechas[i]["y"], -90, layer, stage, String(flechas[i]["name"]).split("_")[1], flechas[i]["magnitud"])
+            } else {
+              newDclArrow(flechas[i]["x"], flechas[i]["y"], 0, layer, stage, String(flechas[i]["name"]).split("_")[1], flechas[i]["magnitud"])
+            }
+          }
+          for(var i = 0; i<fijos.length; i++){
+            if (Math.round(fijos[i]["rotation"]) == 0){
+              newDclArrow(fijos[i]["x"] - 85, fijos[i]["y"], 0, layer, stage, String(fijos[i]["name"]).split("_")[1], fijos[i]["magnitud_x"])
+              newDclArrow(fijos[i]["x"], fijos[i]["y"] + 85, -90, layer, stage, String(fijos[i]["name"]).split("_")[1], fijos[i]["magnitud_y"])
+            } else if (Math.round(fijos[i]["rotation"]) == 90){
+              newDclArrow(fijos[i]["x"] - 85, fijos[i]["y"], 0, layer, stage, String(fijos[i]["name"]).split("_")[1], fijos[i]["magnitud_x"])
+              newDclArrow(fijos[i]["x"], fijos[i]["y"] - 85, 90, layer, stage, String(fijos[i]["name"]).split("_")[1], fijos[i]["magnitud_y"])
+            } else if (Math.round(fijos[i]["rotation"]) == 180){
+              newDclArrow(fijos[i]["x"] + 85, fijos[i]["y"], 180, layer, stage, String(fijos[i]["name"]).split("_")[1], fijos[i]["magnitud_x"])
+              newDclArrow(fijos[i]["x"], fijos[i]["y"] - 85, 90, layer, stage, String(fijos[i]["name"]).split("_")[1], fijos[i]["magnitud_y"])
+            } else if (Math.round(fijos[i]["rotation"]) == -90){
+              newDclArrow(fijos[i]["x"] + 85, fijos[i]["y"], 180, layer, stage, String(fijos[i]["name"]).split("_")[1], fijos[i]["magnitud_x"])
+              newDclArrow(fijos[i]["x"], fijos[i]["y"] + 85, -90, layer, stage, String(fijos[i]["name"]).split("_")[1], fijos[i]["magnitud_y"])
+            } else {
+              newDclArrow(fijos[i]["x"] - 85, fijos[i]["y"], 0, layer, stage, String(fijos[i]["name"]).split("_")[1], fijos[i]["magnitud_x"])
+              newDclArrow(fijos[i]["x"], fijos[i]["y"] + 85, -90, layer, stage, String(fijos[i]["name"]).split("_")[1], fijos[i]["magnitud_y"])
+            }
+          }
+          for (var i = 0; i<deslizantes.length; i++){
+            if (Math.round(deslizantes[i]["rotation"]) == 0){
+              newDclArrow(deslizantes[i]["x"] + 15, deslizantes[i]["y"] + 65, -90, layer, stage, String(deslizantes[i]["name"]).split("_")[1], deslizantes[i]["magnitud"])
+            } else if (Math.round(deslizantes[i]["rotation"]) == 90){
+              newDclArrow(deslizantes[i]["x"] - 65, deslizantes[i]["y"] + 15, 0, layer, stage, String(deslizantes[i]["name"]).split("_")[1], deslizantes[i]["magnitud"])
+            } else if (Math.round(deslizantes[i]["rotation"]) == 180){
+              newDclArrow(deslizantes[i]["x"] - 15, deslizantes[i]["y"] - 65, 90, layer, stage, String(deslizantes[i]["name"]).split("_")[1], deslizantes[i]["magnitud"])
+            } else if (Math.round(deslizantes[i]["rotation"]) == -90){
+              newDclArrow(deslizantes[i]["x"] + 65, deslizantes[i]["y"] - 15, 180, layer, stage, String(deslizantes[i]["name"]).split("_")[1], deslizantes[i]["magnitud"])
+            } else {
+              newDclArrow(deslizantes[i]["x"] + 15, deslizantes[i]["y"] + 65, -90, layer, stage, String(deslizantes[i]["name"]).split("_")[1], deslizantes[i]["magnitud"])
+            }
+          }
+          for (var i = 0; i<empotrados.length; i++){
+            if (Math.round(empotrados[i]["rotation"]) == 0){
+              newDclArrow(empotrados[i]["x"] -65, empotrados[i]["y"] - 15, 0, layer, stage, String(empotrados[i]["name"]).split("_")[1], empotrados[i]["magnitud_x"])
+              newDclArrow(empotrados[i]["x"] + 15, empotrados[i]["y"] + 65, -90, layer, stage, String(empotrados[i]["name"]).split("_")[1], empotrados[i]["magnitud_y"])
+              newDclMomento(empotrados[i]["x"] + 30, empotrados[i]["y"] - 30, 0, layer, stage, String(empotrados[i]["name"]).split("_")[1], empotrados[i]["magnitud_m"])
+            } else if (Math.round(empotrados[i]["rotation"]) == 90){
+              newDclArrow(empotrados[i]["x"] - 65, empotrados[i]["y"] + 15, 0, layer, stage, String(empotrados[i]["name"]).split("_")[1], empotrados[i]["magnitud_x"])
+              newDclArrow(empotrados[i]["x"] + 15, empotrados[i]["y"] - 65, 90, layer, stage, String(empotrados[i]["name"]).split("_")[1], empotrados[i]["magnitud_y"])
+              newDclMomento(empotrados[i]["x"] + 30, empotrados[i]["y"] + 30, 0, layer, stage, String(empotrados[i]["name"]).split("_")[1], empotrados[i]["magnitud_m"])
+            } else if (Math.round(empotrados[i]["rotation"]) == 180){
+              newDclArrow(empotrados[i]["x"] + 65, empotrados[i]["y"] + 15, 180, layer, stage, String(empotrados[i]["name"]).split("_")[1], empotrados[i]["magnitud_x"])
+              newDclArrow(empotrados[i]["x"] -15, empotrados[i]["y"] - 65, 90, layer, stage, String(empotrados[i]["name"]).split("_")[1], empotrados[i]["magnitud_y"])
+              newDclMomento(empotrados[i]["x"] - 30, empotrados[i]["y"] + 30, 0, layer, stage, String(empotrados[i]["name"]).split("_")[1], empotrados[i]["magnitud_m"])
+            } else if (Math.round(empotrados[i]["rotation"]) == -90){
+              newDclArrow(empotrados[i]["x"] + 65, empotrados[i]["y"] - 15, 180, layer, stage, String(empotrados[i]["name"]).split("_")[1], empotrados[i]["magnitud_x"])
+              newDclArrow(empotrados[i]["x"] - 15, empotrados[i]["y"] + 65, -90, layer, stage, String(empotrados[i]["name"]).split("_")[1], empotrados[i]["magnitud_y"])
+              newDclMomento(empotrados[i]["x"] - 30, empotrados[i]["y"] -30, 0, layer, stage, String(empotrados[i]["name"]).split("_")[1], empotrados[i]["magnitud_m"])
+            } else {
+              newDclArrow(empotrados[i]["x"] -65, empotrados[i]["y"] - 15, 0, layer, stage, String(empotrados[i]["name"]).split("_")[1], empotrados[i]["magnitud_x"])
+              newDclArrow(empotrados[i]["x"] + 15, empotrados[i]["y"] + 65, -90, layer, stage, String(empotrados[i]["name"]).split("_")[1], empotrados[i]["magnitud_y"])
+              newDclMomento(empotrados[i]["x"] + 30, empotrados[i]["y"] - 30, 0, layer, stage, String(empotrados[i]["name"]).split("_")[1], empotrados[i]["magnitud_m"])
+            }
+          }
+          for (var i = 0; i<momentos.length; i++){
+            newDclMomento(momentos[i]["x"], momentos[i]["y"], 0, layer, stage, String(momentos[i]["name"]).split("_")[1], momentos[i]["magnitud"])
+          }
+        }
+
         shadowRectangle.hide();
         layer.add(shadowRectangle);
 
@@ -1647,6 +1740,9 @@
         {% else %}
         <div class="col-sm" style="text-align:center">
           <input id="next_btn" type="button" onclick="checkTracking(element_tracking,user_tracking)" value = "Siguiente etapa"/>
+        </div>
+        <div class="col-sm" style="text-align:center">
+          <input id="next_btn" type="button" onclick="clickAllShapes(answer_arrows, answer_fijo, answer_deslizante, answer_empotrado, answer_momento)" value = "Mostrar Resultado"/>
         </div>
         <div class="col-sm">
           <input id="next_btn" type="button" style="float: right;" onclick="location.href='{% url 'balance_equations' homework_id=homework.id  %}'" value = "Saltar Etapa"/>
