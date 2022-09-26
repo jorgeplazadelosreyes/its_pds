@@ -1,3 +1,4 @@
+from django.shortcuts import redirect
 from django.views import View
 from django.http import HttpResponse
 
@@ -16,7 +17,7 @@ class GiveScore(View):
             4:1,
         }
         mount = diffs[diff]
-        plus = int(score / mount) + (score % mount > 0)
+        plus = int(score / diffs[diff]) + (score % diffs[diff] > 0)
         request.user.student.elo_score += plus
         request.user.student.save()
         return HttpResponse("ok", status = 200)
