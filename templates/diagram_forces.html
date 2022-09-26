@@ -22,6 +22,12 @@
       <div class="text-center row align-item-center">
         <div class="col" style="background-color: #393E46">
           <h3 for="exampleFormControlTextarea1" class="form-label" style="margin-top:20px; color: #EEEEEE">Enunciado</h3>
+          
+
+          <input class="btn btn-link .text-nowrap" id="students_btn" type="button" onclick="location.href='{% url 'home_admin' %}'" style="float: right; color: #EEEEEE" value = "Home"/>
+          
+        </div>
+        
         </div>
       </div>
       <h3 id="statement-text" style="margin-top:15px">{{ homework.statement_text }}</h3>
@@ -647,10 +653,7 @@
         console.log("hints")
         console.log(hints)
 
-        console.log("hi:", hi)
         if(hi){
-          console.log("len")
-          //console.log(hints.lentgh())
 
           alert_message = ""
           for(var i in hints){
@@ -2981,12 +2984,6 @@
         <div class="col-sm">
           <input id="comp_btn" type="button" style="float: left;" value = "comparar"/>
         </div>
-        <div class="col-sm"></div>
-        <div class="col-sm">
-          <input id="show_btn" type="button" style="float: right;" value = "Mostrar respuesta"/>
-        </div>
-        <div class="col-sm"></div>
-
 
         <div class="col-sm"></div>
         {% if homework.final_stage == 1 %}

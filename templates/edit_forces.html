@@ -1542,7 +1542,32 @@
           if (alert_message == "HINT \n"){ 
             alert_message = "Felicidades, tu DCL esta completo"
             //return alert_message
-            alert(alert_message)
+            alert(alert_message) 
+            
+            let json = stage.toJSON();
+            console.log(json)
+
+            let homework_id = $("#homework-details").data("homeworkId")
+
+            $.ajax({
+              url: `/homework/${homework_id}/edit_forces`,
+              type: "POST",
+              data:{
+                "diagram2": json,
+
+              },
+
+              beforeSend: function (xhr) {
+                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+              },
+              success: function (data) {
+                console.log("guardo")
+                console.log(json)
+              },
+              error: function (error) {
+                console.log("guardon't")
+              }
+            });
             let final_stage = $("#homework-details").data("homeworkFinal")
             if (final_stage == 2){ 
               location.href='{% url 'student_home' %}'
@@ -1599,7 +1624,6 @@
       </div>
       <div class="row">
         <div class="col-sm">
-          <input id="save_btn" type="button" style="float: left;" value = "Guardar"/>
         </div>
         {% if homework.final_stage == 2 %}
         <div class="col-sm" style="text-align:center">
@@ -1619,89 +1643,5 @@
 
 
     </div>
-    <script> 
-
-      function getCookie(name) {
-    	  let cookieValue = null;
-    	  if (document.cookie && document.cookie !== '') {
-        	const cookies = document.cookie.split(';');
-        	for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-              break;
-            }
-        	}
-    	  }
-    	  return cookieValue;
-	    }
-
-      $(document).ready(function () {
-			  let homework_id = $("#homework-details").data("homeworkId")
-		  	let btn2 = document.getElementById("save_btn");
-			  btn2.addEventListener('click', event => {
-          let str_statement = $("#statement-text").val()
-          let json = stage.toJSON();
-          let initial_state = $("#initialStageSelect").find(":selected").val()
-          let final_state = $("#finalStageSelect").find(":selected").val()
-
-          console.log(initial_state)
-          console.log(final_state)
-
-          let fileData = $("#customFile")[0].files[0]
-
-          console.log(fileData)
-          $.ajax({
-            url: `/homework/${homework_id}/`,
-            type: "POST",
-             data:{
-              "diagram": json,
-              "id": homework_id, 
-              "str_statement": str_statement,
-              "difficulty": dificultad,
-              "Fx": sumas.strX,
-              "Fy": sumas.strY,
-              "Fm": sumas.strM,
-              "initial_stage": initial_state,
-              "final_stage": final_state,
-            },
-
-            beforeSend: function (xhr) {
-              xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-            },
-            success: function (data) {
-              console.log("guardo")
-              console.log(dificultad)
-              //console.log(JSON.parse(json)["children"][0]["children"]);
-            },
-            error: function (error) {
-              console.log("guardon't")
-            }
-          });
-          /*
-          $.ajax({
-				    url: `/statement/${homework_id}/`,
-            type: "POST",
-            data:{
-	            "file_statement": fileData,
-            },
-
-					  processData: false,
-  				  contentType: false, 
-
-					  beforeSend: function (xhr) {
-            	xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-       			},
-            success: function (data) {
-						  console.log("guardo archivo")
-            },
-            error: function (error) {
-              console.log("no guardo archivo")
-            }
-        	});
-        */
-        })
-      });
-    </script>
   </body>
 </html>
