@@ -1537,7 +1537,9 @@
             alert_message = "Felicidades, tu DCL esta completo"
             //return alert_message
             alert(alert_message) 
-            location.href='{% url 'home_admin' %}'
+            id = $("#homework-details").data("homeworkId")
+            new_json = stage.toJSON();
+            location.href = "balance_equations?new_json=" + new_json
           } else{
             //return alert_message
             alert(alert_message) 
