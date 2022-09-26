@@ -1339,12 +1339,27 @@
         function comparar(ejex, ejey){
           fx = $("#homework-details").data("homeworkFx").split("+")
           fy = $("#homework-details").data("homeworkFy").split("+")
+          let homework_id = $("#homework-details").data("homeworkId")
 
           if(fx.length == ejex && fy.length == ejey){
             alert_message = "Felicidades, tu DCL esta completo"
             
             alert(alert_message) 
-            location.href='{% url 'student_home' %}'
+            $.ajax({
+                url: `/homework/${homework_id}/score`,
+                type: "POST",
+
+                beforeSend: function (xhr) {
+                  xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                },
+                success: function (data) {
+                  console.log("success")
+                  location.href = '{% url 'student_home' %}'
+                },
+                error: function (error) {
+                  console.log("error")
+                }
+            });
             return true
           }else if (fx.length != ejex && fy.length != ejey){
             alert_message = "Te falta agregar fuerzas en ambos ejes"
