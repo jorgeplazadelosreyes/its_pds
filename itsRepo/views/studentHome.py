@@ -11,7 +11,7 @@ class StudentHome(View):
 
         for homework in homeworks:
             ids.append(homework.id)
-            sus.append(homework.difficulty - score)
+            sus.append(abs(homework.difficulty - score))
 
         count = 0
         num = 9999999
